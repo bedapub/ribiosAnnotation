@@ -1,3 +1,6 @@
+#' @importFrom DBI dbConnect dbExistsTable dbSendQuery dbHasCompleted  fetch dbClearResult dbDisconnect
+#' @importFrom ribiosUtils matchColumn putColsFirst
+
 ##--------------------##
 ## constants
 ##--------------------##
@@ -20,10 +23,12 @@ ORACLE.BASE <- "/opt/oracle"
 ORACLE.HOME <- "/opt/oracle/client/10/run_1"
 ## ORACLE.LIB <- ":/opt/oracle/client/10/run_1/lib"
 ## maximum vector length in the IN syntax
+#' @export ORACLE.IN.NMAX
 ORACLE.IN.NMAX <- 1000L
 
 
 ## function to test whether Oracle is available
+#' @export hasOracle
 hasOracle <- function() {
   return(requireNamespace("ROracle", quietly=TRUE))
 }
@@ -51,6 +56,7 @@ hasOracle <- function() {
 }
 
 ## automatically establish a connection, depending on whether Oracle client is installed
+#' @export ribiosCon
 ribiosCon <- function(db="bia", user="biread", password="biread", forceJDBC=FALSE) {
   if(hasOracle() & !forceJDBC) {
     con <- dbConnect(ORA, user = user, password = password, db = db)
