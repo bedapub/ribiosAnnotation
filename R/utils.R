@@ -57,11 +57,12 @@ hasOracle <- function() {
 
 ## automatically establish a connection, depending on whether Oracle client is installed
 #' @export ribiosCon
+## TODO: 1g memorz at least is hard-coded. How to infer it?
 ribiosCon <- function(db="bia", user="biread", password="biread", forceJDBC=FALSE) {
   if(hasOracle() & !forceJDBC) {
     con <- dbConnect(ORA, user = user, password = password, db = db)
   } else {
-    options(java.parameters = "-Xmx4g" ) ## increase the heap size before the RJDBC package is loaded
+    options(java.parameters = "-Xmx1g" ) ## increase the heap size before the RJDBC package is loaded
     suppressWarnings(suppressMessages(hasJDBC <- requireNamespace("RJDBC")))
     if(!hasJDBC)
       stop("No JDBC package installed: please run 'install.packages('RJDBC')' first and then load ribiosAnnotation again.")
