@@ -17,8 +17,10 @@ ORACLE.BIARO.PWD <- "biread"
 ORACLE.RED.USER <- "red"
 ORACLE.RED.PWD <- "red"
 ## genome
+## Note that in 2018/09, bin was migrated to bia. The same user/password for bin remain valid for bia.
 ORACLE.BIN.USER <- "genome"
 ORACLE.BIN.PWD <- "genome"
+
 ORACLE.BASE <- "/opt/oracle"
 ORACLE.HOME <- "/opt/oracle/client/10/run_1"
 ## ORACLE.LIB <- ":/opt/oracle/client/10/run_1/lib"
@@ -46,7 +48,7 @@ hasOracle <- function() {
     if(identical(obase, "") || identical(obase, ".") || !"client" %in% dir(obase)) {
       Sys.setenv("ORACLE_BASE"=ORACLE.BASE)
     }
-    if(identical(ohome, "") || identical(ohome, ".") || !"bin" %in% dir(ohome)) {
+    if(identical(ohome, "") || identical(ohome, ".") || !"bia" %in% dir(ohome)) {
       Sys.setenv("ORACLE_HOME"=ORACLE.HOME)
     }
     assign("ORA", ROracle::Oracle(), pos=sys.frame())
@@ -79,8 +81,8 @@ ribiosCon <- function(db="bia", user="biread", password="biread", forceJDBC=FALS
 newconBIA <- function() ribiosCon(db="bia", user=ORACLE.BIA.USER, password=ORACLE.BIA.PWD)
 newconBIA2 <- function() ribiosCon(db="bia", user=ORACLE.BIA2.USER, password=ORACLE.BIA2.PWD)
 newconBIARO <- function() ribiosCon(db="bia", user=ORACLE.BIARO.USER, password=ORACLE.BIARO.PWD)
-newconBIN <- function() ribiosCon(db="bin", user=ORACLE.BIN.USER, password=ORACLE.BIN.PWD)
-newconRED <- function() ribiosCon(db="bin", user=ORACLE.RED.USER, password=ORACLE.RED.PWD)
+newconBIN <- function() ribiosCon(db="bia", user=ORACLE.BIN.USER, password=ORACLE.BIN.PWD)
+newconRED <- function() ribiosCon(db="bia", user=ORACLE.RED.USER, password=ORACLE.RED.PWD)
 
 ##----------------------------------------##
 ## deprecated functions
