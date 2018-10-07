@@ -69,9 +69,9 @@ ribiosCon <- function(db="bia", user="biread", password="biread", forceJDBC=FALS
     if(!hasJDBC)
       stop("No JDBC package installed: please run 'install.packages('RJDBC')' first and then load ribiosAnnotation again.")
     drv <- RJDBC::JDBC("oracle.jdbc.OracleDriver",
-                       system.file("drivers", "ojdbc14.jar", package="ribiosAnnotation"))
-    port <- switch(EXPR=db, bia=15000, bin=15001)
-    str <- paste("jdbc:oracle:thin:", user, "/", password, "@", db, ".kau.roche.com:", port, sep="")
+                       system.file("drivers", "ojdbc7.jar", package="ribiosAnnotation"))
+    port <- switch(EXPR=db, bia=15210, bin=15001)
+    str <- paste("jdbc:oracle:thin:", user, "/", password, "@orse04p-scan.kau.roche.com:", port, "/", db, ".kau.roche.com", sep="")
     con <- dbConnect(drv,str)
   }
   return(con)
