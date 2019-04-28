@@ -1,7 +1,7 @@
 Package: ribiosBase
 Type: Package
 Title: Base ribios Package with Data Structures and Functions in ANSI-C
-Version: 1.0-7
+Version: 1.0-8
 Date: 2019-04-28
 Author: Jitao David Zhang, Clemens Broger, and Detlef Wolf, with input from
     Roche Bioinformatics Group
