@@ -4,12 +4,14 @@
 \alias{readTable}
 \title{Read in data.frame from tab-delimited format written by \code{writeMatrix}}
 \usage{
-readTable(file, row.names = TRUE)
+readTable(file, row.names = TRUE, ...)
 }
 \arguments{
 \item{file}{file to be read in}
 
 \item{row.names}{Logical, whether the first column contains row names (should be consistent with the settign in \code{writeMatrix})}
+
+\item{...}{Other parameters passed to \code{read.table}, for instance \code{stringsAsFactors}. Following parameters are \emph{not} allowed to change: \code{header, sep, quote, dec, check.names, strip.wrhite, comment.char}.}
 }
 \value{
 A \code{data.frame} object

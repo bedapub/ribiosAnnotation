@@ -30,8 +30,9 @@ writeMatrix <- function(x, file, row.names=TRUE) {
 #' Default behaviour of \code{read.table} is adapted to the convention used in \code{writeMatrix}
 #'
 #' @param file file to be read in
-#' @param row.names Logical, whether the first column contains row names (should be consistent with the settign in \code{writeMatrix})
+#' @param row.names Logical, whether the first column contains row names (should be consistent with the setting in \code{writeMatrix})
 #' @param as.matrix Logical, whether the data.frame object should be cast into a matrix
+#' @param ... Other parameters passed to \code{read.table}, for instance \code{stringsAsFactors}. Following parameters are \emph{not} allowed to change: \code{header, sep, quote, dec, check.names, strip.wrhite, comment.char}.
 #' @return Matrix when \code{as.matrix} is set to \code{TRUE} and otherwise data.frame
 #' @examples
 #' test.mat <- matrix(rnorm(1000), nrow=10, dimnames=list(LETTERS[1:10], 1:100))
@@ -40,7 +41,7 @@ writeMatrix <- function(x, file, row.names=TRUE) {
 #' readin.mat <- readMatrix(tmpfile)
 #' if(require(ribiosUtils)) identicalMatrix(test.mat, readin.mat)
 
-readMatrix <- function(file, row.names=TRUE, as.matrix=TRUE) {
+readMatrix <- function(file, row.names=TRUE, as.matrix=TRUE, ...) {
   if(!row.names) {
     row.names <- NULL
   } else {
@@ -49,7 +50,7 @@ readMatrix <- function(file, row.names=TRUE, as.matrix=TRUE) {
   res <- read.table(file, header=TRUE, sep="\t", quote="",
                     row.names=row.names,
                     dec=".", check.names=FALSE, strip.white=TRUE,
-                    comment.char="")
+                    comment.char="", ...)
   if(as.matrix) {
     return(as.matrix(res))
   } else {
@@ -66,6 +67,7 @@ readMatrix <- function(file, row.names=TRUE, as.matrix=TRUE) {
 #'
 #' @param file file to be read in
 #' @param row.names Logical, whether the first column contains row names (should be consistent with the settign in \code{writeMatrix})
+#' @param ... Other parameters passed to \code{read.table}, for instance \code{stringsAsFactors}. Following parameters are \emph{not} allowed to change: \code{header, sep, quote, dec, check.names, strip.wrhite, comment.char}.
 #'
 #' @return A \code{data.frame} object
 #' @examples
@@ -76,6 +78,6 @@ readMatrix <- function(file, row.names=TRUE, as.matrix=TRUE) {
 #' stopifnot(identical(as.character(readin.df$Team), c("HSV", "BVB", "VFB")))
 #' stopifnot(identical(readin.df$Score, c(21L, 19L, 17L)))
 
-readTable <- function(file, row.names=TRUE) {
-    return(readMatrix(file, row.names=row.names, as.matrix=FALSE))
+readTable <- function(file, row.names=TRUE, ...) {
+    return(readMatrix(file, row.names=row.names, as.matrix=FALSE, ...))
 }

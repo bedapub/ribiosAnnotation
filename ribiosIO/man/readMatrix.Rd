@@ -4,14 +4,16 @@
 \alias{readMatrix}
 \title{Read in numeric matrix from tab-delimited format written by \code{writeMatrix}}
 \usage{
-readMatrix(file, row.names = TRUE, as.matrix = TRUE)
+readMatrix(file, row.names = TRUE, as.matrix = TRUE, ...)
 }
 \arguments{
 \item{file}{file to be read in}
 
-\item{row.names}{Logical, whether the first column contains row names (should be consistent with the settign in \code{writeMatrix})}
+\item{row.names}{Logical, whether the first column contains row names (should be consistent with the setting in \code{writeMatrix})}
 
 \item{as.matrix}{Logical, whether the data.frame object should be cast into a matrix}
+
+\item{...}{Other parameters passed to \code{read.table}, for instance \code{stringsAsFactors}. Following parameters are \emph{not} allowed to change: \code{header, sep, quote, dec, check.names, strip.wrhite, comment.char}.}
 }
 \value{
 Matrix when \code{as.matrix} is set to \code{TRUE} and otherwise data.frame
