@@ -10,19 +10,26 @@ matrixToLongTable <- function(x, valueLabel="value", rowLabel="row", colLabel="c
   return(res)
 }
 
-#' Transform eSet to long data.frame
+#' Detect if any column has an empty string as name and fix
+#' @param df
 #' 
-#' @param x An \code{eSet} object
-#' @param exprsFun A function to extract expression values, by default \code{exprs}
-#' 
-#' The function extracts gene expression, and return it in a long data.frame format with phenotypic data
-#' 
+#' If any column has an empty string as name, its replaced by the prefix appended by an index starting from 1
 #' @examples 
-#' data(ribios.ExpressionSet, package="ribiosExpression")
-#' exprsLongTbl <- eSetToLongTable(ribios.ExpressionSet)
-#' seLongTbl <- eSetToLongTable(ribios.ExpressionSet, exprsFun=function(eset) assayData(eset)$se.exprs)
-eSetToLongTable <- function(x, exprsFun=function(eset) Biobase::exprs(eset)) {
-  exp <- do.call(exprsFun, list(x))
+#' testDf <- data.frame("Col1"=LETTERS[1:3], "Col2"=letters[2:4])
+#' colnames(testDf) <- c("", "")
+#' testDf
+#' fixEmptyColumnName(testDf)
+#' fixEmptyColumnName(testDf, prefix="fData")
+fixEmptyColumnName <- function(df, prefix="X") {
+  isEmptyColName <- colnames(df)==""
+  if(any(isEmptyColName)) {
+    colnames(df)[isEmptyColName] <- paste0(prefix,
+                                          seq(along=which(isEmptyColName)))
+  }
+  return(df)
+}
+
+vectorizeExprs <- function(exp) {
   if(is.data.frame(exp)) {
     expVec <- unlist(exp)
     rownames(expVec) <- rownames(exp)
@@ -30,8 +37,43 @@ eSetToLongTable <- function(x, exprsFun=function(eset) Biobase::exprs(eset)) {
   } else {
     exprsLong <- as.data.frame(as.vector(exp))    
   }
-  
+  return(exprsLong)
+}
+
+#' Transform eSet to long data.frame
+#' 
+#' @param x An \code{eSet} object
+#' @param exprsFun A function to extract expression values, by default \code{exprs}
+#' @param includeOtherAssayData Logical, whether other elements in the \code{assayData} environment (if present) should be returned.
+#' 
+#' The function extracts exprs (and other values in the \code{assayData} environment), and return it in a long data.frame format with phenotypic data
+#' 
+#' @examples 
+#' data(ribios.ExpressionSet, package="ribiosExpression")
+#' exprsLongTbl <- eSetToLongTable(ribios.ExpressionSet)
+#' seLongTbl <- eSetToLongTable(ribios.ExpressionSet, exprsFun=function(eset) Biobase::assayData(eset)$se.exprs)
+eSetToLongTable <- function(x, 
+                            exprsFun=function(eset) Biobase::exprs(eset),
+                            includeOtherAssayData=FALSE) {
+  exp <- do.call(exprsFun, list(x))
+  exprsLong <- vectorizeExprs(exp)
   colnames(exprsLong) <- "exprs"
+  
+  if(includeOtherAssayData) {
+    otherAssayDataNames <- setdiff(ls(assayData(x)), "exprs")
+    if(length(otherAssayDataNames)>0) {
+      for(assay in otherAssayDataNames) {
+        ad <- get(assay, assayData(x))
+        adVec <- vectorizeExprs(ad)
+        exprsLong <- cbind(exprsLong, adVec)
+        colnames(exprsLong)[ncol(exprsLong)] <- assay
+      }
+    }
+  }
+  
+  fData(x) <- fixEmptyColumnName(fData(x), prefix="fData.")
+  pData(x) <- fixEmptyColumnName(pData(x), prefix="pData.")
+  
   fDataCol <- colnames(fData(x))
   pDataCol <- colnames(pData(x))
   pfCommon <- intersect(fDataCol, pDataCol)
