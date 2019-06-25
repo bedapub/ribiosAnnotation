@@ -2,15 +2,14 @@
 #' @param limmaTopTable: topTable returned by limma::topTable
 #' @return A data.frame known as DGEtable which has controlled column names
 #' @examples
-#' library(limma)
 #' example.sd <- 0.3*sqrt(4/rchisq(100,df=4))
 #' example.y <- matrix(rnorm(100*6,sd=example.sd),100,6)
 #' example.y[1:2,4:6] <- example.y[1:2,4:6] + 2
 #' rownames(example.y) <- paste("Gene",1:100)
 #' example.design <- cbind(Grp1=1,Grp2vs1=c(0,0,0,1,1,1))
-#' example.fit <- lmFit(example.y,example.design)
-#' example.fit <- eBayes(example.fit)
-#' example.tt <- topTable(example.fit, coef=2)
+#' example.fit <- limma::lmFit(example.y,example.design)
+#' example.fit <- limma::eBayes(example.fit)
+#' example.tt <- limma::topTable(example.fit, coef=2)
 #' example.dt <- limmaTopTable2dgeTable(example.tt)
 #' head(example.dt)
 limmaTopTable2dgeTable <- function(limmaTopTable) {
