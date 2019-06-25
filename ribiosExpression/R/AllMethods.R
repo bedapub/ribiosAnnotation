@@ -17,19 +17,16 @@ setMethod("exprsToLong", "ExpressionSet", function(x,...) {
   exprsToLong(exprs(x),...)
 })
 
-setMethod("rowscale", c("ExpressionSet","ANY", "ANY"), function(object, center, scale) {
-  if(missing(center))
-    center <- TRUE
-  if(missing(scale))
-    scale <- TRUE
-  if(storageMode(object)!="lockedEnvironment")
+rowscale.ExpressionSet <- function(x, center=TRUE, scale=TRUE) {
+  if(storageMode(x)!="lockedEnvironment")
     warning("The storageMode of the input object is not 'lockedEnvironment': exprs is replaced by row-scaled values\n",
             "To prevent damaging the data integrity, set the storageMode to 'lockedEnvironment'")
   
-  exprs(object) <- t(scale(t(exprs(object)),
-                           center=center, scale=scale))
-  return(object)
-})
+  exprs(x) <- t(scale(t(exprs(x)),
+                      center=center, scale=scale))
+  return(x)
+}
+
 
 ## for limma::MArrayLM
 
