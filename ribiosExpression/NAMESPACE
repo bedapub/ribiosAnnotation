@@ -1,12 +1,14 @@
 importFrom("ribiosIO", "read_gct_matrix", "write_gct", "read_cls",
-           "read_exprs_matrix", "readMatrix")
+           "read_exprs_matrix", "readMatrix", "writeMatrix")
 importFrom("ribiosArg", "parseFactor", "parseStrings")
 importFrom("ribiosUtils",
            "rowscale", "summarizeRows", "removeInvarCol", "dfFactor",
            "headtail", "assertFile", "haltifnot","putColsFirst", "sortByCol")
 importFrom("ribiosPlot",
            "pcaScores")
-importFrom("Biobase", "featureNames", "exprs", "fData", "pData", "featureData", "phenoData")
+importFrom("Biobase", "featureNames", "exprs", "fData", "pData", 
+           "fData<-", "pData<-", "exprs<-", 
+           "assayData", "featureData", "phenoData")
 importFrom("graph", "connComp")
 importFrom("limma", "makeContrasts")
 importFrom("methods", "as", "new")
@@ -23,7 +25,7 @@ exportClasses(DesignContrast)
 exportMethods(groups, dispGroups)
 
 ## export methods
-export("rowscale")
+export("rowscale.ExpressionSet")
 export("keepMaxStatProbe")
 
 ## GSEA -- moved to ribiosGSEA package
@@ -64,6 +66,7 @@ export(summarizeProbesets,
 ## transformation
 export("matrixToLongTable")
 export("exprsToLong")
+export("fixEmptyColumnName")
 export("eSetToLongTable")
 
 ## kendallW
