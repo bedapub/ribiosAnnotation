@@ -129,8 +129,11 @@ kendallW(emat, efac, summary="none")
 
 ## kendallW acts as an interface to ExpressionSet
 data(ribios.ExpressionSet)
-kendallW(ribios.ExpressionSet, fData(ribios.ExpressionSet)$GeneID,
-summary="none")
-kendallW(ribios.ExpressionSet, fData(ribios.ExpressionSet)$GeneID, summary="mean")
+kendallW(ribios.ExpressionSet, 
+  Biobase::fData(ribios.ExpressionSet)$GeneID,
+  summary="none")
+kendallW(ribios.ExpressionSet, 
+  Biobase::fData(ribios.ExpressionSet)$GeneID, 
+  summary="mean")
 }
 

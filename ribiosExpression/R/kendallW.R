@@ -180,8 +180,10 @@ setMethod("kendallW", "ExpressionSet", function(object,
   new.fData <- cbind(fData(object)[match(rownames(new.exp),
                                          featureNames(object)),,drop=FALSE],
                      new.info)
-  exprs(object) <- new.exp
-  fData(object) <- new.fData
-  return(object)
+  res <- new("ExpressionSet",
+             exprs=new.exp,
+             phenoData=phenoData(object),
+             featureData=new("AnnotatedDataFrame", new.fData))
+  return(res)
 })
 
