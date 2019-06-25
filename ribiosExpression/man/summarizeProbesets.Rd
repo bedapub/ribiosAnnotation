@@ -49,6 +49,11 @@ ribios.mean <- summarizeProbesets(ribios.ExpressionSet,
 index.name="GeneID", fun=mean)
 ribios.mean
 
+data(ribios.ExpressionSet, package="ribiosExpression")
+ribios.mean.keepFeatureNames <- summarizeProbesets(ribios.ExpressionSet,
+index.name="GeneID", fun=mean, keep.featureNames=TRUE)
+ribios.mean
+
 ribios.inval.mean <- summarizeProbesets(ribios.ExpressionSet,
 index.name="GeneID", fun=mean, keep.nonindex=TRUE)
 

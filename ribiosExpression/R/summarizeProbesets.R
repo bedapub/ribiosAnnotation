@@ -20,20 +20,27 @@ summarizeProbesets <- function(eset,
 
   fun.fd.match <- match(levels(probe.indexed.fac), probe.index)
   eset.remain <- eset[fun.fd.match,]
-  exprs(eset.remain) <- eset.fun
-
+  
   if(keep.featureNames) {
-    featureNames(eset.remain) <- rownames(fData(eset.remain))
+    newFeatureNames <- rownames(fData(eset.remain))
+    ## featureNames(eset.remain) <- rownames(fData(eset.remain))
   } else {
-    rownames(fData(eset.remain)) <- featureNames(eset.remain)
+    newFeatureNames <- rownames(eset.fun)
+    ## rownames(fData(eset.remain)) <- featureNames(eset.remain)
   }
+  rownames(eset.fun) <- featureNames(eset.remain) <- newFeatureNames
+  exprs(eset.remain) <- eset.fun
   
   if(keep.nonindex) {
     eset.inval <- eset[!probe.has.index,]
-    fData(eset.remain) <- rbind(fData(eset.remain),
-                                fData(eset.inval))
-    exprs(eset.remain) <- rbind(exprs(eset.remain),
-                                exprs(eset.inval))
+    resExprs <- rbind(exprs(eset.remain),
+                      exprs(eset.inval))
+    resFdata <- rbind(fData(eset.remain),
+                      fData(eset.inval))
+    eset.remain <- new("ExpressionSet",
+                       exprs=resExprs,
+                       featureData=new("AnnotatedDataFrame", resFdata),
+                       phenoData=phenoData(eset))
   }
   return(eset.remain)
 }
