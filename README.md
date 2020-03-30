@@ -1,8 +1,6 @@
 *ribiosAnnotation*: Annotate genes, mRNAs, and proteins with ribios and Roche Bioinformatics Infrastructure
 ===
 
-![R-CMD-check badge](https://github.com/bedapub/ribiosAnnotation/workflows/R-CMD-check/badge.svg)
-
 ## What is *ribiosAnnotation*?
 
 *ribiosUtils* is a R package that performs feature annotation, for instance genes, mRNAs, and proteins, using Roche Bioinformatics infrastructure. It is distributed under the GPL-3 license.
