@@ -17,4 +17,5 @@ Suggests:
     testthat
 LazyData: true
 License: GPL-3
+Encoding: UTF-8
 RoxygenNote: 7.1.0
