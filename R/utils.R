@@ -13,6 +13,7 @@ parseSecrets <- function(
     warning("Can't find secret file: '", path, "'.")
     path <- system.file("secrets/secrets-template.json", 
                         package="ribiosAnnotation")
+  }
   
   return(jsonlite::read_json(path))
 }
@@ -21,14 +22,14 @@ loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
                    "ribios/secrets",
                    "ribiosAnnotation-secrets.json")) {
     credentials <- parseSecrets(path)
-    assign(ORACLE.BIA.USER, credentials$bia$username, pos=sys.frame())
-    assign(ORACLE.BIA.PWD, credentials$bia$password, pos=sys.frame())
-    assign(ORACLE.BIA2.USER, credentials$bia2$username, pos=sys.frame())
-    assign(ORACLE.BIA2.PWD, credentials$bia2$password, pos=sys.frame())
-    assign(ORACLE.BIARO.USER, credentials$biread$username, pos=sys.frame())
-    assign(ORACLE.BIARO.PWD, credentials$biread$password, pos=sys.frame())
-    assign(ORACLE.BIN.USER, credentials$bin$username, pos=sys.frame())
-    assign(ORACLE.BIN.PWD, credentials$bin$password, pos=sys.frame())
+    assign("ORACLE.BIA.USER", credentials$bia$username, pos=sys.frame())
+    assign("ORACLE.BIA.PWD", credentials$bia$password, pos=sys.frame())
+    assign("ORACLE.BIA2.USER", credentials$bia2$username, pos=sys.frame())
+    assign("ORACLE.BIA2.PWD", credentials$bia2$password, pos=sys.frame())
+    assign("ORACLE.BIARO.USER", credentials$biread$username, pos=sys.frame())
+    assign("ORACLE.BIARO.PWD", credentials$biread$password, pos=sys.frame())
+    assign("ORACLE.BIN.USER", credentials$bin$username, pos=sys.frame())
+    assign("ORACLE.BIN.PWD", credentials$bin$password, pos=sys.frame())
 }
 
 ##--------------------##
