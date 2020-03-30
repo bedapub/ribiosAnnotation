@@ -41,7 +41,7 @@ querydb(sqlComm, db = "bia", user = "biread", password = "biread", forceJDBC=FAL
 }
 \examples{
 options(error=utils::recover)
-querydb("SELECT * FROM genome_sequence WHERE DB='HUMANN'", db="bin",
+querydb("SELECT * FROM genome_sequence WHERE DB='HUMANN'", db=dbName(),
 user="genome", password="genome")
 options(error=NULL)
 }

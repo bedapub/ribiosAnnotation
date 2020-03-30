@@ -46,7 +46,7 @@ password = "biread", forceJDBC=FALSE)
 options(error=utils::recover)
 querydbSelectIn(sqlComm="SELECT * FROM genome_sequence WHERE DB='HUMANN' AND ",
                 inCol="SEQ", inValues=c("CHR1", "CHR5", "CHR16", "CHRY"),
-                db="bin", user="genome", password="genome")
+                db=dbName(), user="genome", password="genome")
 
 options(error=NULL)
 }
