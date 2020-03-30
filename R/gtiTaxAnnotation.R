@@ -8,7 +8,7 @@ gtiTaxAnnotation <- function(taxid) {
                  "FROM bi.EG_GENE_INFO g ",
                  "where g.TAX_ID = '",taxid, "') a, genome.gti_gene_map_a@genome b ",
                  "WHERE a.RO_GENE_ID=b.RO_GENE_ID(+)", sep="")
-  ann <- querydb(state, db="bia", user=ORACLE.BIA.USER, password=ORACLE.BIA.PWD)
+  ann <- querydb(state, db=dbName(), user=biaUser(), password=biaPwd())
   colnames(ann) <- c("GeneID", "GeneSymbol", "GeneName",
                      "Synonyms", "Xrefs",
                      "Chromosome", "MapLocation",

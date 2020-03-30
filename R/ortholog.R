@@ -5,7 +5,7 @@ humanOrthologs <- function(geneids) {
   otbl <- querydbSelectIn("SELECT RO_GENE_ID1 as HG, RO_GENE_ID2 as NHG FROM GTI_ORTHOLOGS WHERE TAX_ID1='9606' AND ",
                           inCol="RO_GENE_ID2",
                           inValues=geneids,
-                          db="bia", user=ORACLE.BIN.USER, password=ORACLE.BIN.PWD)
+                          db=dbName(), user=binUser(), password=binPwd())
   otbl <- otbl[grepl("^[0-9]*$", otbl[,"HG"]),,drop=FALSE]
   olist <- split(safe.as.integer(otbl[,"HG"]),
                  otbl[,"NHG"])
@@ -36,7 +36,7 @@ nonhumanOrthologs <- function(geneids, taxid=NULL) {
   ntbl <- querydbSelectIn(pre.state,
                           inCol="RO_GENE_ID1",
                           inValues=geneids,
-                          db="bia",user=ORACLE.BIN.USER, password=ORACLE.BIN.PWD)
+                          db=dbName(),user=binUser(), password=binPwd())
   ntbl <- ntbl[grepl("^[0-9]*$", ntbl[,"NHG"]),,drop=FALSE]
   nhgs <- safe.as.integer(ntbl[,"NHG"])
   if(is.null(taxid) || length(taxid)>1)
