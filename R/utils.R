@@ -4,29 +4,22 @@
 ##--------------------##
 ## crendentials
 ##--------------------##
-#' @importFrom jsonlite read_json
-parseSecrets <- function(
-    path=file.path("/pstore/apps/bioinfo",
-                   "ribios/secrets",
-                   "ribiosAnnotation-secrets.json")) {
-  if (!file.exists(path)) {
-    warning("Can't find secret file: '", path, "'.")
-    path <- system.file("secrets/secrets-template.json", 
-                        package="ribiosAnnotation")
-  }
-  
-  return(jsonlite::read_json(path))
-}
 
 #' Load secrets from a file and set them in options
 #' @param path Path to the secret file
 #' @return The current options of \code{ribiosAnnotation}
 #' The function writes the \code{credentials} field of the options
 #' After running this function, database names and passwords can be accessed
+#' @importFrom jsonlite read_json
 #' @export
 loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
                                        "ribios/secrets",
                                        "ribiosAnnotation-secrets.json")) {
+  if (!file.exists(path)) {
+    warning("Can't find secret file: '", path, "'.")
+    path <- system.file("secrets/secrets-template.json", 
+                        package="ribiosAnnotation")
+  }
   credentials <- jsonlite::read_json(path)
   opts <- options("ribiosAnnotation")[[1]]
   opts$credentials <- credentials
