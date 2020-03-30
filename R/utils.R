@@ -1,12 +1,7 @@
-#' @importFrom DBI dbConnect dbExistsTable dbSendQuery dbHasCompleted  fetch dbClearResult dbDisconnect
-#' @importFrom ribiosUtils matchColumn putColsFirst
-
-##--------------------##
-## crendentials
-##--------------------##
-
 #' Load secrets from a file and set them in options
+#'
 #' @param path Path to the secret file
+#'
 #' @return The current options of \code{ribiosAnnotation}
 #' The function writes the \code{credentials} field of the options
 #' After running this function, database names and passwords can be accessed
@@ -27,12 +22,7 @@ loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
   return(invisible(opts))
 }
 
-
-
 #' Quick access of credentials
-#' 
-#' Quick access of credentials
-#' 
 #' 
 #' @aliases biaUser biaPwd bia2User bia2Pwd biaroUser biaroPwd binUser binPwd
 #' @section Functions: \itemize{ \item \code{biaPwd}: BIA password
@@ -86,19 +76,13 @@ binUser <- function()
 #' @export
 binPwd <- function() return(options()$ribiosAnnotation$credentials$bin$password)
 
-
-
 #' Maximum vector length in the IN syntax
 #' 
 oracleInNmax <- function() return(options()$ribiosAnnotation$ORACLE.IN.NMAX)
 
-
-
 #' Database name
 #' @export
 dbName <- function() return(options()$ribiosAnnotation$dbName)
-
-
 
 #' Oracle object name
 #' @export
@@ -181,6 +165,7 @@ hasOracle <- function() {
 #' dbDisconnect(conJDBC)
 #' options(error=NULL)
 #' 
+#' @importFrom DBI dbConnect dbExistsTable dbSendQuery dbHasCompleted fetch dbClearResult dbDisconnect
 #' @export ribiosCon
 ribiosCon <- function(db=dbName(), user=biaroUser(), password=biaroPwd(), 
                       forceJDBC=FALSE) {
