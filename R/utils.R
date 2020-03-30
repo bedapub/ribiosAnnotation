@@ -19,11 +19,13 @@ parseSecrets <- function(
 }
 
 loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
-                   "ribios/secrets",
-                   "ribiosAnnotation-secrets.json")) {
-    credentials <- parseSecrets(path)
-    options("ribiosAnnotation"=list(credentials=credentials))
-    return(invisible(credentials))
+                                       "ribios/secrets",
+                                       "ribiosAnnotation-secrets.json")) {
+  credentials <- jsonlite::read_json(path)
+  opts <- options("ribiosAnnotation")[[1]]
+  opts$credentials <- credentials
+  options("ribiosAnnotation"=opts)
+  return(invisible(opts))
 }
 
 #' Quick access of credentials
@@ -64,11 +66,11 @@ oracleInNmax <- function() options()$ribiosAnnotation$ORACLE.IN.NMAX
 
 #' Database name
 #' @export
-dbName <- function() options$ribiosAnnotation$dbname
+dbName <- function() options()$ribiosAnnotation$dbname
 
 #' Oracle object name
 #' @export
-oracleObject <- function() options$ribiosAnnotation$oracleObject
+oracleObject <- function() return(options()$ribiosAnnotation$oracleObject)
 
 ##--------------------##
 ## constants
@@ -90,11 +92,10 @@ hasOracle <- function() {
   } else {
     oracleObj <- NULL
   }
-  credentials <- parseSecrets(path)
   options("ribiosAnnotation"=list(dbName=dbName(),
                                   oracleObject=oracleObj,
-                                  credentials=credentials,
                                   ORACLE.IN.NMAX=1000L))
+  loadSecrets()
 }
 
 ## automatically establish a connection, depending on whether Oracle client is installed
