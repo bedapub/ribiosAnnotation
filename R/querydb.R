@@ -7,7 +7,7 @@ formatIn <- function(x) paste("(",paste("'", x, "'", sep="", collapse=","),")", 
 tmpTbl <- function(forceJDBC=FALSE) ifelse(hasOracle() & !forceJDBC, RIBIOS_TMP_TBL, RIBIOS_JDBC_TMP_TBL)
 
 #' @export querydb
-querydb <- function(sqlComm, db="bia", user="biread", password="biread", forceJDBC=FALSE) {
+querydb <- function(sqlComm, db=dbName(), user=biaroUser(), password=biaroPwd(), forceJDBC=FALSE) {
   isORA <- hasOracle() & !forceJDBC
   con <- ribiosCon(db=db, user=user, password=password, forceJDBC=forceJDBC)
   rs <- dbSendQuery(con, sqlComm)
@@ -26,20 +26,20 @@ querydb <- function(sqlComm, db="bia", user="biread", password="biread", forceJD
 ## select in: large IN queries
 #' @export querydbSelectIn
 querydbSelectIn <- function(sqlComm, inCol, inValues,
-                            db="bia", user="biread", password="biread",
+                            db=dbName(), user=biaroUser(), password=biaroPwd(),
                             forceJDBC=FALSE) {
   isORA <- hasOracle() & !forceJDBC
   inValues <- unique(as.character(inValues))
-  if (length(inValues) <= ORACLE.IN.NMAX) {
+  if (length(inValues) <= oracleInNmax()) {
     state <- paste(sqlComm, inCol, "IN", formatIn(inValues), 
                    collapse = " ")
     querydb(state, db = db, user = user, password = password, forceJDBC=forceJDBC)
   } else {
     con <- ribiosCon(db = db, user = user, password = password, forceJDBC=forceJDBC)
-    nob <- ceiling(length(inValues)/ORACLE.IN.NMAX)
+    nob <- ceiling(length(inValues)/oracleInNmax())
     res <- vector("list", nob)
     for (i in 1:nob) {
-      ind <- seq((i - 1) * ORACLE.IN.NMAX + 1L, i * ORACLE.IN.NMAX)
+      ind <- seq((i - 1) * oracleInNmax() + 1L, i * oracleInNmax())
       state <- paste(sqlComm, inCol, "IN", formatIn(inValues[ind]))
       rs <- dbSendQuery(con, state)
       if(isORA) {
@@ -92,7 +92,8 @@ fillOneColTmpTbl <- function(con,  values) {
 ## querydbTmpTbl shows principles of using temporary table. The SQL building is not finished: currently it only supports WHERE-free syntax
 #' @export querydbTmpTbl
 querydbTmpTbl <- function(sqlComm, inCol, inValues,
-                          db="bia", user="biread", password="biread", forceJDBC=FALSE) {
+                          db=dbName(), user=biaroUser(), password=biaroPwd(), 
+                          forceJDBC=FALSE) {
   isORA <- hasOracle() & !forceJDBC
   con <- ribiosCon(db=db, user=user, password=password, forceJDBC=forceJDBC)
   inValues <- setdiff(unique(as.character(inValues)), "")

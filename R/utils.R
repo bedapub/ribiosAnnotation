@@ -55,16 +55,24 @@ biaroPwd <- function() options()$ribiosAnnotation$credentials$biaro$password
 binUser <- function() options()$ribiosAnnotation$credentials$bin$username
 
 #' @describeIn biaUser BIN password
-#' @epxport
+#' @export
 binPwd <- function() options()$ribiosAnnotation$credentials$bin$password
+
+#' Maximum vector length in the IN syntax
+#' @export
+oracleInNmax <- function() options()$ribiosAnnotation$ORACLE.IN.NMAX
+
+#' Database name
+#' @export
+dbName <- function() options$ribiosAnnotation$dbname
+
+#' Oracle object name
+#' @export
+oracleObject <- function() options$ribiosAnnotation$oracleObject
 
 ##--------------------##
 ## constants
 ##--------------------##
-## ORACLE.LIB <- ":/opt/oracle/client/10/run_1/lib"
-## maximum vector length in the IN syntax
-#' @export ORACLE.IN.NMAX
-ORACLE.IN.NMAX <- 1000L
 
 ## function to test whether Oracle is available
 #' @export hasOracle
@@ -78,17 +86,23 @@ hasOracle <- function() {
   if(hasOracle()) {
     if(!"package:ROracle" %in% search())
       attachNamespace("ROracle")
-    assign("ORA", ROracle::Oracle(), pos=sys.frame())
-  } 
-  loadSecrets()
+    oracleObj <- ROracle::Oracle()
+  } else {
+    oracleObj <- NULL
+  }
+  credentials <- parseSecrets(path)
+  options("ribiosAnnotation"=list(dbName=dbName(),
+                                  oracleObject=oracleObj,
+                                  credentials=credentials,
+                                  ORACLE.IN.NMAX=1000L))
 }
 
 ## automatically establish a connection, depending on whether Oracle client is installed
 #' @export ribiosCon
 ## TODO: 1g memorz at least is hard-coded. How to infer it?
-ribiosCon <- function(db="bia", user=biaroUser(), password=ORACLE.BIARO.PWD, forceJDBC=FALSE) {
+ribiosCon <- function(db=dbName(), user=biaroUser(), password=biaroPwd(), forceJDBC=FALSE) {
   if(hasOracle() & !forceJDBC) {
-    con <- dbConnect(ORA, user = user, password = password, db = db)
+    con <- dbConnect(oracleObject(), user = user, password = password, db = db)
   } else {
     options(java.parameters = "-Xmx1g" ) ## increase the heap size before the RJDBC package is loaded
     suppressWarnings(suppressMessages(hasJDBC <- requireNamespace("RJDBC")))
@@ -104,10 +118,10 @@ ribiosCon <- function(db="bia", user=biaroUser(), password=ORACLE.BIARO.PWD, for
 }
 
 ## shortcuts for common connections
-newconBIA <- function() ribiosCon(db="bia", user=biaUser(), password=biaPwd())
-newconBIA2 <- function() ribiosCon(db="bia", user=bia2User(), password=bia2Pwd())
-newconBIARO <- function() ribiosCon(db="bia", user=biaroUser(), password=biaroPwd())
-newconBIN <- function() ribiosCon(db="bia", user=binUser(), password=binPwd())
+newconBIA <- function() ribiosCon(db=dbName(), user=biaUser(), password=biaPwd())
+newconBIA2 <- function() ribiosCon(db=dbName(), user=bia2User(), password=bia2Pwd())
+newconBIARO <- function() ribiosCon(db=dbName(), user=biaroUser(), password=biaroPwd())
+newconBIN <- function() ribiosCon(db=dbName(), user=binUser(), password=binPwd())
 
 ##----------------------------------------##
 ## deprecated functions
