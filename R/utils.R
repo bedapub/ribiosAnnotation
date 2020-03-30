@@ -30,43 +30,50 @@ loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
 
 #' Quick access of credentials
 #' @export
-biaUser <- function() options()$ribiosAnnotation$credentials$bi$username
+biaUser <- function() 
+  return(options()$ribiosAnnotation$credentials$bi$username)
 
 #' @describeIn biaUser BIA password
 #' @export
-biaPwd <- function() options()$ribiosAnnotation$credentials$bi$password
+biaPwd <- function() 
+  return(options()$ribiosAnnotation$credentials$bi$password)
 
 #' @describeIn biaUser BIA2 username
 #' @export
-bia2User <- function() options()$ribiosAnnotation$credentials$bi2$username
+bia2User <- function() 
+  return(options()$ribiosAnnotation$credentials$bi2$username)
 
 #' @describeIn biaUser BIA2 password
 #' @export
-bia2Pwd <- function() options()$ribiosAnnotation$credentials$bi2$password
+bia2Pwd <- function() 
+  return(options()$ribiosAnnotation$credentials$bi2$password)
 
 #' @describeIn biaUser BIA READONLY username
 #' @export
-biaroUser <- function() options()$ribiosAnnotation$credentials$biaro$username
+biaroUser <- function() 
+  return(options()$ribiosAnnotation$credentials$biaro$username)
 
 #' @describeIn biaUser BIA READONLY password
 #' @export
-biaroPwd <- function() options()$ribiosAnnotation$credentials$biaro$password
+biaroPwd <- function() 
+  return(options()$ribiosAnnotation$credentials$biaro$password)
 
 #' @describeIn biaUser BIN username
 #' @export 
-binUser <- function() options()$ribiosAnnotation$credentials$bin$username
+binUser <- function() 
+  return(options()$ribiosAnnotation$credentials$bin$username)
 
 #' @describeIn biaUser BIN password
 #' @export
-binPwd <- function() options()$ribiosAnnotation$credentials$bin$password
+binPwd <- function() return(options()$ribiosAnnotation$credentials$bin$password)
 
 #' Maximum vector length in the IN syntax
 #' @export
-oracleInNmax <- function() options()$ribiosAnnotation$ORACLE.IN.NMAX
+oracleInNmax <- function() return(options()$ribiosAnnotation$ORACLE.IN.NMAX)
 
 #' Database name
 #' @export
-dbName <- function() options()$ribiosAnnotation$dbname
+dbName <- function() return(options()$ribiosAnnotation$dbName)
 
 #' Oracle object name
 #' @export
@@ -92,7 +99,7 @@ hasOracle <- function() {
   } else {
     oracleObj <- NULL
   }
-  options("ribiosAnnotation"=list(dbName=dbName(),
+  options("ribiosAnnotation"=list(dbName="bia",
                                   oracleObject=oracleObj,
                                   ORACLE.IN.NMAX=1000L))
   loadSecrets()
