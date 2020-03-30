@@ -22,15 +22,41 @@ loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
                    "ribios/secrets",
                    "ribiosAnnotation-secrets.json")) {
     credentials <- parseSecrets(path)
-    assign("ORACLE.BIA.USER", credentials$bia$username, pos=sys.frame())
-    assign("ORACLE.BIA.PWD", credentials$bia$password, pos=sys.frame())
-    assign("ORACLE.BIA2.USER", credentials$bia2$username, pos=sys.frame())
-    assign("ORACLE.BIA2.PWD", credentials$bia2$password, pos=sys.frame())
-    assign("ORACLE.BIARO.USER", credentials$biread$username, pos=sys.frame())
-    assign("ORACLE.BIARO.PWD", credentials$biread$password, pos=sys.frame())
-    assign("ORACLE.BIN.USER", credentials$bin$username, pos=sys.frame())
-    assign("ORACLE.BIN.PWD", credentials$bin$password, pos=sys.frame())
+    options("ribiosAnnotation"=list(credentials=credentials))
+    return(invisible(credentials))
 }
+
+#' Quick access of credentials
+#' @export
+biaUser <- function() options()$ribiosAnnotation$credentials$bi$username
+
+#' @describeIn biaUser BIA password
+#' @export
+biaPwd <- function() options()$ribiosAnnotation$credentials$bi$password
+
+#' @describeIn biaUser BIA2 username
+#' @export
+bia2User <- function() options()$ribiosAnnotation$credentials$bi2$username
+
+#' @describeIn biaUser BIA2 password
+#' @export
+bia2Pwd <- function() options()$ribiosAnnotation$credentials$bi2$password
+
+#' @describeIn biaUser BIA READONLY username
+#' @export
+biaroUser <- function() options()$ribiosAnnotation$credentials$biaro$username
+
+#' @describeIn biaUser BIA READONLY password
+#' @export
+biaroPwd <- function() options()$ribiosAnnotation$credentials$biaro$password
+
+#' @describeIn biaUser BIN username
+#' @export 
+binUser <- function() options()$ribiosAnnotation$credentials$bin$username
+
+#' @describeIn biaUser BIN password
+#' @epxport
+binPwd <- function() options()$ribiosAnnotation$credentials$bin$password
 
 ##--------------------##
 ## constants
@@ -60,7 +86,7 @@ hasOracle <- function() {
 ## automatically establish a connection, depending on whether Oracle client is installed
 #' @export ribiosCon
 ## TODO: 1g memorz at least is hard-coded. How to infer it?
-ribiosCon <- function(db="bia", user=ORACLE.BIARO.USER, password=ORACLE.BIARO.PWD, forceJDBC=FALSE) {
+ribiosCon <- function(db="bia", user=biaroUser(), password=ORACLE.BIARO.PWD, forceJDBC=FALSE) {
   if(hasOracle() & !forceJDBC) {
     con <- dbConnect(ORA, user = user, password = password, db = db)
   } else {
@@ -78,10 +104,10 @@ ribiosCon <- function(db="bia", user=ORACLE.BIARO.USER, password=ORACLE.BIARO.PW
 }
 
 ## shortcuts for common connections
-newconBIA <- function() ribiosCon(db="bia", user=ORACLE.BIA.USER, password=ORACLE.BIA.PWD)
-newconBIA2 <- function() ribiosCon(db="bia", user=ORACLE.BIA2.USER, password=ORACLE.BIA2.PWD)
-newconBIARO <- function() ribiosCon(db="bia", user=ORACLE.BIARO.USER, password=ORACLE.BIARO.PWD)
-newconBIN <- function() ribiosCon(db="bia", user=ORACLE.BIN.USER, password=ORACLE.BIN.PWD)
+newconBIA <- function() ribiosCon(db="bia", user=biaUser(), password=biaPwd())
+newconBIA2 <- function() ribiosCon(db="bia", user=bia2User(), password=bia2Pwd())
+newconBIARO <- function() ribiosCon(db="bia", user=biaroUser(), password=biaroPwd())
+newconBIN <- function() ribiosCon(db="bia", user=binUser(), password=binPwd())
 
 ##----------------------------------------##
 ## deprecated functions
