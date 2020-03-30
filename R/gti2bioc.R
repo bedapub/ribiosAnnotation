@@ -1,7 +1,11 @@
+@importFrom utils globalVariables
+utils::globalVariables("gtibioc")
+
 ## translate GTI chiptype to bioc chiptype
 #' @export bioc2gti
+#' @importFrom utils data
 bioc2gti <- function (chipname) {
-  data("gtibioc", package="ribiosAnnotation")
+  data("gtibioc", package="ribiosAnnotation", envir=environment())
   if(missing(chipname)) {
 
     supp <- !is.na(gtibioc$Bioconductor)
@@ -47,7 +51,7 @@ bioc2gti <- function (chipname) {
 #' 
 #' @export gti2bioc
 gti2bioc <- function(chipname) {
-  data("gtibioc", package="ribiosAnnotation")
+  data("gtibioc", package="ribiosAnnotation", envir=environment())
   if(missing(chipname)) {
     supp <- !is.na(gtibioc$Bioconductor)
     vec <- gtibioc$Bioconductor[supp]
