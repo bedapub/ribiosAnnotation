@@ -7,7 +7,8 @@
 mRNArefseqByTaxID(taxid = 10090)
 }
 \arguments{
-\item{taxid}{NCBI Taxonomy ID, supported values include human (9606), mouse (10090), and rat (10116)}
+\item{taxid}{NCBI Taxonomy ID, supported values include human (9606), mouse
+(10090), and rat (10116)}
 }
 \value{
 A \code{data.frame} containing RefSeq ids and their annotation
@@ -16,8 +17,10 @@ A \code{data.frame} containing RefSeq ids and their annotation
 Retrieve mRNA RefSeq records by TaxID
 }
 \examples{
+
 \dontrun{
 ## get all RefSeq records of human genes
 mRNArefseqByTaxID(9606)
 }
+
 }
