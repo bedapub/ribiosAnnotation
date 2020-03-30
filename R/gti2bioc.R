@@ -1,4 +1,4 @@
-@importFrom utils globalVariables
+#' @importFrom utils globalVariables
 utils::globalVariables("gtibioc")
 
 ## translate GTI chiptype to bioc chiptype
