@@ -1,11 +1,18 @@
 #' Retrieve mRNA RefSeq records by TaxID
-#' @param taxid NCBI Taxonomy ID, supported values include human (9606), mouse (10090), and rat (10116)
+#' 
+#' Retrieve mRNA RefSeq records by TaxID
+#' 
+#' 
+#' @param taxid NCBI Taxonomy ID, supported values include human (9606), mouse
+#' (10090), and rat (10116)
 #' @return A \code{data.frame} containing RefSeq ids and their annotation
 #' @examples
+#' 
 #' \dontrun{
 #' ## get all RefSeq records of human genes
 #' mRNArefseqByTaxID(9606)
 #' }
+#' 
 #' @export mRNArefseqByTaxID
 mRNArefseqByTaxID <- function(taxid=10090) {
     taxidQ <-  paste("'", as.character(taxid), "'", sep="")

@@ -28,8 +28,27 @@ loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
   return(invisible(opts))
 }
 
+
+
 #' Quick access of credentials
-#' @export
+#' 
+#' Quick access of credentials
+#' 
+#' 
+#' @aliases biaUser biaPwd bia2User bia2Pwd biaroUser biaroPwd binUser binPwd
+#' @section Functions: \itemize{ \item \code{biaPwd}: BIA password
+#' 
+#' \item \code{bia2User}: BIA2 username
+#' 
+#' \item \code{bia2Pwd}: BIA2 password
+#' 
+#' \item \code{biaroUser}: BIA READONLY username
+#' 
+#' \item \code{biaroPwd}: BIA READONLY password
+#' 
+#' \item \code{binUser}: BIN username
+#' 
+#' \item \code{binPwd}: BIN password }
 biaUser <- function() 
   return(options()$ribiosAnnotation$credentials$bi$username)
 
@@ -67,16 +86,31 @@ binUser <- function()
 #' @export
 binPwd <- function() return(options()$ribiosAnnotation$credentials$bin$password)
 
+
+
 #' Maximum vector length in the IN syntax
-#' @export
+#' 
+#' Maximum vector length in the IN syntax
+#' 
+#' 
 oracleInNmax <- function() return(options()$ribiosAnnotation$ORACLE.IN.NMAX)
 
+
+
 #' Database name
-#' @export
+#' 
+#' Database name
+#' 
+#' 
 dbName <- function() return(options()$ribiosAnnotation$dbName)
 
+
+
 #' Oracle object name
-#' @export
+#' 
+#' Oracle object name
+#' 
+#' 
 oracleObject <- function() return(options()$ribiosAnnotation$oracleObject)
 
 ##--------------------##
@@ -84,6 +118,21 @@ oracleObject <- function() return(options()$ribiosAnnotation$oracleObject)
 ##--------------------##
 
 ## function to test whether Oracle is available
+
+
+#' Testing whether the Oracle client library is installed
+#' 
+#' The function tests whether the Oracle client library is installed. If so,
+#' the package uses \code{ROracle} as driver interface to Oracle database,
+#' otherwise \code{RJDBC} is used.
+#' 
+#' 
+#' @return Logical. \code{TRUE} indicates Oracle SQL client is installed.
+#' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
+#' @examples
+#' 
+#' hasOracle()
+#' 
 #' @export hasOracle
 hasOracle <- function() {
   return(requireNamespace("ROracle", quietly=TRUE))
@@ -108,6 +157,42 @@ hasOracle <- function() {
 ## automatically establish a connection, depending on whether Oracle client is installed
 #' @export ribiosCon
 ## TODO: 1g memorz at least is hard-coded. How to infer it?
+
+
+#' Get a connection object
+#' 
+#' Get a connection object for communication with Oracle database.
+#' 
+#' Depending on the availability of Oracle client library,
+#' \code{ribiosAnnotation} automatically uses either \code{OraConnection} of
+#' the \code{ROracle} package or \code{JDBCConnection} of \code{RJDBC} to
+#' access database.
+#' 
+#' @param db Database name
+#' @param user User name
+#' @param password Password
+#' @param forceJDBC Logical, forcing the user of JDBC interface to fetch data
+#' from Oracle servers. By default it is set to \code{FALSE}, since the JDBC
+#' interface is slower than native ROracle implementation. This option is
+#' largely for debugging purposes.
+#' @return A connection object of the type \code{OraConnection} when Oracle
+#' client library is available, or \code{JDBCConnection} otherwise. Setting
+#' \code{forceJDBC} to \code{FALSE} makes the function return a
+#' \code{JDBCCOnnection} object independent of library availability.
+#' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
+#' @seealso \code{\link{dbConnect}}
+#' @examples
+#' 
+#' options(error=utils::recover)
+#' (con <- ribiosCon(db="bia", user="biread", password="biread"))
+#' (conJDBC <- ribiosCon(db="bia", user="biread", password="biread",
+#' forceJDBC=TRUE))
+#' 
+#' dbDisconnect(con)
+#' dbDisconnect(conJDBC)
+#' options(error=NULL)
+#' 
+#' @export ribiosCon
 ribiosCon <- function(db=dbName(), user=biaroUser(), password=biaroPwd(), forceJDBC=FALSE) {
   if(hasOracle() & !forceJDBC) {
     con <- dbConnect(oracleObject(), user = user, password = password, db = db)

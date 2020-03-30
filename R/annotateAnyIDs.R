@@ -2,6 +2,35 @@
 
 ## note by zhangj83: this file is not yet part of the package. needs to be tested. On 04.05.2015
 
+
+
+#' Annotate any identifiers
+#' 
+#' This annotates any identifies that can be recognized by GTI.
+#' 
+#' 
+#' @param ids A vector of identifiers. They must be of the same type: GeneID,
+#' GeneSymbol or Probesets.
+#' @param orthologue Logical, is orthologous mapping needed?
+#' @param multiOrth Logical, is more t han one orthologs allowed
+#' @return A \code{data.frame} containing annotation information.
+#' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
+#' @seealso \code{\link{annotateGeneIDs}}, \code{\link{annotateGeneSymbols}}
+#' and \code{\link{annotateProbesets}}
+#' @examples
+#' 
+#' options(error=utils::recover)
+#' 
+#' annotateAnyIDs(ids=c(780, 5982, 3310, NA))
+#' 
+#' annotateAnyIDs(ids=c("DDR1", "RFC2", "HSPA6", "HSAP6"))
+#' 
+#' myprobes <- c("1000_at", "1004_at", "1002_f_at", "nonsense_at")
+#' annotateProbesets(myprobes, chiptype="HG_U95A")
+#' 
+#' annotateAnyIDs(ids=c("P38398", "Q8NDF8"))
+#' options(error=NULL)
+#' 
 #' @export annotateAnyIDs
 annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
   comm <- paste("SELECT m.ANY_ID, m.ID_TYPE, c.RO_GENE_ID,c.GENE_SYMBOL, c.DESCRIPTION, c.TAX_ID ", 
