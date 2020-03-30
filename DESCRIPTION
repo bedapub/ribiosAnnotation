@@ -5,8 +5,7 @@ Version: 3.3-1
 Date: 2020-03-30
 Author: Jitao David Zhang <jitao_david.zhang@roche.com>
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
-Description: Retrieve annotation information of genomic features, genes, RNAs
-    and proteins from the Oracle database of the Roche Bioinformatics environment
+Description: Retrieves annotation information of genomic features, genes, RNAs and proteins from the Oracle database of the Roche Bioinformatics environment.
 Imports:
     ribiosUtils,DBI
 Depends:
