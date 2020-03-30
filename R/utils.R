@@ -18,6 +18,12 @@ parseSecrets <- function(
   return(jsonlite::read_json(path))
 }
 
+#' Load secrets from a file and set them in options
+#' @param path Path to the secret file
+#' @return The current options of \code{ribiosAnnotation}
+#' The function writes the \code{credentials} field of the options
+#' After running this function, database names and passwords can be accessed
+#' @export
 loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
                                        "ribios/secrets",
                                        "ribiosAnnotation-secrets.json")) {
@@ -49,6 +55,7 @@ loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
 #' \item \code{binUser}: BIN username
 #' 
 #' \item \code{binPwd}: BIN password }
+#' @export
 biaUser <- function() 
   return(options()$ribiosAnnotation$credentials$bi$username)
 
@@ -90,27 +97,18 @@ binPwd <- function() return(options()$ribiosAnnotation$credentials$bin$password)
 
 #' Maximum vector length in the IN syntax
 #' 
-#' Maximum vector length in the IN syntax
-#' 
-#' 
 oracleInNmax <- function() return(options()$ribiosAnnotation$ORACLE.IN.NMAX)
 
 
 
 #' Database name
-#' 
-#' Database name
-#' 
-#' 
+#' @export
 dbName <- function() return(options()$ribiosAnnotation$dbName)
 
 
 
 #' Oracle object name
-#' 
-#' Oracle object name
-#' 
-#' 
+#' @export
 oracleObject <- function() return(options()$ribiosAnnotation$oracleObject)
 
 ##--------------------##
