@@ -37,8 +37,6 @@ notValid <- function(x)  is.null(x) || is.na(x) || tolower(x)=="any" || x==""
 #' orthologue gene}
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
 #' @seealso \code{\link{humanOrthologs}} and \code{\link{humanUniqOrtholog}}
-#' @references
-#' \url{http://kephar.bas.roche.com/bioinfo/apps/gti/HOW_design_and_implementation/GTI%20core%20tables_files/GTI%20core%20tables_frames.htm}
 #' @examples
 #' 
 #' options(error=utils::recover)
@@ -119,8 +117,6 @@ annotateHumanOrthologsNoOrigTax <- function(...) {
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
 #' @seealso \code{\link{gtiChiptypes}} for a complete list of supported chip
 #' types.
-#' @references
-#' \url{http://kephar.bas.roche.com/bioinfo/apps/chip/Chip_probes_GTI_interface.htm}
 #' @examples
 #' 
 #' \dontrun{
@@ -367,8 +363,6 @@ annotateAnyProbeset <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' See \code{\link{gtiChipAnnotation}} to get annotation for all probesets in a
 #' chip, \code{\link{annotateAnyProbeset}} to get annotations for probesets
 #' from unknown chiptype(s).
-#' @references
-#' \url{http://bioinfo.bas.roche.com:8080/apps/gti/architecture/gtiora.html}
 #' @examples
 #' 
 #' options(error=utils::recover)
@@ -427,12 +421,6 @@ annotateProbeIDs <- annotateProbesets
 #' @aliases annotateGeneIDs annotateGeneSymbols annotateRefSeqs annotatemRNAs
 #' @param ids Character vector, GeneIDs, GeneSymbols or mRNAs of query. It can
 #' contain \code{NA} or \code{NULL}
-#' @param organism Character string, specifies the organism from which input
-#' gene symbols com from. This option is only valid for GeneSymbol since it is
-#' commonly not unique.In case of \sQuote{any}, all genes with the matching
-#' GeneSymbol, irrespective of the species, will be returned. In this special
-#' case the number of rows of the resulting \code{data.frame} can be different
-#' from the number of input GeneSymbols.
 #' @param orthologue Logical, whether human orthologues should be returnd
 #' @param multiOrth Logical, whether multiple mapped orthologues should be
 #' returned or not. Only useful when \code{orthologue} is \code{TRUE}, By

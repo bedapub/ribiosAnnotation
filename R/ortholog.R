@@ -36,11 +36,6 @@ safe.as.integer <- function(x) as.integer(as.character(x))
 #' @aliases humanOrthologs humanUniqOrtholog nonhumanOrthologs
 #' nonhumanUniqOrtholog
 #' @param geneids A vector of integers or charaters, giving Entrez GeneIDs.
-#' @param taxid NCBI Taxon ID, vector of integer or character. For
-#' \code{nonhumanOrthologs}, if set to \code{NULL} (default), all orthologs
-#' available will be returned. If a vector is given, only orthologs in these
-#' specified taxa are returned. For \code{nonhumanUniqOrtholog}, onle one Taxon
-#' ID is accepted.
 #' @return \code{humanOrthologs} and \code{nonhumanOrthologs} return a list in
 #' the same length and exactly the same order as the input vector of GeneIDs.
 #' Each list item contains a vector of ortholog GeneIDs, or \code{NULL}. For
