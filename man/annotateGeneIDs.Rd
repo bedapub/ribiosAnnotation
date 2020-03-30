@@ -11,7 +11,8 @@
 }
 \usage{
 annotateGeneIDs(ids, orthologue=FALSE, multiOrth=FALSE)
-annotateGeneSymbols(ids, organism=c("human", "mouse", "rat", "any"),orthologue=FALSE, multiOrth=FALSE)
+annotateGeneSymbols(ids, organism=c("human", "mouse", "rat", "any"),
+                    orthologue=FALSE, multiOrth=FALSE)
 annotateRefSeqs(ids, orthologue=FALSE, multiOrth=FALSE)
 }
 \arguments{
