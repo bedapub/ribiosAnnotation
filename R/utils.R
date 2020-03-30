@@ -191,7 +191,8 @@ hasOracle <- function() {
 #' options(error=NULL)
 #' 
 #' @export ribiosCon
-ribiosCon <- function(db=dbName(), user=biaroUser(), password=biaroPwd(), forceJDBC=FALSE) {
+ribiosCon <- function(db=dbName(), user=biaroUser(), password=biaroPwd(), 
+                      forceJDBC=FALSE) {
   if(hasOracle() & !forceJDBC) {
     con <- dbConnect(oracleObject(), user = user, password = password, db = db)
   } else {
