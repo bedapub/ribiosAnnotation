@@ -1,15 +1,16 @@
 library(ribiosAnnotation)
 
-hc <- querydb("SELECT * FROM genome_sequence WHERE DB='HUMANN'", db="bin", user="genome", password="genome")
+hc <- querydb("SELECT * FROM genome_sequence WHERE DB='HUMANN'", 
+      db=dbName(), user=binUser(), password=binPwd())
 stopifnot(all(paste("CHR", 1:22, sep="") %in% hc$SEQ))
 
 hcIn <- querydbSelectIn("SELECT * FROM genome_sequence WHERE DB='HUMANN' AND ",
                         inCol="SEQ", inValues=c("CHR1", "CHR5", "CHRX"),
-                        db="bin", user="genome", password="genome")
+                        db=dbName(), user=binUser(), password=binPwd())
 
 hcIn <- querydbTmpTbl("SELECT * FROM genome_sequence WHERE DB='HUMANN' ",
                       inCol="SEQ", inValues=c("CHR1", "CHR5", "CHRX"),
-                      db="bin", user="genome", password="genome")
+                      db=dbName(), user=binUser(), password=binPwd())
 
 
 ## annotate probesets

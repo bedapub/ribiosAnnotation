@@ -1,10 +1,10 @@
 library(ribiosAnnotation)
 
 ## find out all non-human orthologues of MAPK14
-## querydb("SELECT RO_GENE_ID1 as HG, RO_GENE_ID2 as NHG FROM GTI_ORTHOLOGS WHERE RO_GENE_ID1='1432' AND TAX_ID2!='9606'", "bin")
+## querydb("SELECT RO_GENE_ID1 as HG, RO_GENE_ID2 as NHG FROM GTI_ORTHOLOGS WHERE RO_GENE_ID1='1432' AND TAX_ID2!='9606'", "bia")
 
 ## find out human ortholog of mouse Mapk14
-## querydb("SELECT RO_GENE_ID1 as HG, RO_GENE_ID2 as NHG FROM GTI_ORTHOLOGS WHERE RO_GENE_ID2='26416' AND TAX_ID1='9606'", "bin")
+## querydb("SELECT RO_GENE_ID1 as HG, RO_GENE_ID2 as NHG FROM GTI_ORTHOLOGS WHERE RO_GENE_ID2='26416' AND TAX_ID1='9606'", "bia")
 
 TORTURE <- FALSE
 
