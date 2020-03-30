@@ -4,6 +4,7 @@
 ##--------------------##
 ## crendentials
 ##--------------------##
+#' @importFrom jsonlite read_json
 parseSecrets <- function(
     path=file.path("/pstore/apps/bioinfo",
                    "ribios/secrets",
