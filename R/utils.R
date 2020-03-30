@@ -154,9 +154,6 @@ hasOracle <- function() {
   loadSecrets()
 }
 
-## automatically establish a connection, depending on whether Oracle client is installed
-#' @export ribiosCon
-## TODO: 1g memorz at least is hard-coded. How to infer it?
 
 
 #' Get a connection object
@@ -179,6 +176,7 @@ hasOracle <- function() {
 #' client library is available, or \code{JDBCConnection} otherwise. Setting
 #' \code{forceJDBC} to \code{FALSE} makes the function return a
 #' \code{JDBCCOnnection} object independent of library availability.
+#' @note TODO: 1g memory at least is hard-coded. How to infer it?
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
 #' @seealso \code{\link{dbConnect}}
 #' @examples
