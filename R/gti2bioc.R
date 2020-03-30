@@ -14,6 +14,7 @@ bioc2gti <- function (chipname) {
 }
 
 #' @export gti2bioc
+#' @importFrom utils data
 gti2bioc <- function(chipname) {
   data("gtibioc", package="ribiosAnnotation")
   if(missing(chipname)) {
