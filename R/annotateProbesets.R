@@ -43,6 +43,7 @@ notValid <- function(x)  is.null(x) || is.na(x) || tolower(x)=="any" || x==""
 #' annotateHumanOrthologs(c(100034253, 100036582, 1000125361, 1432))
 #' options(error=NULL)
 #' 
+#' @importFrom ribiosUtils matchColumn putColsFirst
 #' @export annotateHumanOrthologs
 annotateHumanOrthologs <- function(geneids, multiOrth=FALSE) {
   geneids <- unique(geneids)
