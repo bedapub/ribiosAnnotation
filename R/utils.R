@@ -11,7 +11,9 @@ loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
                                        "ribios/secrets",
                                        "ribiosAnnotation-secrets.json")) {
   if (!file.exists(path)) {
-    warning("Can't find secret file: '", path, "'.")
+    ## the message below must not be sent with warning, otherwise
+    ## packages that depdend on ribiosAnnotation will not load properly.
+    message("Can't find secret file: '", path, "'. Queries will not work.")
     path <- system.file("secrets/secrets-template.json", 
                         package="ribiosAnnotation")
   }
