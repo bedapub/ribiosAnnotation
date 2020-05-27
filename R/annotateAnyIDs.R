@@ -24,7 +24,7 @@ removeEnsemblVersion <- function(ensemblIDs) {
 #' version suffixes).
 #' 
 #' @param orthologue Logical, is orthologous mapping needed?
-#' @param multiOrth Logical, is more t han one orthologs allowed
+#' @param multiOrth Logical, is more than one orthologs allowed
 #' @return A \code{data.frame} containing annotation information.
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
 #' @seealso \code{\link{annotateGeneIDs}}, \code{\link{annotateGeneSymbols}}

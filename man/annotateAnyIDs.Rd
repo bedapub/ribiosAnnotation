@@ -7,12 +7,14 @@
 annotateAnyIDs(ids, orthologue = FALSE, multiOrth = FALSE)
 }
 \arguments{
-\item{ids}{A vector of identifiers. They must be of the same type: GeneID,
-GeneSymbol or Probesets.}
+\item{ids}{A vector of identifiers. They must be of the same type. Supported 
+types include Entrez GeneID, GeneSymbol, Probesets, UniProt identifiers, 
+NCBI RefSeq mRNA identifiers, and Ensembl gene identifiers (with possible 
+version suffixes).}
 
 \item{orthologue}{Logical, is orthologous mapping needed?}
 
-\item{multiOrth}{Logical, is more t han one orthologs allowed}
+\item{multiOrth}{Logical, is more than one orthologs allowed}
 }
 \value{
 A \code{data.frame} containing annotation information.
@@ -24,14 +26,26 @@ This annotates any identifies that can be recognized by GTI.
 
 options(error=utils::recover)
 
+# GeneID
 annotateAnyIDs(ids=c(780, 5982, 3310, NA))
 
+# GeneSymbol
 annotateAnyIDs(ids=c("DDR1", "RFC2", "HSPA6", "HSAP6"))
 
+# Probesets
 myprobes <- c("1000_at", "1004_at", "1002_f_at", "nonsense_at")
 annotateProbesets(myprobes, chiptype="HG_U95A")
 
+# UniProt
 annotateAnyIDs(ids=c("P38398", "Q8NDF8"))
+
+# EnsEMBL 
+ensemblIDs <- c("ENSG00000197535", "ENST00000399231.7", "ENSP00000418960.2")
+annotateAnyIDs(ensemblIDs)
+
+# RefSeq
+annotateAnyIDs(c("NM_000235", "NM_000498"))
+
 options(error=NULL)
 
 }
