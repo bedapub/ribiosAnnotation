@@ -105,6 +105,8 @@ likeHumanGeneSymbol <- function(featureIDs) {
 
 #' Guess the majority members of a character string look like human gene symbols
 #' @param x A vector of character strings
+#' @param majority A numeric value between 0 and 1, the threshold of majority 
+#'   voting
 #' @return A logical value
 #' \code{TRUE} is only returned if at least a proportion of \code{majority} 
 #' members look like human gene symbols
