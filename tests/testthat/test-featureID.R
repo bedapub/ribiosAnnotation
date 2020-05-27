@@ -64,4 +64,4 @@ test_that("likeGeneID and similar functions work",
                               feats %in% uniprots)
              expect_identical(likeHumanGeneSymbol(feats),
                               feats %in% genesymbols)
-})
+          })
