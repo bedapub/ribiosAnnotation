@@ -77,7 +77,7 @@ annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
     ort <- annotateHumanOrthologsNoOrigTax(ann$OrigGeneID, 
                                            multiOrth = multiOrth)
     if (multiOrth) {
-      1Gres <- merge(ann, ort, by = "OrigGeneID", all.x = TRUE)
+      res <- merge(ann, ort, by = "OrigGeneID", all.x = TRUE)
     }  else {
       ort.re <- matchColumn(ann$OrigGeneID, ort, "OrigGeneID", 
                             multi = FALSE)
