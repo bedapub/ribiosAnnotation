@@ -29,6 +29,7 @@ removeEnsemblVersion <- function(ensemblIDs) {
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
 #' @seealso \code{\link{annotateGeneIDs}}, \code{\link{annotateGeneSymbols}}
 #' and \code{\link{annotateProbesets}}
+#' @importFrom ribiosUtils putColsFirst matchColumn
 #' @examples
 #' 
 #' options(error=utils::recover)
@@ -76,7 +77,7 @@ annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
     ort <- annotateHumanOrthologsNoOrigTax(ann$OrigGeneID, 
                                            multiOrth = multiOrth)
     if (multiOrth) {
-      res <- merge(ann, ort, by = "OrigGeneID", all.x = TRUE)
+      1Gres <- merge(ann, ort, by = "OrigGeneID", all.x = TRUE)
     }  else {
       ort.re <- matchColumn(ann$OrigGeneID, ort, "OrigGeneID", 
                             multi = FALSE)
