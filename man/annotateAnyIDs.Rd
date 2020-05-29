@@ -17,7 +17,16 @@ version suffixes).}
 \item{multiOrth}{Logical, is more than one orthologs allowed}
 }
 \value{
-A \code{data.frame} containing annotation information.
+A \code{data.frame} containing annotation information. Following
+   columns exist at least: 
+\enumerate{
+  \item \code{Input} Input string, it will be in the first column.
+  \item \code{InputIDType} Input ID type 
+  \item \code{GeneID} (Human) Entrez GeneID
+  \item \code{GeneSymbol} (Human) official gene symbol
+  \item \code{GeneName} (Human) gene name
+  \item \code{TaxID} NCBI taxonomy ID
+}
 }
 \description{
 This annotates any identifies that can be recognized by GTI.

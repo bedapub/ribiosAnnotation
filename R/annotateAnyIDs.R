@@ -25,7 +25,16 @@ removeEnsemblVersion <- function(ensemblIDs) {
 #' 
 #' @param orthologue Logical, is orthologous mapping needed?
 #' @param multiOrth Logical, is more than one orthologs allowed
-#' @return A \code{data.frame} containing annotation information.
+#' @return A \code{data.frame} containing annotation information. Following
+#'    columns exist at least: 
+#' \enumerate{
+#'   \item \code{Input} Input string, it will be in the first column.
+#'   \item \code{InputIDType} Input ID type 
+#'   \item \code{GeneID} (Human) Entrez GeneID
+#'   \item \code{GeneSymbol} (Human) official gene symbol
+#'   \item \code{GeneName} (Human) gene name
+#'   \item \code{TaxID} NCBI taxonomy ID
+#' }
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
 #' @seealso \code{\link{annotateGeneIDs}}, \code{\link{annotateGeneSymbols}}
 #' and \code{\link{annotateProbesets}}
