@@ -26,11 +26,13 @@
 gtiTaxAnnotation <- function(taxid) {
   if(missing(taxid))
     stop("'taxid' cannot be missing.")
-  state <- paste("SELECT a.*, b.SEQ, b.CLEFT, b.CRIGHT, b.REVCOMP FROM (SELECT TO_CHAR(g.GENEID) as RO_GENE_ID, g.OFFICIAL_SYMBOL, g.OFFICIAL_NAME, g.SYNONYMS, g.DBXREFS, ",
+  state <- paste("SELECT a.*, b.SEQ, b.CLEFT, b.CRIGHT, b.REVCOMP FROM ",
+                 "(SELECT TO_CHAR(g.GENEID) as RO_GENE_ID, g.OFFICIAL_SYMBOL, ",
+                 "g.OFFICIAL_NAME, g.SYNONYMS, g.DBXREFS, ",
                  "g.CHROMOSOME, g.MAP_LOCATION, g.GENE_TYPE, ",
                  "g.TAX_ID ",
                  "FROM bi.EG_GENE_INFO g ",
-                 "where g.TAX_ID = '",taxid, "') a, genome.gti_gene_map_a@genome b ",
+                 "where g.TAX_ID = '",taxid, "') a, genome.gti_gene_map_a b ",
                  "WHERE a.RO_GENE_ID=b.RO_GENE_ID(+)", sep="")
   ann <- querydb(state, db=dbName(), user=biaUser(), password=biaPwd())
   colnames(ann) <- c("GeneID", "GeneSymbol", "GeneName",
