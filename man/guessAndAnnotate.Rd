@@ -41,7 +41,7 @@ A \code{data.frame}, containing annotations of following ID types
     \item \code{UniProt}
     \item \code{Unknown}
   }. 
-In case of \code{Unknown}, an empty \code{data.frame} is returned.
+In case of \code{Unknown}, a \code{data.frame} with one column (\code{FeatureName}), containing input ids, is returned.
 
 The difference between \code{guessAndAnnotate} and \code{annotateAnyIDs} is that the later does not assume that all IDs are of the same type.
 }

@@ -196,7 +196,7 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #'     \item \code{UniProt}
 #'     \item \code{Unknown}
 #'   }. 
-#' In case of \code{Unknown}, an empty \code{data.frame} is returned.
+#' In case of \code{Unknown}, a \code{data.frame} with one column (\code{FeatureName}), containing input ids, is returned.
 #' 
 #' The difference between \code{guessAndAnnotate} and \code{annotateAnyIDs} is that the later does not assume that all IDs are of the same type.
 #' 
@@ -226,7 +226,7 @@ guessAndAnnotate <- function(featureIDs, majority=0.5,
   } else if (ft=="UniProt") {
     res <- annotateAnyIDs(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
   } else {
-    res <- data.frame(row.names=featureIDs)
+    res <- data.frame(FeatureName=featureIDs, row.names=id2rownames(featureIDs))
   }
   return(res)
 }
