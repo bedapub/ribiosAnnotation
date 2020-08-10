@@ -171,3 +171,62 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
     return("Unknown")
   }
 }
+
+#' Guess feature ID type by majority voting and annotate them 
+#' 
+#' @param featureIDs A vector of character strings. Other input types will be 
+#'   converted to character strings.
+#' @param majority Numeric value between 0 and 1. If the proportion of valid
+#'   feature IDs in the input matching the pattern of a certain feature type 
+#'   exceeds this value, the function returns a character string representing
+#'   the feature ID type.
+#' @param organism Character string, in case the input identifiers are gene 
+#'   symbols, the user can specify the organism to be used. 
+#'   The option is passed to \code{\link{annotateGeneSymbols}}.
+#' @param orthologue Logical, whether orthologue should be returned if the 
+#' input features are not of human
+#' @param multiOrth Logical, in case multiple human orthologues are available, 
+#' should they all be returned?
+#' @return A \code{data.frame}, containing annotations of following ID types
+#'   \itemize{
+#'     \item \code{GeneID}
+#'     \item \code{GeneSymbol}
+#'     \item \code{RefSeq}
+#'     \item \code{Ensembl}
+#'     \item \code{UniProt}
+#'     \item \code{Unknown}
+#'   }. 
+#' In case of \code{Unknown}, an empty \code{data.frame} is returned.
+#' 
+#' The difference between \code{guessAndAnnotate} and \code{annotateAnyIDs} is that the later does not assume that all IDs are of the same type.
+#' 
+#' @seealso \code{\link{annotateAnyIDs}}
+#' 
+#' @examples 
+#' guessAndAnnotate(c("AKT1", "AKT2", "MAPK14"))
+#' guessAndAnnotate(c(1,2,14,149))
+#' guessAndAnnotate(c("NM_000259", "NM_000331"))
+#' guessAndAnnotate(c("ENST00000613858.4", "ENST00000553916.5",
+#'     "ENST00000399229.6"))
+#' guessAndAnnotate(c("O60583", "P05997", "Q7Z624"))
+#' guessAndAnnotate(c("CM000677.2", "AB003434.2"))
+#' @export
+guessAndAnnotate <- function(featureIDs, majority=0.5,
+                                         orthologue=FALSE, multiOrth=FALSE,
+                                         organism=c("human", "mouse", "rat", "any")) {
+  ft <- guessFeatureType(featureIDs, majority)
+  if(ft=="GeneID") {
+    res <- annotateGeneIDs(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+  } else if (ft=="GeneSymbol") {
+    res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+  } else if (ft=="RefSeq") {
+    res <- annotateRefSeqs(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+  } else if (ft=="Ensembl") {
+    res <- annotateEnsembl(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+  } else if (ft=="UniProt") {
+    res <- annotateAnyIDs(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+  } else {
+    res <- data.frame(row.names=featureIDs)
+  }
+  return(res)
+}
