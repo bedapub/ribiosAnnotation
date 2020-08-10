@@ -26,6 +26,10 @@ input features are not of human}
 
 \item{multiOrth}{Logical, in case multiple human orthologues are available, 
 should they all be returned?}
+
+\item{organism}{Character string, in case the input identifiers are gene 
+symbols, the user can specify the organism to be used. 
+The option is passed to \code{\link{annotateGeneSymbols}}.}
 }
 \value{
 A \code{data.frame}, containing annotations of following ID types
@@ -39,7 +43,7 @@ A \code{data.frame}, containing annotations of following ID types
   }. 
 In case of \code{Unknown}, an empty \code{data.frame} is returned.
 
-The difference between \code{guessAndAnnotate} and \code{annotateAnyID} is that the later does not assume that all IDs are of the same type.
+The difference between \code{guessAndAnnotate} and \code{annotateAnyIDs} is that the later does not assume that all IDs are of the same type.
 }
 \description{
 Guess feature ID type by majority voting and annotate them
@@ -54,5 +58,5 @@ guessAndAnnotate(c("O60583", "P05997", "Q7Z624"))
 guessAndAnnotate(c("CM000677.2", "AB003434.2"))
 }
 \seealso{
-\code{\link{annotateAnyID}}
+\code{\link{annotateAnyIDs}}
 }
