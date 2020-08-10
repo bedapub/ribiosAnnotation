@@ -31,5 +31,5 @@ test_that("guessAndAnnotate works with UniProtIDs", {
 test_that("guessAndAnnotate returns an empty data.frame in case of unknown identifiers", {
   ukid <- c("CM000677.2", "AB003434.2")
   ukidRes <- guessAndAnnotate(ukid)
-  expect_identical(ukidRes, data.frame(row.names=ukid))
+  expect_identical(ukidRes$FeatureName, ukid)
 })
