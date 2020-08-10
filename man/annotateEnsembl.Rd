@@ -44,12 +44,19 @@ Annotate Ensembl identifiers, optionally with human orthologue mappings
 options(error=utils::recover)
 
 ## normal use
-annotateEnsembl(ids=c("ENST00000456328", "ENST00000541675", NA))
+annotateEnsembl(ids=c("ENSG00000197535", "ENSG00000105221", NA))
 
 annotateEnsembl(ids=c("ENSG00000112062", "ENST00000229795", "ENSP00000229795", NULL))
 
 annotateEnsembl(ids="ENSMUSG00000031710", orthologue=TRUE)
 
+## with version numbers
+annotateEnsembl(ids=c("ENSG00000197535.1", "ENSG00000105221.2", "ENSG00000112062"))
+
+annotateEnsembl(ids=c("ENSMUSG00000031710.1", 
+  "ENSMUSG00000031710",
+  "ENSMUSG00000041272.1"), orthologue=TRUE, multiOrth=TRUE)
+  
 options(error=NULL)
 
 }
