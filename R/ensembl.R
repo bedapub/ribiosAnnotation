@@ -1,7 +1,9 @@
+#' @include annotateAnyIDs.R
+NULL
+
 #' Annotate Ensembl gene/transcript/protein identifiers
 #' 
 #' Annotate Ensembl identifiers, optionally with human orthologue mappings
-#' 
 #' 
 #' @param ids Character vector, Ensembl gene (ENSG)/transcript (ENST)/protein
 #' (ENSG) identifiers . It can contain \code{NA} or \code{NULL}
@@ -34,24 +36,33 @@
 #' See \code{\link{annotateGeneIDs}} to get annotation for Entrez GeneIDs.
 #' 
 #' See \code{\link{annotateProbesets}} to get annotation for probesets.
+#' @importFrom ribiosUtils matchColumnIndex
 #' @examples
 #' 
 #' options(error=utils::recover)
 #' 
 #' ## normal use
-#' annotateEnsembl(ids=c("ENST00000456328", "ENST00000541675", NA))
+#' annotateEnsembl(ids=c("ENSG00000197535", "ENSG00000105221", NA))
 #' 
 #' annotateEnsembl(ids=c("ENSG00000112062", "ENST00000229795", "ENSP00000229795", NULL))
 #' 
 #' annotateEnsembl(ids="ENSMUSG00000031710", orthologue=TRUE)
 #' 
+#' ## with version numbers
+#' annotateEnsembl(ids=c("ENSG00000197535.1", "ENSG00000105221.2", "ENSG00000112062"))
+#' 
+#' annotateEnsembl(ids=c("ENSMUSG00000031710.1", 
+#'   "ENSMUSG00000031710",
+#'   "ENSMUSG00000041272.1"), orthologue=TRUE, multiOrth=TRUE)
+#'   
 #' options(error=NULL)
 #' 
 #' @export annotateEnsembl
 annotateEnsembl <- function (ids, orthologue = FALSE, multiOrth = FALSE) {
+  idsWoVersion <- removeEnsemblVersion(ids)
   comm <- paste("SELECT e.ENSEMBL_ID, c.RO_GENE_ID,c.GENE_SYMBOL, c.DESCRIPTION, c.TAX_ID", 
                 " FROM GTI_GENES c INNER JOIN ENSEMBL_GENE e ON c.RO_GENE_ID=e.GENE_ID ", sep = "")
-  ann <- querydbTmpTbl(comm, "e.ENSEMBL_ID", ids, dbName(),
+  ann <- querydbTmpTbl(comm, "e.ENSEMBL_ID", idsWoVersion, dbName(),
                        binUser(), 
                        binPwd())
   keyCol <- "EnsemblID"
@@ -76,7 +87,9 @@ annotateEnsembl <- function (ids, orthologue = FALSE, multiOrth = FALSE) {
     res <- putColsFirst(res, c(keyCol, "GeneID", "GeneSymbol", "TaxID", 
                                "OrigTaxID", "OrigGeneID", "OrigGeneSymbol", "OrigGeneName"))
   }
-  res <- matchColumn(ids, res, keyCol, multi = orthologue && multiOrth)
+  resInd <- matchColumnIndex(idsWoVersion, res, keyCol, multi = orthologue && multiOrth)
+  res <- res[unlist(resInd),,drop=FALSE]
+  res[,keyCol] <- ids
   rownames(res) <- id2rownames(res[,keyCol])
   return(res)
 }
