@@ -2,10 +2,10 @@
 % Please edit documentation in R/utils.R
 \name{dbName}
 \alias{dbName}
-\title{Database name}
+\title{Database name for Oracle}
 \usage{
 dbName()
 }
 \description{
-Database name
+Database name for Oracle
 }

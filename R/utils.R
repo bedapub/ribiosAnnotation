@@ -17,9 +17,10 @@ loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
     path <- system.file("secrets/secrets-template.json", 
                         package="ribiosAnnotation")
   }
-  credentials <- jsonlite::read_json(path)
+  secrets <- jsonlite::read_json(path)
   opts <- options("ribiosAnnotation")[[1]]
-  opts$credentials <- credentials
+  opts$credentials <- secrets$credentials
+  opts$connection <- secrets$connection
   options("ribiosAnnotation"=opts)
   return(invisible(opts))
 }
@@ -82,9 +83,31 @@ binPwd <- function() return(options()$ribiosAnnotation$credentials$bin$password)
 #' 
 oracleInNmax <- function() return(options()$ribiosAnnotation$ORACLE.IN.NMAX)
 
-#' Database name
+
+#' Make connect string for Oracle
+#' @param host A character string, host name
+#' @param post A integer, port
+#' @param sid A character string, service id
+#' @return A string that can be used by \code{\link{dbConnect}} as dbname
+#' @keywords internal
+#' @seealso \code{jdbcConnectString}
+oracleConnectString <- function(host, port, sid) {
+  res <- paste(
+    "(DESCRIPTION=",
+    "(ADDRESS=(PROTOCOL=TCP)(HOST=", host, ")(PORT=", port, "))",
+    "(CONNECT_DATA=(SERVER=dedicated)(SERVICE_NAME=", sid, ")))", sep = "")
+  return(res)
+}
+
+#' Database name for Oracle
 #' @export
-dbName <- function() return(options()$ribiosAnnotation$dbName)
+dbName <- function() {
+  connection <- options()$ribiosAnnotation$connection
+  res <- oracleConnectString(connection$host,
+                             connection$port,
+                             connection$service_name)
+  return(res)
+}
 
 #' Oracle object name
 #' @export
@@ -121,17 +144,29 @@ hasOracle <- function() {
   if(hasOracle()) {
     if(!"package:ROracle" %in% search())
       attachNamespace("ROracle")
-    oracleObj <- ROracle::Oracle()
+    oracleObj <- ROracle::Oracle(interruptible = TRUE)
   } else {
     oracleObj <- NULL
   }
-  options("ribiosAnnotation"=list(dbName="bia",
-                                  oracleObject=oracleObj,
+  options("ribiosAnnotation"=list(oracleObject=oracleObj,
                                   ORACLE.IN.NMAX=1000L))
   loadSecrets()
 }
 
-
+#' Make connect string for JDBC
+#' @param user A character string, user id
+#' @param password A character string, password
+#' @param host A character string, host name
+#' @param post A integer, port
+#' @param sid A character string, service id
+#' @return A string that can be used by \code{\link{dbConnect}} as dbname
+#' @keywords internal
+#' @seealso \code{oracleConnectString}
+jdbcConnectString <- function(user, password, host, port, sid) {
+  res <- paste("jdbc:oracle:thin:", user, "/", password, 
+               "@", host, ":", port, "/", sid, sep="")
+  return(res)
+}
 
 #' Get a connection object
 #' 
@@ -180,8 +215,11 @@ ribiosCon <- function(db=dbName(), user=biaroUser(), password=biaroPwd(),
       stop("No JDBC package installed: please run 'install.packages('RJDBC')' first and then load ribiosAnnotation again.")
     drv <- RJDBC::JDBC("oracle.jdbc.OracleDriver",
                        system.file("drivers", "ojdbc7.jar", package="ribiosAnnotation"))
-    port <- switch(EXPR=db, bia=15210, bin=15001)
-    str <- paste("jdbc:oracle:thin:", user, "/", password, "@orse04p-scan.kau.roche.com:", port, "/", db, ".kau.roche.com", sep="")
+    connection <- options()$ribiosAnnotation$connection
+    str <- jdbcConnectString(user, password,
+                             connection$host,
+                             connection$port,
+                             connection$service_name)
     con <- dbConnect(drv,str)
   }
   return(con)
