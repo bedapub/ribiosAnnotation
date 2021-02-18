@@ -34,3 +34,5 @@ Collate:
     'querydb.R'
     'snp.R'
     'utils.R'
+Remotes:
+    github::bedapub/ribiosUtils
