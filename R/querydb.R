@@ -152,11 +152,15 @@ fillOneColTmpTbl <- function(con,  values) {
   values <- as.character(values)
   values[is.na(values)] <- "NA"
   values[values==""] <- "NA"
+  if(any(nchar(values)>100)) {
+    warning("Identifiers longer than 100 characters are truncated!")
+  }
+  values <- substr(values, 1, 100)
   isORA <- inherits(con, "OraConnection")
   if(isORA) {
     if (!dbExistsTable(con, RIBIOS_TMP_TBL)) {
       state <- paste("CREATE GLOBAL TEMPORARY TABLE", RIBIOS_TMP_TBL, 
-                     "(ID VARCHAR2(255) NOT NULl PRIMARY KEY) ON COMMIT DELETE ROWS")
+                     "(ID VARCHAR2(100) NOT NULl PRIMARY KEY) ON COMMIT DELETE ROWS")
       rs <- dbSendQuery(con, state)
     }
     inputDf <- data.frame(ID = values)
@@ -166,7 +170,7 @@ fillOneColTmpTbl <- function(con,  values) {
   } else {
     if(!dbExistsTable(con, RIBIOS_JDBC_TMP_TBL)) {
       state <- paste("CREATE GLOBAL TEMPORARY TABLE", RIBIOS_JDBC_TMP_TBL, 
-                     "(ID VARCHAR2(255) NOT NULl PRIMARY KEY) ON COMMIT PRESERVE ROWS")
+                     "(ID VARCHAR2(100) NOT NULl PRIMARY KEY) ON COMMIT PRESERVE ROWS")
       rs <- RJDBC::dbSendUpdate(con, state)
     }
     state2 <- paste("insert into",RIBIOS_JDBC_TMP_TBL, " (ID) values (?)")
