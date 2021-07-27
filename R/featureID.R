@@ -212,19 +212,24 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #' guessAndAnnotate(c("CM000677.2", "AB003434.2"))
 #' @export
 guessAndAnnotate <- function(featureIDs, majority=0.5,
-                                         orthologue=FALSE, multiOrth=FALSE,
-                                         organism=c("human", "mouse", "rat", "any")) {
+                             orthologue=FALSE, multiOrth=FALSE,
+                             organism=c("human", "mouse", "rat", "any")) {
   ft <- guessFeatureType(featureIDs, majority)
   if(ft=="GeneID") {
-    res <- annotateGeneIDs(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+    res <- annotateGeneIDs(featureIDs, orthologue=orthologue, 
+                           multiOrth=multiOrth)
   } else if (ft=="GeneSymbol") {
-    res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+    res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, 
+                               multiOrth=multiOrth, organism=organism)
   } else if (ft=="RefSeq") {
-    res <- annotateRefSeqs(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+    res <- annotateRefSeqs(featureIDs, orthologue=orthologue, 
+                           multiOrth=multiOrth)
   } else if (ft=="Ensembl") {
-    res <- annotateEnsembl(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+    res <- annotateEnsembl(featureIDs, orthologue=orthologue, 
+                           multiOrth=multiOrth)
   } else if (ft=="UniProt") {
-    res <- annotateAnyIDs(featureIDs, orthologue=orthologue, multiOrth=multiOrth)
+    res <- annotateAnyIDs(featureIDs, orthologue=orthologue, 
+                          multiOrth=multiOrth)
   } else {
     res <- data.frame(FeatureName=featureIDs, row.names=id2rownames(featureIDs))
   }
