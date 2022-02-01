@@ -1,3 +1,8 @@
+#' @rdname loadSecrets
+#' @export
+ribiosAnnotationSecretFile <- file.path(normalizePath("~"),
+			       ".credentials", "ribiosAnnotation-secrets.json")
+
 #' Load secrets from a file and set them in options
 #'
 #' @param path Path to the secret file
@@ -7,9 +12,7 @@
 #' After running this function, database names and passwords can be accessed
 #' @importFrom jsonlite read_json
 #' @export
-loadSecrets <- function(path=file.path("/pstore/apps/bioinfo",
-                                       "ribios/secrets",
-                                       "ribiosAnnotation-secrets.json")) {
+loadSecrets <- function(path=ribiosAnnotationSecretFile) {
   if (!file.exists(path)) {
     ## the message below must not be sent with warning, otherwise
     ## packages that depdend on ribiosAnnotation will not load properly.
