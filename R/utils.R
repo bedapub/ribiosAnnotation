@@ -288,6 +288,7 @@ loadMongodbSecrets <- function(file=ribiosAnnotationSecretFile,
 #' returnFieldsJson(c("name", "birthday"))
 #' returnFieldsJson(c("name", "birthday"), include_id=TRUE)
 #' @importFrom rjson toJSON
+#' @export
 returnFieldsJson <- function(fields, include_id=FALSE) {
   logvec <- rep(TRUE, length(fields))
   names(logvec) <- fields
