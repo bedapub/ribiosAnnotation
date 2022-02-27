@@ -278,3 +278,23 @@ getMongodbSecrets <- function(file=ribiosAnnotationSecretFile,
   }
   return(dbSecrets)
 }
+
+#' Construct a JSON string to indicate returned fields from a MongoDB query
+#' @param fields A vector of character strings that should be included
+#' @param include_id Logical, whether \code{_id} should be returned. Default 
+#'   is \code{FALSE}
+#' @return A JSON string that represents the fields to be returned
+#' @examples 
+#' returnFieldsJson(c("name", "birthday"))
+#' returnFieldsJson(c("name", "birthday"), include_id=TRUE)
+#' @importFrom rjson toJSON
+returnFieldsJson <- function(fields, include_id=FALSE) {
+  logvec <- rep(TRUE, length(fields))
+  names(logvec) <- fields
+  if(!include_id) {
+    logvec <- c(logvec,
+                "_id"=FALSE)
+  }
+  res <- rjson::toJSON(logvec)
+  return(res)
+}

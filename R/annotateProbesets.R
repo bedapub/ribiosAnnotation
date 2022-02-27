@@ -1,3 +1,6 @@
+#' @include utils.R annotateAnyIDs.R querydb.R
+NULL
+
 id2rownames <- function(ids) {
   if(identical(anyDuplicated(ids), 0L) & !any(is.na(ids))) {
     return(ids)

@@ -1,3 +1,6 @@
+#' @include utils.R querydb.R
+NULL
+
 ## if only looking after proteins, it is also possible to check the GA_PROTEIN_GENE table in the protein component of the Genome Analysis Pipeline
 
 #' Remove version suffix from Ensembl IDs

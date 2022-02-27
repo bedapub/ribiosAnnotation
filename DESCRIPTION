@@ -20,6 +20,8 @@ License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Collate: 
+    'querydb.R'
+    'utils.R'
     'annotateAnyIDs.R'
     'annotateProbesets.R'
     'chrLen.R'
@@ -28,11 +30,10 @@ Collate:
     'gti2bioc.R'
     'gtiChiptypes.R'
     'gtiTaxAnnotation.R'
+    'humanOrthologsByTaxID.R'
     'mRNArefseqByTaxID.R'
     'mappedProbesets.R'
     'ortholog.R'
-    'querydb.R'
     'snp.R'
-    'utils.R'
 Remotes:
     github::bedapub/ribiosUtils

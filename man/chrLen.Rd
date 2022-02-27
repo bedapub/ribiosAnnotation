@@ -16,7 +16,7 @@ database} \item{Description}{Description} \item{Length}{Length of the
 chromosome, in basepairs (bp)} \item{Rank}{Rank of chromosomes by lengths}
 }
 \description{
-Get chromosome lengths (in basepairs) of the organism specified.
+Get chromosome lengths in basepairs
 }
 \examples{
 

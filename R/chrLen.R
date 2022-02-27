@@ -1,6 +1,7 @@
+#' @include utils.R
+NULL
+
 #' Get chromosome lengths in basepairs
-#' 
-#' Get chromosome lengths (in basepairs) of the organism specified.
 #' 
 #' 
 #' @param organism Organism to query, supporting human, mouse and rat

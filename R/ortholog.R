@@ -1,6 +1,7 @@
+#' @include querydb.R
+NULL
+
 safe.as.integer <- function(x) as.integer(as.character(x))
-
-
 
 #' Mapping between orthologous genes in human and in other taxa
 #' 
