@@ -1,4 +1,17 @@
+#' @rdname loadSecrets
+#' @export
+ribiosAnnotationSecretFile <- file.path(normalizePath("~"),
+			       ".credentials", "ribiosAnnotation-secrets.json")
+
 #' Load secrets from a file and set them in options
+#'
+#' ribiosAnnotation needs to access databases to fetch annotations, the process
+#' of which requires credentials for these databases. The package looks for a
+#' file \sQuote{\code{~/.credentials/ribiosAnnotation-secrets.json}} which
+#' contains the credentials. If this file is not found, no queries can be made.
+#'
+#' A template of the credential file is provided in
+#' \sQuote{\code{secrets/secrets-template.json}} file of the package.
 #'
 #' @param path Path to the secret file
 #'
@@ -7,7 +20,7 @@
 #' After running this function, database names and passwords can be accessed
 #' @importFrom jsonlite read_json
 #' @export
-loadSecrets <- function(path=file.path("~/.credentials/ribiosAnnotation-secrets.json")) {
+loadSecrets <- function(path=ribiosAnnotationSecretFile) {
   if (!file.exists(path)) {
     ## the message below must not be sent with warning, otherwise
     ## packages that depdend on ribiosAnnotation will not load properly.
