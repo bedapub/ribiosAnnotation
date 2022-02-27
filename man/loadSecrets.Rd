@@ -4,10 +4,7 @@
 \alias{loadSecrets}
 \title{Load secrets from a file and set them in options}
 \usage{
-loadSecrets(
-  path = file.path("/pstore/apps/bioinfo", "ribios/secrets",
-    "ribiosAnnotation-secrets.json")
-)
+loadSecrets(path = file.path("~/.credentials/ribiosAnnotation-secrets.json"))
 }
 \arguments{
 \item{path}{Path to the secret file}
