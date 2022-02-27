@@ -243,6 +243,43 @@ newconBIARO <- function() ribiosCon(db=dbName(), user=biaroUser(), password=biar
 newconBIN <- function() ribiosCon(db=dbName(), user=binUser(), password=binPwd())
 
 ##----------------------------------------##
+## MongoDB functions
+##----------------------------------------##
+
+#' Get secrets for MongoDB connections
+#' @param file The secret JSON file.
+#' @param instance String, which must be found under the \code{mongodb} section
+#'  of the JSON file
+#' @return A list of the following items:
+#' \itemize{
+#'   \item{\code{hostname}}{Hostname of the MongoDB}
+#'   \item{\code{port}}{Port of the MongoDB}
+#'   \item{\code{dbname}}{Database of the MongoDB}
+#'   \item{\code{username}}{User name}
+#'   \item{\code{password}}{Password}
+#' }
+#' @examples 
+#' getMongodbSecrets(instance="bioinfo_read")
+#' \dontrun{
+#'     getMongodbSecrets(instance="decoy")
+#' }
+#' @export
+getMongodbSecrets <- function(file=ribiosAnnotationSecretFile,
+                              instance="bioinfo_read") {
+  secrets <-  rjson::fromJSON(file=file)
+  dbSecrets <- secrets$mongodb[[instance]]
+  if(is.null(dbSecrets)) {
+    warning("Secrets for the instance '", instance, 
+            "' was not found. Make sure that the secret file '", file, 
+            "' contains a field 'mongodb' with the instance as a list.\n",
+            "A decoy is returned. Subsequent queries will not work")
+    dbSecrets <- list(hostname=NULL, port=NULL, dbname=NULL,
+                      username=NULL, password=NULL)
+  }
+  return(dbSecrets)
+}
+
+##----------------------------------------##
 ## deprecated functions
 ##----------------------------------------##
 biosCurrentGeneSymbol <- function(...) {
