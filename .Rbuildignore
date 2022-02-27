@@ -1,4 +1,5 @@
 ^Meta$
+^*.proj$
 ^doc$
 .git
 ^.*\.Rproj$

@@ -18,7 +18,7 @@ test_that("guessAndAnnotate works with EnsemblIDs", {
   eid <- c("ENST00000613858.4", "ENST00000553916.5", "ENST00000399229.6")
   eidRes <- guessAndAnnotate(eid)
   expect_identical(eidRes$EnsemblID, eid)
-  expect_identical(eidRes$GeneID, as.character(rep(4644, 3)))
+  expect_identical(eidRes$GeneID, c(NA, as.character(rep(4644, 2))))
 })
 
 test_that("guessAndAnnotate works with UniProtIDs", {

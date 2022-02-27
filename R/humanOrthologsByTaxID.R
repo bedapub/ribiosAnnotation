@@ -17,7 +17,7 @@ NULL
 #' @note
 #' To query NCBI taxonomy IDs from free-text search, visit [NCBI Taxonomy 
 #'   Browser](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi).
-#' @importFrom magrittr %>%
+#' @importFrom magrittr '%>%'
 #' @importFrom rjson fromJSON toJSON
 #' @importFrom mongolite mongo
 #' @importFrom dplyr right_join left_join select
