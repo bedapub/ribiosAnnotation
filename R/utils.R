@@ -278,18 +278,3 @@ getMongodbSecrets <- function(file=ribiosAnnotationSecretFile,
   }
   return(dbSecrets)
 }
-
-##----------------------------------------##
-## deprecated functions
-##----------------------------------------##
-biosCurrentGeneSymbol <- function(...) {
-  .Deprecated("gtiChipAnnotation",
-              package="ribiosAnnotation")
-  gtiChipAnnotation(...)
-}
-
-raceChipAnnotation <- function(...) {
-  .Deprecated("gtiChipAnnotation",
-              package="ribiosAnnotation")
-  gtiChipAnnotation(...)
-}
