@@ -3,7 +3,7 @@ NULL
 
 #' Retrieve human orthologs of genes of another species with its Taxonomy ID
 #' @param taxid An integer, a NCBI taxonomy ID to identify a species, 
-#'    for instance \code{10116} for rat, \code{10090} for mouse, and \cpde{9541}
+#'    for instance \code{10116} for rat, \code{10090} for mouse, and \code{9541}
 #'    for cyno (crab-eating macaque).
 #' @return A \code{data.frame} contains following columns:
 #'  \itemize{
@@ -32,6 +32,9 @@ NULL
 #' }
 #' @export
 humanOrthologsByTaxID <- function(taxid) {
+  GeneID <- GeneSymbol <- Description <- NULL
+  HumanGeneID <- HumanGeneSymbol <- HumanDescription <- NULL
+  
   bioinfoReadSecrets <- getMongodbSecrets(instance="bioinfo_read")
   bioinfoReadURL <- sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
                             bioinfoReadSecrets$username,

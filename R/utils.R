@@ -18,7 +18,7 @@ ribiosAnnotationSecretFile <- file.path(normalizePath("~"),
 #' @return The current options of \code{ribiosAnnotation}
 #' The function writes the \code{credentials} field of the options
 #' After running this function, database names and passwords can be accessed
-#' @importFrom jsonlite read_json
+#' @importFrom rjson fromJSON
 #' @export
 loadSecrets <- function(path=ribiosAnnotationSecretFile) {
   if (!file.exists(path)) {
@@ -28,7 +28,7 @@ loadSecrets <- function(path=ribiosAnnotationSecretFile) {
     path <- system.file("secrets/secrets-template.json", 
                         package="ribiosAnnotation")
   }
-  secrets <- jsonlite::read_json(path)
+  secrets <- rjson::fromJSON(file=path)
   opts <- options("ribiosAnnotation")[[1]]
   opts$credentials <- secrets$credentials
   opts$connection <- secrets$connection

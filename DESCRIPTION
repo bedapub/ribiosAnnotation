@@ -7,9 +7,12 @@ Author: Jitao David Zhang <jitao_david.zhang@roche.com>
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
 Description: Retrieves annotation information of genomic features, genes, RNAs and proteins from the Oracle database of the Roche Bioinformatics environment.
 Imports:
-    ribiosUtils,DBI
-Depends:
-    jsonlite
+    ribiosUtils,
+    DBI,
+    dplyr,
+    rjson,
+    magrittr,
+    mongolite
 Suggests:
     ROracle,
     RJDBC,

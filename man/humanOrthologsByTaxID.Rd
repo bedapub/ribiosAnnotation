@@ -8,7 +8,7 @@ humanOrthologsByTaxID(taxid)
 }
 \arguments{
 \item{taxid}{An integer, a NCBI taxonomy ID to identify a species, 
-for instance \code{10116} for rat, \code{10090} for mouse, and \cpde{9541}
+for instance \code{10116} for rat, \code{10090} for mouse, and \code{9541}
 for cyno (crab-eating macaque).}
 }
 \value{
