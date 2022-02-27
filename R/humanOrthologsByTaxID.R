@@ -35,7 +35,7 @@ humanOrthologsByTaxID <- function(taxid) {
   GeneID <- GeneSymbol <- Description <- NULL
   HumanGeneID <- HumanGeneSymbol <- HumanDescription <- NULL
   
-  bioinfoReadSecrets <- getMongodbSecrets(instance="bioinfo_read")
+  bioinfoReadSecrets <- loadMongodbSecrets(instance="bioinfo_read")
   bioinfoReadURL <- sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
                             bioinfoReadSecrets$username,
                             bioinfoReadSecrets$password,

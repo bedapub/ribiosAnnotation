@@ -259,12 +259,12 @@ newconBIN <- function() ribiosCon(db=dbName(), user=binUser(), password=binPwd()
 #'   \item{\code{password}}{Password}
 #' }
 #' @examples 
-#' getMongodbSecrets(instance="bioinfo_read")
+#' loadMongodbSecrets(instance="bioinfo_read")
 #' \dontrun{
-#'     getMongodbSecrets(instance="decoy")
+#'     loadMongodbSecrets(instance="decoy")
 #' }
 #' @export
-getMongodbSecrets <- function(file=ribiosAnnotationSecretFile,
+loadMongodbSecrets <- function(file=ribiosAnnotationSecretFile,
                               instance="bioinfo_read") {
   secrets <-  rjson::fromJSON(file=file)
   dbSecrets <- secrets$mongodb[[instance]]
@@ -292,8 +292,7 @@ returnFieldsJson <- function(fields, include_id=FALSE) {
   logvec <- rep(TRUE, length(fields))
   names(logvec) <- fields
   if(!include_id) {
-    logvec <- c(logvec,
-                "_id"=FALSE)
+    logvec <- c(logvec, "_id"=FALSE)
   }
   res <- rjson::toJSON(logvec)
   return(res)
