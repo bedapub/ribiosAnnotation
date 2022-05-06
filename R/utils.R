@@ -1,6 +1,6 @@
 #' @rdname loadSecrets
 #' @export
-ribiosAnnotationSecretFile <- file.path(normalizePath("~"),
+ribiosAnnotationSecretFile <- file.path("~",
 			       ".credentials", "ribiosAnnotation-secrets.json")
 
 #' Load secrets from a file and set them in options
