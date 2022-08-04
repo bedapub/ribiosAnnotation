@@ -411,7 +411,7 @@ annotateProbeIDs <- annotateProbesets
 #' human orthologue mappings
 #' 
 #' Prior to version \code{1.2-0}, GeneIDs and GeneSymbols are mapped via chip
-#' annotation files, which introduce uncessary dependency and confusing results
+#' annotation files, which introduce unnecessary dependency and confusing results
 #' when chip does not contain all genes.
 #' 
 #' From version \code{1.2-0}, \code{annotateGeneIDs} and
@@ -514,6 +514,90 @@ annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
   }
   res <- matchColumn(ids, res, cn, multi=orthologue && multiOrth)
   rownames(res) <- id2rownames(res[,cn])
+  return(res)
+}
+
+#' Annotate GeneID with MongoDB
+#' 
+#' Annotate GeneIDs, GeneSymbols or mRNA accesion numbers with MongoDB. This 
+#' function will replaec annotateGeneIDs soon.
+#' 
+#' @aliases annotateGeneIDs annotateGeneSymbols annotateRefSeqs annotatemRNAs
+#' @param ids Character vector, GeneIDs, GeneSymbols or mRNAs of query. It can
+#' contain \code{NA} or \code{NULL}
+#' @param orthologue Logical, whether human orthologues should be returned, 
+#' currently not supported
+#' @param multiOrth Logical, whether multiple mapped orthologues should be
+#' returned or not. Only useful when \code{orthologue} is \code{TRUE}, By
+#' default \code{FALSE}. Be cautious with the \code{TRUE} option: in this case
+#' the returning \code{data.frame} may have different row numbers as the input
+#' vector.
+#' @return A \code{data.frame} object containing the annotations.
+#' 
+#' If \code{orthologue} is set to \code{FALSE}, the data frame contains
+#' following columns: \code{GeneID, GeneSymbol, GeneName and TaxID}
+#' 
+#' If \code{orthologue} is \code{TRUE}, the data frame contains \code{GeneID,
+#' GeneSymbol,TaxID, OrigTaxID, OrigGeneID, OrigGeneSymbol, OrigGeneName}. Note
+#' that \code{GeneID, GeneSymbol, TaxID} contains the information of mapped
+#' orthologues, while \code{OrigXXX} contains the information of queried genes.
+#' 
+#' If \code{multiOrth} is \code{TRUE} (only valid when \code{orthologue} is
+#' \code{TRUE}), multiples orthologues mapped to the same gene are all
+#' returned. This means that the result data frame may contain more rows than
+#' the length of input vector. If set to \code{FALSE}, the resulting data frame
+#' contains exact number of rows as the input vector length.
+#' @note \code{annotatemRNAs} is an alias of \code{annotateRefSeqs}
+#' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
+#' @seealso See \code{\link{gtiChipAnnotation}} to get annotation for all
+#' probesets in a chip.
+#' 
+#' See \code{\link{annotateProbesets}} to get annotation for probesets.
+#' @examples
+#' 
+#' options(error=utils::recover)
+#' 
+#' ## normal use
+#' annotateGeneIDsWithMongoDB(ids=c(780, 5982, 3310))
+#' ## annotateGeneIDsWithMongoDB(ids=c(780, 5982, 3310, NA))
+#' ## annotateGeneIDsWithMongoDB(ids=c(780, 5982, 3310, NULL))
+#' options(error=NULL)
+#' 
+#' @export annotateGeneIDsWithMongoDB
+annotateGeneIDsWithMongoDB <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
+  if(orthologue) {
+    stop("not supported yet")
+  }
+  GeneID <- GeneSymbol <- Description <- NULL
+  HumanGeneID <- HumanGeneSymbol <- HumanDescription <- NULL
+  
+  bioinfoReadSecrets <- loadMongodbSecrets(instance="bioinfo_read")
+  bioinfoReadURL <- sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
+                            bioinfoReadSecrets$username,
+                            bioinfoReadSecrets$password,
+                            bioinfoReadSecrets$hostname, 
+                            bioinfoReadSecrets$port,
+                            bioinfoReadSecrets$dbname,
+                            bioinfoReadSecrets$dbname)
+  giCon <- mongolite::mongo(collection='ncbi_gene_info',
+                            db=bioinfoReadSecrets$dbname,
+                            url=bioinfoReadURL)
+  
+  speciesFields <- c("Symbol", "description", "geneId",
+                     "taxId", "type_of_gene")
+  speciesFieldsJson <- returnFieldsJson(speciesFields)
+  query <- paste0('{"geneId":{"$in":[', paste(as.character(ids), collapse=","),']}}')
+  genes <- giCon$find(query, fields=speciesFieldsJson) 
+  res <- genes %>%
+    dplyr::rename('GeneID'='geneId',
+                  'GeneSymbol'='Symbol',
+                  'GeneName'='description',
+                  "TaxID"="taxId",
+                  "Type"="type_of_gene") %>%
+    dplyr::select(GeneID, GeneSymbol, GeneName, TaxID, Type)
+  resInd <- matchColumnIndex(ids, res, "GeneID", multi=multiOrth)
+  res <- res[resInd,,drop=FALSE]
+  rownames(res) <- id2rownames(ids)
   return(res)
 }
 

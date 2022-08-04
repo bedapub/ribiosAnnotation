@@ -44,7 +44,7 @@ human orthologue mappings
 }
 \details{
 Prior to version \code{1.2-0}, GeneIDs and GeneSymbols are mapped via chip
-annotation files, which introduce uncessary dependency and confusing results
+annotation files, which introduce unnecessary dependency and confusing results
 when chip does not contain all genes.
 
 From version \code{1.2-0}, \code{annotateGeneIDs} and

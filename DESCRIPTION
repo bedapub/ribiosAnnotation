@@ -21,7 +21,7 @@ Suggests:
 LazyData: true
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Collate: 
     'querydb.R'
     'utils.R'
