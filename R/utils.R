@@ -279,6 +279,32 @@ loadMongodbSecrets <- function(file=ribiosAnnotationSecretFile,
   return(dbSecrets)
 }
 
+#' Connect to a MongoDB instance
+#' @param instance Character string, the MongoDB instance to connect to
+#' @param collection Character string, the collection to be used
+#' @return A pointer to a collection on the server, as returned by
+#'  \code{\link[mongolite]{mongo}}.
+#' @examples 
+#' giCon <- connectMongoDB(instance="bioinfo_read",
+#'                         collection="ncbi_gene_info")
+#' @seealso \code{\link{loadMongodbSecrets}}
+#' @export
+connectMongoDB <- function(instance="bioinfo_read",
+                           collection="ncbi_gene_info") {
+  bioinfoReadSecrets <- loadMongodbSecrets(instance=instance)
+  bioinfoReadURL <- sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
+                            bioinfoReadSecrets$username,
+                            bioinfoReadSecrets$password,
+                            bioinfoReadSecrets$hostname, 
+                            bioinfoReadSecrets$port,
+                            bioinfoReadSecrets$dbname,
+                            bioinfoReadSecrets$dbname)
+  giCon <- mongolite::mongo(collection=collection,
+                            db=bioinfoReadSecrets$dbname,
+                            url=bioinfoReadURL)
+  return(giCon)
+}
+
 #' Construct a JSON string to indicate returned fields from a MongoDB query
 #' @param fields A vector of character strings that should be included
 #' @param include_id Logical, whether \code{_id} should be returned. Default 

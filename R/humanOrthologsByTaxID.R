@@ -35,20 +35,10 @@ humanOrthologsByTaxID <- function(taxid) {
   GeneID <- GeneSymbol <- Description <- NULL
   HumanGeneID <- HumanGeneSymbol <- HumanDescription <- NULL
   
-  bioinfoReadSecrets <- loadMongodbSecrets(instance="bioinfo_read")
-  bioinfoReadURL <- sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
-                            bioinfoReadSecrets$username,
-                            bioinfoReadSecrets$password,
-                            bioinfoReadSecrets$hostname, 
-                            bioinfoReadSecrets$port,
-                            bioinfoReadSecrets$dbname,
-                            bioinfoReadSecrets$dbname)
-  giCon <- mongolite::mongo(collection='ncbi_gene_info',
-                            db=bioinfoReadSecrets$dbname,
-                            url=bioinfoReadURL)
-  goCon <- mongolite::mongo(collection='ncbi_gene_orthologs',
-                            db=bioinfoReadSecrets$dbname,
-                            url=bioinfoReadURL)
+  giCon <- connectMongoDB(instance="bioinfo_read",
+                          collection="ncbi_gene_info")
+  goCon <- connectMongoDB(instance="bioinfo_read",
+                          collection="ncbi_gene_orthologs")
   
   speciesFields <- c("Symbol", "description", "geneId")
   speciesFieldsJson <- returnFieldsJson(speciesFields)
@@ -72,8 +62,8 @@ humanOrthologsByTaxID <- function(taxid) {
     dplyr::rename('HumanGeneID'='geneId',
                   'GeneID'='other_geneId')
   speciesHumanOrt <- speciesHumanDf %>%
-    right_join(speciesDf, by="GeneID") %>%
-    left_join(humanDf, by="HumanGeneID") %>%
+    dplyr::right_join(speciesDf, by="GeneID") %>%
+    dplyr::left_join(humanDf, by="HumanGeneID") %>%
     dplyr::select(GeneID, GeneSymbol, Description,
                   HumanGeneID, HumanGeneSymbol, HumanDescription)
   return(speciesHumanOrt)

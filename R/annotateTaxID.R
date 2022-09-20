@@ -1,3 +1,6 @@
+#' @include utils.R
+NULL
+
 #' Annotations of all genes associated with the given TaxID
 #' 
 #' The function returns annotations (see details below) of all features
@@ -25,7 +28,6 @@
 #' hsMtAnno <- annotateTaxID("10092")
 #' dim(hsMtAnno)
 #' head(hsMtAnno)
-#' 
 #' }
 #'
 #' @importFrom dplyr any_of rename
@@ -46,17 +48,8 @@ annotateTaxID <- function(taxid) {
   
   GeneID <- GeneSymbol <- Description <- NULL
 
-  bioinfoReadSecrets <- loadMongodbSecrets(instance="bioinfo_read")
-  bioinfoReadURL <- sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
-                            bioinfoReadSecrets$username,
-                            bioinfoReadSecrets$password,
-                            bioinfoReadSecrets$hostname, 
-                            bioinfoReadSecrets$port,
-                            bioinfoReadSecrets$dbname,
-                            bioinfoReadSecrets$dbname)
-  giCon <- mongolite::mongo(collection='ncbi_gene_info',
-                            db=bioinfoReadSecrets$dbname,
-                            url=bioinfoReadURL)
+  giCon <- connectMongoDB(instance="bioinfo_read",
+                          collection="ncbi_gene_info")
   
   speciesFields <- c("Symbol", "description", "geneId",
                      "chromosome", "map_location", "type_of_gene")

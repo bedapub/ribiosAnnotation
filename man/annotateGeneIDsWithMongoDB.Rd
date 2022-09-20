@@ -46,6 +46,8 @@ function will replaec annotateGeneIDs soon.
 }
 \note{
 \code{annotatemRNAs} is an alias of \code{annotateRefSeqs}
+
+Currently, \code{NA} and \code{NULL} is not handled. This may change later.
 }
 \examples{
 

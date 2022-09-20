@@ -553,6 +553,8 @@ annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' probesets in a chip.
 #' 
 #' See \code{\link{annotateProbesets}} to get annotation for probesets.
+#' @note Currently, \code{NA} and \code{NULL} is not handled. This may change later.
+#'
 #' @examples
 #' 
 #' options(error=utils::recover)
@@ -563,6 +565,7 @@ annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' ## annotateGeneIDsWithMongoDB(ids=c(780, 5982, 3310, NULL))
 #' options(error=NULL)
 #' 
+#' @importFrom ribiosUtils matchColumnIndex
 #' @export annotateGeneIDsWithMongoDB
 annotateGeneIDsWithMongoDB <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
   if(orthologue) {
@@ -571,17 +574,9 @@ annotateGeneIDsWithMongoDB <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
   GeneID <- GeneSymbol <- Description <- NULL
   HumanGeneID <- HumanGeneSymbol <- HumanDescription <- NULL
   
-  bioinfoReadSecrets <- loadMongodbSecrets(instance="bioinfo_read")
-  bioinfoReadURL <- sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
-                            bioinfoReadSecrets$username,
-                            bioinfoReadSecrets$password,
-                            bioinfoReadSecrets$hostname, 
-                            bioinfoReadSecrets$port,
-                            bioinfoReadSecrets$dbname,
-                            bioinfoReadSecrets$dbname)
-  giCon <- mongolite::mongo(collection='ncbi_gene_info',
-                            db=bioinfoReadSecrets$dbname,
-                            url=bioinfoReadURL)
+  giCon <- connectMongoDB(instance="bioinfo_read",
+                          collection="ncbi_gene_info")
+
   
   speciesFields <- c("Symbol", "description", "geneId",
                      "taxId", "type_of_gene")
