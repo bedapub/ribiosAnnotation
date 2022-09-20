@@ -33,7 +33,6 @@ head(hsAnno)
 hsMtAnno <- annotateTaxID("10092")
 dim(hsMtAnno)
 head(hsMtAnno)
-
 }
 
 }
