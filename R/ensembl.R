@@ -10,7 +10,7 @@ NULL
 #'   \item{EnsemblID}: The input EnsemblID
 #'   \item{GeneID}: NCBI GeneID
 #'   \item{GeneSymbol}: Official gene symbol
-#'   \item{GeneName}: Gene name
+#'   \item{Description}: Gene description
 #'   \item{TaxID}: Taxonomy ID
 #' }
 #' This function uses data from EnsEMBL to annotate EnsEMBL GeneIDs. For most 
@@ -19,7 +19,7 @@ NULL
 #' task.
 #' 
 #' @details The \code{ensembl_genes} collection is used. Note that Ensembl 
-#' IDs often refere to novel transcripts which do not have identifiers in other
+#' IDs often refer to novel transcripts which do not have identifiers in other
 #' databases like NCBI Genes. If an EnsemblID is invalid or obsolete, the fields
 #' \code{GeneName} and \code{TaxID} will be NA.
 #' 
@@ -30,7 +30,8 @@ NULL
 #' @importFrom ribiosUtils matchColumnIndex
 #' @importFrom dplyr left_join
 #' @examples
-#' ensIDs <- readLines("inst/extdata/ribios_annotate_testdata/ensemble_geneids.txt")
+#' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
+#'                     "ensemble_geneids.txt"), package="ribiosAnnotation"))
 #' ensAnno <- annotateEnsemblGeneIDsWithEnsembl(ensIDs)
 #' @export
 annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
@@ -57,17 +58,17 @@ annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
     res <- data.frame(EnsemblID=ids,
                       GeneID=NA,
                       GeneSymbol=NA,
-                      GeneName=NA,
+                      Description=NA,
                       TaxID=NA)
   } else {
     res <- genes %>%
       dplyr::rename('UVID'='geneId',
                     'GeneID'='entrezgeneId',
                     'GeneSymbol'='symbol',
-                    'GeneName'='description',
+                    'Description'='description',
                     "TaxID"="taxId") %>%
       dplyr::left_join(input, by="UVID") %>%
-      dplyr::select(EnsemblID, GeneID, GeneSymbol, GeneName, TaxID)
+      dplyr::select(EnsemblID, GeneID, GeneSymbol, Description, TaxID)
       resInd <- ribiosUtils::matchColumnIndex(ids, res, "EnsemblID")
       res <- res[resInd, , drop=FALSE]
       res$EnsemblID <- ids
@@ -85,12 +86,12 @@ annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
 #'   \item{EnsemblID}: The input EnsemblID
 #'   \item{GeneID}: NCBI GeneID
 #'   \item{GeneSymbol}: Official gene symbol
-#'   \item{GeneName}: Gene name
+#'   \item{Description}: Gene description
 #'   \item{TaxID}: Taxonomy ID
 #'   \item{Type}: Gene type
 #' }
 #' This function uses data from NCBI to annotate EnsEMBL GeneIDs. For most 
-#' users, it is recommended to use \code{\link{annotateEnsembleGeneIDs}}, 
+#' users, it is recommended to use \code{\link{annotateEnsemblGeneIDs}}, 
 #' because it uses both data from EnsEMBL and data from NCBI to perform the
 #' task.
 #' 
@@ -103,7 +104,8 @@ annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
 #' @importFrom ribiosUtils matchColumnIndex
 #' @importFrom dplyr left_join
 #' @examples
-#' ensIDs <- readLines("inst/extdata/ribios_annotate_testdata/ensemble_geneids.txt")
+#' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
+#'                     "ensemble_geneids.txt"), package="ribiosAnnotation"))
 #' ncbiAnno <- annotateEnsembleGeneIDsWithNCBI(ensIDs)
 #' @export
 annotateEnsembleGeneIDsWithNCBI <- function(ids) {
@@ -127,7 +129,7 @@ annotateEnsembleGeneIDsWithNCBI <- function(ids) {
     res <- data.frame(EnsemblID=ids,
                       GeneID=NA,
                       GeneSymbol=NA,
-                      GeneName=NA,
+                      Description=NA,
                       TaxID=NA,
                       Type=NA)
   } else {
@@ -155,7 +157,7 @@ annotateEnsembleGeneIDsWithNCBI <- function(ids) {
 #'   \item{EnsemblID}: The input EnsemblID
 #'   \item{GeneID}: NCBI GeneID
 #'   \item{GeneSymbol}: Official gene symbol
-#'   \item{GeneName}: Gene name
+#'   \item{Description}: Gene description
 #'   \item{TaxID}: Taxonomy ID
 #'   \item{Type}: Gene type
 #' }
@@ -164,7 +166,8 @@ annotateEnsembleGeneIDsWithNCBI <- function(ids) {
 #' for those genes that are annotated by EnsEMBL but not by NCBI, merging the
 #' information from both sources.
 #' @examples
-#' ensIDs <- readLines("inst/extdata/ribios_annotate_testdata/ensemble_geneids.txt")
+#' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
+#'                     "ensemble_geneids.txt"), package="ribiosAnnotation"))
 #' enAnno <- annotateEnsembleGeneIDs(ensIDs)
 #' @export
 annotateEnsembleGeneIDs <- function(ids) {
@@ -175,7 +178,7 @@ annotateEnsembleGeneIDs <- function(ids) {
   isEnsSuccess <- !is.na(ensAnno$TaxID)
   isNcbiFailure <- is.na(ncbiAnno$GeneID)
   isToReplace <- isEnsSuccess & isNcbiFailure
-  replaceCols <- c("GeneID", "GeneSymbol", "GeneName", "TaxID")
+  replaceCols <- c("GeneID", "GeneSymbol", "Description", "TaxID")
   for (column in replaceCols) {
     res[isToReplace, column] <- ensAnno[isToReplace, column]
   }
@@ -335,6 +338,7 @@ annotateGeneIDsWithEnsembl <- function (ids,
                                         orthologue = FALSE, 
                                         multiOrth = FALSE,
                                         type=c("gene", "transcript", "protein")) {
+  .Deprecated()
   type <- match.arg(type)
   typeID <- c("gene"="26", "transcript"="30", "protein"="31")[type]
   comm <- paste("SELECT c.RO_GENE_ID, e.ENSEMBL_ID, c.GENE_SYMBOL, c.DESCRIPTION, c.TAX_ID", 
