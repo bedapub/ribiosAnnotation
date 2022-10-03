@@ -26,8 +26,12 @@ getGenesPerIndex <- function(x) {
 #' * GeneName
 #' * TaxID
 #' @examples
+#' options(error=utils::recover)
+#' \dontrun{
 #' annotateProteinGroups(c("A0A024RBG1;Q9NZJ9", "A0A0B4J2D5;P0DPI2",
 #'                            "A0A0B4J2F0;A0A0U1RRL7"))
+#' }
+#' options(error=NULL)
 #' @importFrom dplyr group_by arrange group_modify
 #' @export
 annotateProteinGroups <- function(ids, delimiter=";") {

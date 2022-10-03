@@ -29,6 +29,10 @@ A \code{data.frame} with following columns:
 Annotate protein groups for proteomics studies
 }
 \examples{
+options(error=utils::recover)
+\dontrun{
 annotateProteinGroups(c("A0A024RBG1;Q9NZJ9", "A0A0B4J2D5;P0DPI2",
                            "A0A0B4J2F0;A0A0U1RRL7"))
+}
+options(error=NULL)
 }
