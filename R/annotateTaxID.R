@@ -59,7 +59,7 @@ annotateTaxID <- function(taxid) {
                'Description'='description',
                'Chromosome'='chromosome',
                'MapLocation'='map_location',
-               'TypeOfGene'='type_of_gene')
+               'Type'='type_of_gene')
   speciesDf <- giCon$find(rjson::toJSON(list(taxId=taxid)),
                           fields=speciesFieldsJson) %>%
     dplyr::rename(dplyr::any_of(renames)) %>%
