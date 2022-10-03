@@ -80,7 +80,7 @@ annotateNonHumanGenesHumanOrthologsWithNCBI <- function(geneids,
 #' \code{\link{annotateNonHumanGenesHumanOrthologsWithNCBI}} if you are sure
 #' that input GeneIDs do not come from human.
 #' 
-#' \seealso \code{\link{annotateNonHumanGenesHumanOrthologsWithNCBI}} 
+#' @seealso \code{\link{annotateNonHumanGenesHumanOrthologsWithNCBI}} 
 #' 
 #' @details \code{ncbi_gene_info} and \code{ncbi_gene_orthologs} collections 
 #' are used.

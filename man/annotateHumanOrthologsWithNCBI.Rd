@@ -23,8 +23,6 @@ This function annotates human orthologs for any GeneID, including human
 genes, in which case the ortholog will be itself. Use 
 \code{\link{annotateNonHumanGenesHumanOrthologsWithNCBI}} if you are sure
 that input GeneIDs do not come from human.
-
-\seealso \code{\link{annotateNonHumanGenesHumanOrthologsWithNCBI}}
 }
 \description{
 Annotate human orthologs with data from NCBI
@@ -39,4 +37,7 @@ annotateHumanOrthologsWithNCBI(c(25120, 114483548, 57300, 20))
 annotateHumanOrthologsWithNCBI(c(25120, 114483548, 57300, 20, 1506, 1545,
                                  102129055))
 }
+}
+\seealso{
+\code{\link{annotateNonHumanGenesHumanOrthologsWithNCBI}}
 }

@@ -7,11 +7,10 @@
 annotateGeneIDsWithHumanOrtholog(ids, multiOrth = FALSE)
 }
 \arguments{
+\item{ids}{Vector of integer or character strings, EntrezIDs to be annotated}
+
 \item{multiOrth}{Logical, whether mutliple orthologues should be returned if
 exist. Deafult: \code{FALSE}}
-
-\item{orthologue}{Logical, whether human orthologues should be returned. 
-Default: \code{FALSE}}
 }
 \value{
 A \code{data.frame} object containing the annotations:

@@ -142,7 +142,7 @@ annotateEnsemblGeneIDsWithNCBI <- function(ids) {
                     'GeneID'='geneId') %>%
       dplyr::left_join(input, by="UVID") %>%
       dplyr::select(EnsemblID, GeneID)
-    resAnno <- annotateGeneIDsWithMongoDB(ids=resE2N$GeneID)
+    resAnno <- annotateGeneIDs(ids=resE2N$GeneID)
     res <- dplyr::left_join(resE2N, resAnno, by="GeneID")
     resInd <- ribiosUtils::matchColumnIndex(ids, res, "EnsemblID")
     res <- res[resInd, , drop=FALSE]

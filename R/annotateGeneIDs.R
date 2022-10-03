@@ -103,8 +103,7 @@ annotateGeneIDsWithoutHumanOrtholog <- function(ids) {
 }
 
 #' Annotate Entrez GeneIDs with the query of human orthologs
-#' @param orthologue Logical, whether human orthologues should be returned. 
-#' Default: \code{FALSE}
+#' @param ids Vector of integer or character strings, EntrezIDs to be annotated
 #' @param multiOrth Logical, whether mutliple orthologues should be returned if
 #' exist. Deafult: \code{FALSE}
 #' @return A \code{data.frame} object containing the annotations:
@@ -134,6 +133,10 @@ annotateGeneIDsWithoutHumanOrtholog <- function(ids) {
 #' 
 #' @export
 annotateGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE) {
+  
+  HumanGeneID <- HumanGeneSymbol <- HumanDescription <- Type <- NULL
+  GeneSymbol <- GeneID <- Description <- NULL
+  
   hasCharOrIsNa <- any(is.character(ids) | is.na(ids))
   if(hasCharOrIsNa) {
     ids <- as.character(ids)
@@ -153,7 +156,7 @@ annotateGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE) {
       dplyr::select(GeneID, HumanGeneSymbol=GeneSymbol, HumanDescription=Description,
                     HumanType=Type)
     if(hasCharOrIsNa) {
-      orthologAnno$GeneID <- as.character(orthologAnno$GeneID )
+      orthologAnno$GeneID <- as.character(orthologAnno$GeneID)
     }
     res <- left_join(geneIdAnno, orthologs, by="GeneID") %>%
       left_join(orthologAnno, by="GeneID") %>% unique
