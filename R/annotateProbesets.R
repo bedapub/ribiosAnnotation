@@ -68,8 +68,6 @@ annotateHumanOrthologsNoOrigTax <- function(...) {
   return(res[,-2L])
 }
 
-
-
 #' Annotations of all features associated with the given chip type
 #' 
 #' The function returns annotations (see details below) of all or selected
@@ -590,7 +588,7 @@ annotateGeneIDsWithMongoDB <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
                   "TaxID"="taxId",
                   "Type"="type_of_gene") %>%
     dplyr::select(GeneID, GeneSymbol, GeneName, TaxID, Type)
-  resInd <- matchColumnIndex(ids, res, "GeneID", multi=multiOrth)
+  resInd <- ribiosUtils::matchColumnIndex(ids, res, "GeneID", multi=multiOrth)
   res <- res[resInd,,drop=FALSE]
   rownames(res) <- id2rownames(ids)
   return(res)
