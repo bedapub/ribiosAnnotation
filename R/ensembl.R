@@ -1,5 +1,187 @@
-#' @include annotateAnyIDs.R
+#' @include removeEnsemblVersion.R
 NULL
+
+#' Annotate EnsEMBL GeneID with data from EnsEMBL
+#' @param ids Character strings, Ensembl GeneIDs in form of 
+#' \code{ENS(species)(object type)(identifier).(version)}. The version is
+#' optional.
+#' @return A \code{data.frame} containing following columns:
+#' \itemize{
+#'   \item{EnsemblID}: The input EnsemblID
+#'   \item{GeneID}: NCBI GeneID
+#'   \item{GeneSymbol}: Official gene symbol
+#'   \item{GeneName}: Gene name
+#'   \item{TaxID}: Taxonomy ID
+#' }
+#' This function uses data from EnsEMBL to annotate EnsEMBL GeneIDs. For most 
+#' users, it is recommended to use \code{\link{annotateEnsembleGeneIDs}}, 
+#' because it uses both data from EnsEMBL and data from NCBI to perform the
+#' task.
+#' 
+#' @details The \code{ensembl_genes} collection is used. Note that Ensembl 
+#' IDs often refere to novel transcripts which do not have identifiers in other
+#' databases like NCBI Genes. If an EnsemblID is invalid or obsolete, the fields
+#' \code{GeneName} and \code{TaxID} will be NA.
+#' 
+#' @seealso Function \code{\link{annotateEnsembleGeneIDsWithNCBI}} annotates
+#' EnsEMBL GeneIDs with data from NCBI, and \code{\link{annotateEnsembleGeneIDs}}
+#' annotates EnsEMBL GeneIDs with both data from EnsEMBL and data from NCBI.
+#' @importFrom magrittr %>%
+#' @importFrom ribiosUtils matchColumnIndex
+#' @importFrom dplyr left_join
+#' @examples
+#' ensIDs <- readLines("inst/extdata/ribios_annotate_testdata/ensemble_geneids.txt")
+#' ensAnno <- annotateEnsemblGeneIDsWithEnsembl(ensIDs)
+#' @export
+annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
+  ids <- as.character(ids)
+  uvids <- removeEnsemblVersion(ids)
+  
+  input <- data.frame(EnsemblID=ids,
+                      UVID=uvids)
+  EnsemblID <- GeneSymbol <-  GeneID <- Description <- TaxID <- NULL
+  
+  giCon <- giCon <- connectMongoDB(instance="bioinfo_read",
+                                   collection='ensembl_genes')
+  
+  speciesFields <- c("symbol", "description", "geneId", "entrezgeneId",
+                     "taxId")
+  speciesFieldsJson <- returnFieldsJson(speciesFields)
+  query <- paste0('{"geneId":{"$in":[', 
+                  paste("\"", 
+                        as.character(uvids), 
+                        "\"", collapse=",", sep=""),']}}')
+  genes <- giCon$find(query, fields=speciesFieldsJson)
+  if(nrow(genes)==0) {
+    warning("No annotation was found")
+    res <- data.frame(EnsemblID=ids,
+                      GeneID=NA,
+                      GeneSymbol=NA,
+                      GeneName=NA,
+                      TaxID=NA)
+  } else {
+    res <- genes %>%
+      dplyr::rename('UVID'='geneId',
+                    'GeneID'='entrezgeneId',
+                    'GeneSymbol'='symbol',
+                    'GeneName'='description',
+                    "TaxID"="taxId") %>%
+      dplyr::left_join(input, by="UVID") %>%
+      dplyr::select(EnsemblID, GeneID, GeneSymbol, GeneName, TaxID)
+      resInd <- ribiosUtils::matchColumnIndex(ids, res, "EnsemblID")
+      res <- res[resInd, , drop=FALSE]
+      res$EnsemblID <- ids
+  }
+  rownames(res) <- id2rownames(ids)
+  return(res)
+}
+
+#' Annotate EnsEMBL GeneID with data from NCBI
+#' @param ids Character strings, Ensembl GeneIDs in form of 
+#' \code{ENS(species)(object type)(identifier).(version)}. The version is
+#' optional.
+#' @return A \code{data.frame} containing following columns:
+#' \itemize{
+#'   \item{EnsemblID}: The input EnsemblID
+#'   \item{GeneID}: NCBI GeneID
+#'   \item{GeneSymbol}: Official gene symbol
+#'   \item{GeneName}: Gene name
+#'   \item{TaxID}: Taxonomy ID
+#'   \item{Type}: Gene type
+#' }
+#' This function uses data from NCBI to annotate EnsEMBL GeneIDs. For most 
+#' users, it is recommended to use \code{\link{annotateEnsembleGeneIDs}}, 
+#' because it uses both data from EnsEMBL and data from NCBI to perform the
+#' task.
+#' 
+#' @details The \code{ncbi_gene2ensembl} collection is used.
+#' @seealso Function \code{\link{annotateEnsembleGeneIDsWithEnsembl}} annotates
+#' EnsEMBL GeneIDs with data from Ensembl, and 
+#' \code{\link{annotateEnsembleGeneIDs}} annotates EnsEMBL GeneIDs with both 
+#' data from EnsEMBL and data from NCBI.
+#' @importFrom magrittr %>%
+#' @importFrom ribiosUtils matchColumnIndex
+#' @importFrom dplyr left_join
+#' @examples
+#' ensIDs <- readLines("inst/extdata/ribios_annotate_testdata/ensemble_geneids.txt")
+#' ncbiAnno <- annotateEnsembleGeneIDsWithNCBI(ensIDs)
+#' @export
+annotateEnsembleGeneIDsWithNCBI <- function(ids) {
+  ids <- as.character(ids)
+  uvids <- removeEnsemblVersion(ids)
+  input <- data.frame(EnsemblID=ids,
+                      UVID=uvids)
+  
+  EnsemblID <- GeneID <- NULL
+  
+  giCon <- connectMongoDB(instance="bioinfo_read",
+                          collection='ncbi_gene2ensembl')
+  
+  queryFields <- c("geneId", "Ensembl_geneId")
+  queryFieldsJson <- returnFieldsJson(queryFields)
+  query <- paste0('{"Ensembl_geneId":{"$in":[', 
+                  paste("\"", as.character(uvids), "\"", collapse=",", sep=""),']}}')
+  genes <- giCon$find(query, fields=queryFieldsJson) 
+  if(nrow(genes)==0) {
+    warning("No annotation was found")
+    res <- data.frame(EnsemblID=ids,
+                      GeneID=NA,
+                      GeneSymbol=NA,
+                      GeneName=NA,
+                      TaxID=NA,
+                      Type=NA)
+  } else {
+    resE2N <- genes %>%
+      dplyr::rename('UVID'='Ensembl_geneId',
+                    'GeneID'='geneId') %>%
+      dplyr::left_join(input, by="UVID") %>%
+      dplyr::select(EnsemblID, GeneID)
+    resAnno <- annotateGeneIDsWithMongoDB(ids=resE2N$GeneID)
+    res <- dplyr::left_join(resE2N, resAnno, by="GeneID")
+    resInd <- ribiosUtils::matchColumnIndex(ids, res, "EnsemblID")
+    res <- res[resInd, , drop=FALSE]
+    res$EnsemblID <- ids
+  }
+  rownames(res) <- id2rownames(ids)
+  return(res)
+}
+
+#' Annotate Ensembl GeneIDs with data from both EnsEMBL and NCBI
+#' @param ids A vector of character strings, Ensembl GeneIDs in form of 
+#' \code{ENS(species)(object type)(identifier).(version)}. The version is
+#' optional.
+#' @return A \code{data.frame} containing following columns:
+#' \itemize{
+#'   \item{EnsemblID}: The input EnsemblID
+#'   \item{GeneID}: NCBI GeneID
+#'   \item{GeneSymbol}: Official gene symbol
+#'   \item{GeneName}: Gene name
+#'   \item{TaxID}: Taxonomy ID
+#'   \item{Type}: Gene type
+#' }
+#' @details First, both EnsEMBL and NCBI annotation is queried. Next, we use
+#' the NCBI annotation as the template. Finally, we take the EnsEMBL annotation 
+#' for those genes that are annotated by EnsEMBL but not by NCBI, merging the
+#' information from both sources.
+#' @examples
+#' ensIDs <- readLines("inst/extdata/ribios_annotate_testdata/ensemble_geneids.txt")
+#' enAnno <- annotateEnsembleGeneIDs(ensIDs)
+#' @export
+annotateEnsembleGeneIDs <- function(ids) {
+  ensAnno <- annotateEnsemblGeneIDsWithEnsembl(ids)
+  ncbiAnno <- annotateEnsembleGeneIDsWithNCBI(ids)
+
+  res <- ncbiAnno
+  isEnsSuccess <- !is.na(ensAnno$TaxID)
+  isNcbiFailure <- is.na(ncbiAnno$GeneID)
+  isToReplace <- isEnsSuccess & isNcbiFailure
+  replaceCols <- c("GeneID", "GeneSymbol", "GeneName", "TaxID")
+  for (column in replaceCols) {
+    res[isToReplace, column] <- ensAnno[isToReplace, column]
+  }
+  res$Source <- ifelse(isToReplace, "EnsEMBL", "NCBI")
+  return(res)
+}
 
 #' Annotate Ensembl gene/transcript/protein identifiers
 #' 
@@ -59,6 +241,7 @@ NULL
 #' 
 #' @export annotateEnsembl
 annotateEnsembl <- function (ids, orthologue = FALSE, multiOrth = FALSE) {
+  .Deprecated("annotateEnsemblGeneIDs")
   idsWoVersion <- removeEnsemblVersion(ids)
   comm <- paste("SELECT e.ENSEMBL_ID, c.RO_GENE_ID,c.GENE_SYMBOL, c.DESCRIPTION, c.TAX_ID", 
                 " FROM GTI_GENES c INNER JOIN ENSEMBL_GENE e ON c.RO_GENE_ID=e.GENE_ID ", sep = "")
