@@ -1,6 +1,8 @@
 library(ribiosAnnotation)
 library(testthat)
 
+skip("Updating annotation backend from Oracle to MongoDB")
+
 test_that("guessAndAnnotate works with gene symbols", {
   gs <- c("AKT1", "AKT2", "MAPK14")
   gsRes <- guessAndAnnotate(gs)

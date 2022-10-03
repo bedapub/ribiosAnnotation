@@ -1,3 +1,5 @@
+skip("Updating annotation backend from Oracle to MongoDB")
+
 humanRefSeq <- mRNArefseqByTaxID(9606)
 
 context("Test mRNArefseqByTaxID")
