@@ -586,7 +586,7 @@ annotateGeneIDsWithMongoDB <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
                   'Description'='description',
                   "TaxID"="taxId",
                   "Type"="type_of_gene") %>%
-    dplyr::select(GeneID, GeneSymbol, GeneName, TaxID, Type)
+    dplyr::select(GeneID, GeneSymbol, Description, TaxID, Type)
   resInd <- ribiosUtils::matchColumnIndex(ids, res, "GeneID", multi=multiOrth)
   res <- res[resInd,,drop=FALSE]
   rownames(res) <- id2rownames(ids)
