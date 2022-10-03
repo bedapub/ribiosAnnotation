@@ -569,9 +569,8 @@ annotateGeneIDsWithMongoDB <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
   if(orthologue) {
     stop("not supported yet")
   }
-  GeneID <- GeneSymbol <- Description <- NULL
-  HumanGeneID <- HumanGeneSymbol <- HumanDescription <- NULL
-  
+  GeneID <- GeneSymbol <- Description <- TaxID <- Type <- NULL
+
   giCon <- connectMongoDB(instance="bioinfo_read",
                           collection="ncbi_gene_info")
 
@@ -584,7 +583,7 @@ annotateGeneIDsWithMongoDB <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
   res <- genes %>%
     dplyr::rename('GeneID'='geneId',
                   'GeneSymbol'='Symbol',
-                  'GeneName'='description',
+                  'Description'='description',
                   "TaxID"="taxId",
                   "Type"="type_of_gene") %>%
     dplyr::select(GeneID, GeneSymbol, GeneName, TaxID, Type)
