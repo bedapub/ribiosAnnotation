@@ -218,7 +218,7 @@ jdbcConnectString <- function(user, password, host, port, sid) {
 ribiosCon <- function(db=dbName(), user=biaroUser(), password=biaroPwd(), 
                       forceJDBC=FALSE) {
   if(hasOracle() & !forceJDBC) {
-    con <- dbConnect(oracleObject(), user = user, password = password, db = db)
+    con <- try(dbConnect(oracleObject(), user = user, password = password, db = db))
   } else {
     options(java.parameters = "-Xmx1g" ) ## increase the heap size before the RJDBC package is loaded
     suppressWarnings(suppressMessages(hasJDBC <- requireNamespace("RJDBC")))
@@ -231,7 +231,7 @@ ribiosCon <- function(db=dbName(), user=biaroUser(), password=biaroPwd(),
                              connection$host,
                              connection$port,
                              connection$service_name)
-    con <- dbConnect(drv,str)
+    con <- try(dbConnect(drv,str))
   }
   return(con)
 }
