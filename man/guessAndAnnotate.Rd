@@ -49,6 +49,8 @@ The difference between \code{guessAndAnnotate} and \code{annotateAnyIDs} is that
 Guess feature ID type by majority voting and annotate them
 }
 \examples{
+options(error=utils::recover)
+\dontrun{
 guessAndAnnotate(c("AKT1", "AKT2", "MAPK14"))
 guessAndAnnotate(c(1,2,14,149))
 guessAndAnnotate(c("NM_000259", "NM_000331"))
@@ -56,6 +58,8 @@ guessAndAnnotate(c("ENST00000613858.4", "ENST00000553916.5",
     "ENST00000399229.6"))
 guessAndAnnotate(c("O60583", "P05997", "Q7Z624"))
 guessAndAnnotate(c("CM000677.2", "AB003434.2"))
+}
+options(error=NULL)
 }
 \seealso{
 \code{\link{annotateAnyIDs}}
