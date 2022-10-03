@@ -203,6 +203,8 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #' @seealso \code{\link{annotateAnyIDs}}
 #' 
 #' @examples 
+#' options(error=utils::recover)
+#' \dontrun{
 #' guessAndAnnotate(c("AKT1", "AKT2", "MAPK14"))
 #' guessAndAnnotate(c(1,2,14,149))
 #' guessAndAnnotate(c("NM_000259", "NM_000331"))
@@ -210,6 +212,8 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #'     "ENST00000399229.6"))
 #' guessAndAnnotate(c("O60583", "P05997", "Q7Z624"))
 #' guessAndAnnotate(c("CM000677.2", "AB003434.2"))
+#' }
+#' options(error=NULL)
 #' @export
 guessAndAnnotate <- function(featureIDs, majority=0.5,
                              orthologue=FALSE, multiOrth=FALSE,
