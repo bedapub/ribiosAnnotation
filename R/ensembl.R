@@ -14,7 +14,7 @@ NULL
 #'   \item{TaxID}: Taxonomy ID
 #' }
 #' This function uses data from EnsEMBL to annotate EnsEMBL GeneIDs. For most 
-#' users, it is recommended to use \code{\link{annotateEnsembleGeneIDs}}, 
+#' users, it is recommended to use \code{\link{annotateEnsemblGeneIDs}}, 
 #' because it uses both data from EnsEMBL and data from NCBI to perform the
 #' task.
 #' 
@@ -23,16 +23,18 @@ NULL
 #' databases like NCBI Genes. If an EnsemblID is invalid or obsolete, the fields
 #' \code{GeneName} and \code{TaxID} will be NA.
 #' 
-#' @seealso Function \code{\link{annotateEnsembleGeneIDsWithNCBI}} annotates
-#' EnsEMBL GeneIDs with data from NCBI, and \code{\link{annotateEnsembleGeneIDs}}
+#' @seealso Function \code{\link{annotateEnsemblGeneIDsWithNCBI}} annotates
+#' EnsEMBL GeneIDs with data from NCBI, and \code{\link{annotateEnsemblGeneIDs}}
 #' annotates EnsEMBL GeneIDs with both data from EnsEMBL and data from NCBI.
 #' @importFrom magrittr %>%
 #' @importFrom ribiosUtils matchColumnIndex
 #' @importFrom dplyr left_join
 #' @examples
+#' \dontrun{
 #' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
 #'                     "ensemble_geneids.txt"), package="ribiosAnnotation"))
 #' ensAnno <- annotateEnsemblGeneIDsWithEnsembl(ensIDs)
+#' }
 #' @export
 annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
   ids <- as.character(ids)
@@ -96,19 +98,21 @@ annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
 #' task.
 #' 
 #' @details The \code{ncbi_gene2ensembl} collection is used.
-#' @seealso Function \code{\link{annotateEnsembleGeneIDsWithEnsembl}} annotates
+#' @seealso Function \code{\link{annotateEnsemblGeneIDsWithEnsembl}} annotates
 #' EnsEMBL GeneIDs with data from Ensembl, and 
-#' \code{\link{annotateEnsembleGeneIDs}} annotates EnsEMBL GeneIDs with both 
+#' \code{\link{annotateEnsemblGeneIDs}} annotates EnsEMBL GeneIDs with both 
 #' data from EnsEMBL and data from NCBI.
 #' @importFrom magrittr %>%
 #' @importFrom ribiosUtils matchColumnIndex
 #' @importFrom dplyr left_join
 #' @examples
+#' \dontrun{
 #' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
 #'                     "ensemble_geneids.txt"), package="ribiosAnnotation"))
-#' ncbiAnno <- annotateEnsembleGeneIDsWithNCBI(ensIDs)
+#' ncbiAnno <- annotateEnsemblGeneIDsWithNCBI(ensIDs)
+#' }
 #' @export
-annotateEnsembleGeneIDsWithNCBI <- function(ids) {
+annotateEnsemblGeneIDsWithNCBI <- function(ids) {
   ids <- as.character(ids)
   uvids <- removeEnsemblVersion(ids)
   input <- data.frame(EnsemblID=ids,
@@ -166,13 +170,15 @@ annotateEnsembleGeneIDsWithNCBI <- function(ids) {
 #' for those genes that are annotated by EnsEMBL but not by NCBI, merging the
 #' information from both sources.
 #' @examples
+#' \dontrun{
 #' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
 #'                     "ensemble_geneids.txt"), package="ribiosAnnotation"))
-#' enAnno <- annotateEnsembleGeneIDs(ensIDs)
+#' enAnno <- annotateEnsemblGeneIDs(ensIDs)
+#' }
 #' @export
-annotateEnsembleGeneIDs <- function(ids) {
+annotateEnsemblGeneIDs <- function(ids) {
   ensAnno <- annotateEnsemblGeneIDsWithEnsembl(ids)
-  ncbiAnno <- annotateEnsembleGeneIDsWithNCBI(ids)
+  ncbiAnno <- annotateEnsemblGeneIDsWithNCBI(ids)
 
   res <- ncbiAnno
   isEnsSuccess <- !is.na(ensAnno$TaxID)
