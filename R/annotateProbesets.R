@@ -1,4 +1,4 @@
-#' @include utils.R annotateAnyIDs.R querydb.R
+#' @include utils.R annotateAnyIDs.R querydb.R orderAnnotationByQuery.R
 NULL
 
 id2rownames <- function(ids) {
@@ -349,7 +349,7 @@ annotateAnyProbeset <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' unique, they are used as row names of the resulting \code{data.frame};
 #' otherwise the row names is set to \code{NULL}, which when printed will be
 #' shown as incremental integers.
-#' 
+#'
 #' If \code{orthologue} is set to \code{TRUE}, orthologue information is
 #' returned.
 #' @note If the \code{chip} option is given, internally the function calls the
@@ -483,116 +483,6 @@ annotateProbeIDs <- annotateProbesets
 #' annotatemRNAs(c("NM_007158", "NM_001007553"))
 #' options(error=NULL)
 #' 
-#' @export annotateGeneIDs
-annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
-  comm <- paste("SELECT c.RO_GENE_ID,c.GENE_SYMBOL, c.DESCRIPTION, c.TAX_ID ",
-                " FROM GTI_GENES c", sep="")
-  ann <- querydbTmpTbl(comm, 
-                       "c.RO_GENE_ID",
-                       ids, dbName(), binUser(), binPwd())
-  cnames <- c("GeneID", "GeneSymbol", "GeneName", "TaxID")
-  conames <- c("OrigGeneID", "OrigGeneSymbol", "OrigGeneName", "OrigTaxID")
-
-  if(!orthologue) {
-    colnames(ann) <- cnames
-    cn <- "GeneID"
-    res <- ann
-  } else {
-    colnames(ann) <- conames
-    cn <- "OrigGeneID"
-    ort <- annotateHumanOrthologsNoOrigTax(ann$OrigGeneID, multiOrth=multiOrth)
-    if(multiOrth) {
-      res <- merge(ann, ort, by="OrigGeneID", all.x=TRUE)
-    } else {
-      ort.re <- matchColumn(ann$OrigGeneID, ort, "OrigGeneID", multi=FALSE)
-      res <- cbind(ann, ort.re[,-1L])
-    }
-    res <- putColsFirst(res, c("GeneID", "GeneSymbol", "TaxID",
-                               "OrigTaxID", "OrigGeneID", "OrigGeneSymbol", "OrigGeneName"))
-  }
-  res <- matchColumn(ids, res, cn, multi=orthologue && multiOrth)
-  rownames(res) <- id2rownames(res[,cn])
-  return(res)
-}
-
-#' Annotate GeneID with MongoDB
-#' 
-#' Annotate GeneIDs, GeneSymbols or mRNA accesion numbers with MongoDB. This 
-#' function will replaec annotateGeneIDs soon.
-#' 
-#' @aliases annotateGeneIDs annotateGeneSymbols annotateRefSeqs annotatemRNAs
-#' @param ids Character vector, GeneIDs, GeneSymbols or mRNAs of query. It can
-#' contain \code{NA} or \code{NULL}
-#' @param orthologue Logical, whether human orthologues should be returned, 
-#' currently not supported
-#' @param multiOrth Logical, whether multiple mapped orthologues should be
-#' returned or not. Only useful when \code{orthologue} is \code{TRUE}, By
-#' default \code{FALSE}. Be cautious with the \code{TRUE} option: in this case
-#' the returning \code{data.frame} may have different row numbers as the input
-#' vector.
-#' @return A \code{data.frame} object containing the annotations.
-#' 
-#' If \code{orthologue} is set to \code{FALSE}, the data frame contains
-#' following columns: \code{GeneID, GeneSymbol, GeneName and TaxID}
-#' 
-#' If \code{orthologue} is \code{TRUE}, the data frame contains \code{GeneID,
-#' GeneSymbol,TaxID, OrigTaxID, OrigGeneID, OrigGeneSymbol, OrigGeneName}. Note
-#' that \code{GeneID, GeneSymbol, TaxID} contains the information of mapped
-#' orthologues, while \code{OrigXXX} contains the information of queried genes.
-#' 
-#' If \code{multiOrth} is \code{TRUE} (only valid when \code{orthologue} is
-#' \code{TRUE}), multiples orthologues mapped to the same gene are all
-#' returned. This means that the result data frame may contain more rows than
-#' the length of input vector. If set to \code{FALSE}, the resulting data frame
-#' contains exact number of rows as the input vector length.
-#' @note \code{annotatemRNAs} is an alias of \code{annotateRefSeqs}
-#' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
-#' @seealso See \code{\link{gtiChipAnnotation}} to get annotation for all
-#' probesets in a chip.
-#' 
-#' See \code{\link{annotateProbesets}} to get annotation for probesets.
-#' @note Currently, \code{NA} and \code{NULL} is not handled. This may change later.
-#'
-#' @examples
-#' 
-#' options(error=utils::recover)
-#' 
-#' ## normal use
-#' annotateGeneIDsWithMongoDB(ids=c(780, 5982, 3310))
-#' ## annotateGeneIDsWithMongoDB(ids=c(780, 5982, 3310, NA))
-#' ## annotateGeneIDsWithMongoDB(ids=c(780, 5982, 3310, NULL))
-#' options(error=NULL)
-#' 
-#' @importFrom ribiosUtils matchColumnIndex
-#' @export annotateGeneIDsWithMongoDB
-annotateGeneIDsWithMongoDB <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
-  if(orthologue) {
-    stop("not supported yet")
-  }
-  GeneID <- GeneSymbol <- Description <- TaxID <- Type <- NULL
-
-  giCon <- connectMongoDB(instance="bioinfo_read",
-                          collection="ncbi_gene_info")
-
-  
-  speciesFields <- c("Symbol", "description", "geneId",
-                     "taxId", "type_of_gene")
-  speciesFieldsJson <- returnFieldsJson(speciesFields)
-  query <- paste0('{"geneId":{"$in":[', paste(as.character(ids), collapse=","),']}}')
-  genes <- giCon$find(query, fields=speciesFieldsJson) 
-  res <- genes %>%
-    dplyr::rename('GeneID'='geneId',
-                  'GeneSymbol'='Symbol',
-                  'Description'='description',
-                  "TaxID"="taxId",
-                  "Type"="type_of_gene") %>%
-    dplyr::select(GeneID, GeneSymbol, Description, TaxID, Type)
-  resInd <- ribiosUtils::matchColumnIndex(ids, res, "GeneID", multi=multiOrth)
-  res <- res[resInd,,drop=FALSE]
-  rownames(res) <- id2rownames(ids)
-  return(res)
-}
-
 #' @export annotateGeneSymbols
 annotateGeneSymbols <- function(ids,
                                 organism=c("human", "mouse", "rat", "any"),
