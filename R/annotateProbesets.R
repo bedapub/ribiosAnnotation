@@ -420,9 +420,10 @@ annotateProbeIDs <- annotateProbesets
 #' From version \code{2.0-0}, the speed of both functions are further
 #' optimized.
 #' 
-#' @aliases annotateGeneIDs annotateGeneSymbols annotateRefSeqs annotatemRNAs
+#' @aliases annotateGeneSymbols annotateRefSeqs annotatemRNAs
 #' @param ids Character vector, GeneIDs, GeneSymbols or mRNAs of query. It can
 #' contain \code{NA} or \code{NULL}
+#' @param organism Organism, used by \code{annotateGeneSymbols}
 #' @param orthologue Logical, whether human orthologues should be returnd
 #' @param multiOrth Logical, whether multiple mapped orthologues should be
 #' returned or not. Only useful when \code{orthologue} is \code{TRUE}, By
@@ -455,8 +456,6 @@ annotateProbeIDs <- annotateProbesets
 #' options(error=utils::recover)
 #' 
 #' ## normal use
-#' annotateGeneIDs(ids=c(780, 5982, 3310, NA))
-#' annotateGeneIDs(ids=c(780, 5982, 3310, NULL))
 #' annotateGeneSymbols(ids=c("DDR1", "RFC2", "HSPA6",
 #' "HSAP6"),organism="human", orthologue=FALSE)
 #' 
@@ -464,14 +463,8 @@ annotateProbeIDs <- annotateProbesets
 #' annotateGeneSymbols(ids=c("DDR1", "RFC2", "HSPA6", "HSAP6"),organism="any", orthologue=FALSE)
 #' 
 #' ## orthologues
-#' annotateGeneIDs(ids=c(1017, 12566, 362817, 26416, 81649),
-#' orthologue=FALSE)
-#' annotateGeneIDs(ids=c(1017, 12566, 362817, 26416, 81649),
-#' orthologue=TRUE)
 #' annotateGeneSymbols(ids=c("DDR1", "RFC2", "HSPA6",
 #' "HSAP6"),organism="any", orthologue=TRUE)
-#' annotateGeneIDs(ids=c(1017, 12566, 362817, 26416, 81649),
-#' orthologue=TRUE, multiOrth=TRUE)
 #' 
 #' ## Following examples underlines the non-uniqueness of GeneSymbols
 #' annotateGeneSymbols(ids=c("Cdk2", "CDK4", "Mapk14"),organism="rat",

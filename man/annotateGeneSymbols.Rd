@@ -2,7 +2,6 @@
 % Please edit documentation in R/annotateProbesets.R
 \name{annotateGeneSymbols}
 \alias{annotateGeneSymbols}
-\alias{annotateGeneIDs}
 \alias{annotateRefSeqs}
 \alias{annotatemRNAs}
 \title{Annotate GeneIDs, GeneSymbols, or mRNA accession numbers.}
@@ -17,6 +16,8 @@ annotateGeneSymbols(
 \arguments{
 \item{ids}{Character vector, GeneIDs, GeneSymbols or mRNAs of query. It can
 contain \code{NA} or \code{NULL}}
+
+\item{organism}{Organism, used by \code{annotateGeneSymbols}}
 
 \item{orthologue}{Logical, whether human orthologues should be returnd}
 
@@ -68,8 +69,6 @@ optimized.
 options(error=utils::recover)
 
 ## normal use
-annotateGeneIDs(ids=c(780, 5982, 3310, NA))
-annotateGeneIDs(ids=c(780, 5982, 3310, NULL))
 annotateGeneSymbols(ids=c("DDR1", "RFC2", "HSPA6",
 "HSAP6"),organism="human", orthologue=FALSE)
 
@@ -77,14 +76,8 @@ annotateGeneSymbols(ids=c("DDR1", "RFC2", "HSPA6",
 annotateGeneSymbols(ids=c("DDR1", "RFC2", "HSPA6", "HSAP6"),organism="any", orthologue=FALSE)
 
 ## orthologues
-annotateGeneIDs(ids=c(1017, 12566, 362817, 26416, 81649),
-orthologue=FALSE)
-annotateGeneIDs(ids=c(1017, 12566, 362817, 26416, 81649),
-orthologue=TRUE)
 annotateGeneSymbols(ids=c("DDR1", "RFC2", "HSPA6",
 "HSAP6"),organism="any", orthologue=TRUE)
-annotateGeneIDs(ids=c(1017, 12566, 362817, 26416, 81649),
-orthologue=TRUE, multiOrth=TRUE)
 
 ## Following examples underlines the non-uniqueness of GeneSymbols
 annotateGeneSymbols(ids=c("Cdk2", "CDK4", "Mapk14"),organism="rat",
