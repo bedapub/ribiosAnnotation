@@ -252,6 +252,8 @@ annotateEnsemblGeneIDsWithoutHumanOrtholog <- function(ids) {
 #'   \item{HumanDescription}: Gene description of the human orthologue
 #'   \item{HumanType}: Gene type of the human orthologue
 #' }
+#' @note Currently the human orthologs are looked up in NCBI. It remains to
+#' be changed to EnsEMBL
 #' @examples
 #' \dontrun{
 #' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
