@@ -91,14 +91,21 @@ annotateGeneIDsWithoutHumanOrtholog <- function(ids) {
                                           "taxId", "type_of_gene"))
   query <- paste0('{"geneId":{"$in":[', paste(as.character(validID), collapse=","),']}}')
   genes <- giCon$find(query, fields=speciesFieldsJson) 
-  res <- genes %>%
-    dplyr::rename('GeneID'='geneId',
-                  'GeneSymbol'='Symbol',
-                  'Description'='description',
-                  "TaxID"="taxId",
-                  "Type"="type_of_gene") %>%
-    dplyr::select(GeneID, GeneSymbol, Description, TaxID, Type)
-  
+  if(nrow(genes)==0) {
+    res <- data.frame(GeneID=ids,
+                      GeneSymbol=NA,
+                      Description=NA,
+                      TaxID=NA,
+                      Type=NA)
+  } else {
+    res <- genes %>%
+      dplyr::rename('GeneID'='geneId',
+                    'GeneSymbol'='Symbol',
+                    'Description'='description',
+                    "TaxID"="taxId",
+                    "Type"="type_of_gene") %>%
+      dplyr::select(GeneID, GeneSymbol, Description, TaxID, Type)
+  }
   res <- sortAnnotationByQuery(res, ids, "GeneID", multi=FALSE)
   return(res)
 }
