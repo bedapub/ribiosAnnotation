@@ -65,7 +65,15 @@ likeRefSeq <- function(featureIDs) {
 #' @describeIn likeGeneID tests whether input strings look like Ensembl IDs
 #' @export
 likeEnsembl <- function(featureIDs) {
-  res <- grepl("^ENS[T|G|P][0-9]+\\.?[0-9]*$",
+  res <- grepl("^ENS[A-Z]*[T|G|P][0-9]+\\.?[0-9]*$",
+               as.character(featureIDs))
+  return(res)
+}
+
+#' @describeIn likeGeneID tests whether input strings look like EnsemblGeneIDs
+#' @export
+likeEnsemblGeneID <- function(featureIDs) {
+  res <- grepl("^ENS[A-Z]*G[0-9]+\\.?[0-9]*$",
                as.character(featureIDs))
   return(res)
 }
@@ -135,6 +143,7 @@ majorityLikeHumanGeneSymbol <- function(x, majority=0.8) {
 #'     \item \code{GeneID}
 #'     \item \code{GeneSymbol}
 #'     \item \code{RefSeq}
+#'     \item \code{EnsemblGeneID}
 #'     \item \code{Ensembl}
 #'     \item \code{UniProt}
 #'     \item \code{Unknown}
@@ -152,6 +161,7 @@ majorityLikeHumanGeneSymbol <- function(x, majority=0.8) {
 guessFeatureType <- function(featureIDs, majority=0.5) {
   vnames <- as.character(validFeatureIDs(featureIDs))
   geneIdsLike <- likeGeneID(vnames)
+  ensemblGeneIDLike <- likeEnsemblGeneID(vnames)
   ensemblLike <- likeEnsembl(vnames)
   geneSymbolsLike <- likeGeneSymbol(vnames)
   refseqLike <- likeRefSeq(vnames)
@@ -163,6 +173,8 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
     return("GeneSymbol")
   } else if(mean(refseqLike, na.rm=TRUE)>=majority) {
     return("RefSeq")
+  } else if(mean(ensemblGeneIDLike, na.rm=TRUE)>=majority) {
+    return("EnsemblGeneID")
   } else if(mean(ensemblLike, na.rm=TRUE)>=majority) {
     return("Ensembl")
   } else if(mean(uniprotLike, na.rm=TRUE)>=majority) {
@@ -192,6 +204,7 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #'     \item \code{GeneID}
 #'     \item \code{GeneSymbol}
 #'     \item \code{RefSeq}
+#'     \item \code{EnsemblGeneID}
 #'     \item \code{Ensembl}
 #'     \item \code{UniProt}
 #'     \item \code{Unknown}
@@ -222,20 +235,26 @@ guessAndAnnotate <- function(featureIDs, majority=0.5,
   if(ft=="GeneID") {
     res <- annotateGeneIDs(featureIDs, orthologue=orthologue, 
                            multiOrth=multiOrth)
-  } else if (ft=="GeneSymbol") {
-    res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, 
-                               multiOrth=multiOrth, organism=organism)
-  } else if (ft=="RefSeq") {
-    res <- annotateRefSeqs(featureIDs, orthologue=orthologue, 
-                           multiOrth=multiOrth)
   } else if (ft=="Ensembl") {
-    res <- annotateEnsembl(featureIDs, orthologue=orthologue, 
+    res <- annotateEnsemblGeneIDs(featureIDs, orthologue=orthologue, 
                            multiOrth=multiOrth)
-  } else if (ft=="UniProt") {
-    res <- annotateAnyIDs(featureIDs, orthologue=orthologue, 
-                          multiOrth=multiOrth)
   } else {
-    res <- data.frame(FeatureName=featureIDs, row.names=id2rownames(featureIDs))
-  }
+    res <- annotateAnyIDs(featureIDs, orthologue=orthologue,
+                          multiOrth=multiOrth)
+  } 
+  ## the following options will be restored gradually
+  # else if (ft=="GeneSymbol") {
+  #   res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, 
+  #                              multiOrth=multiOrth, organism=organism)
+  # } else if (ft=="RefSeq") {
+  #   res <- annotateRefSeqs(featureIDs, orthologue=orthologue, 
+  #                          multiOrth=multiOrth)
+  # } 
+  # } else if (ft=="UniProt") {
+  #   res <- annotateAnyIDs(featureIDs, orthologue=orthologue, 
+  #                         multiOrth=multiOrth)
+  # } else {
+  #   res <- data.frame(FeatureName=featureIDs, row.names=id2rownames(featureIDs))
+  # }
   return(res)
 }

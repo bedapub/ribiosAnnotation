@@ -4,6 +4,7 @@
 \alias{likeGeneID}
 \alias{likeRefSeq}
 \alias{likeEnsembl}
+\alias{likeEnsemblGeneID}
 \alias{likeUniProt}
 \alias{likeGeneSymbol}
 \alias{likeHumanGeneSymbol}
@@ -14,6 +15,8 @@ likeGeneID(featureIDs)
 likeRefSeq(featureIDs)
 
 likeEnsembl(featureIDs)
+
+likeEnsemblGeneID(featureIDs)
 
 likeUniProt(featureIDs)
 
@@ -35,6 +38,8 @@ Whether input strings look like Entrez GeneIDs
 \item \code{likeRefSeq}: tests whether input strings look like NCBI RefSeq IDs
 
 \item \code{likeEnsembl}: tests whether input strings look like Ensembl IDs
+
+\item \code{likeEnsemblGeneID}: tests whether input strings look like EnsemblGeneIDs
 
 \item \code{likeUniProt}: tests whether input strings look like UniProt IDs
 

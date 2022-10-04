@@ -37,6 +37,7 @@ A \code{data.frame}, containing annotations of following ID types
     \item \code{GeneID}
     \item \code{GeneSymbol}
     \item \code{RefSeq}
+    \item \code{EnsemblGeneID}
     \item \code{Ensembl}
     \item \code{UniProt}
     \item \code{Unknown}
