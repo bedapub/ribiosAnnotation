@@ -32,21 +32,21 @@ Quick access of credentials
 }
 \section{Functions}{
 \itemize{
-\item \code{biaPwd}: BIA password
+\item \code{biaPwd()}: BIA password
 
-\item \code{bia2User}: BIA2 username
+\item \code{bia2User()}: BIA2 username
 
-\item \code{bia2Pwd}: BIA2 password
+\item \code{bia2Pwd()}: BIA2 password
 
-\item \code{biaroUser}: BIA READONLY username
+\item \code{biaroUser()}: BIA READONLY username
 
-\item \code{biaroPwd}: BIA READONLY password
+\item \code{biaroPwd()}: BIA READONLY password
 
-\item \code{binUser}: BIN username
+\item \code{binUser()}: BIN username
 
-\item \code{binPwd}: BIN password
+\item \code{binPwd()}: BIN password
+
 }}
-
 \section{Functions}{
  \itemize{ \item \code{biaPwd}: BIA password
 
