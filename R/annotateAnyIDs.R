@@ -1,7 +1,5 @@
-#' @include utils.R querydb.R removeEnsemblVersion.R
+#' @include utils.R removeEnsemblVersion.R sortAnnotationByQuery.R
 NULL
-
-## if only looking after proteins, it is also possible to check the GA_PROTEIN_GENE table in the protein component of the Genome Analysis Pipeline
 
 #' Annotate any identifiers
 #' 
@@ -19,7 +17,7 @@ NULL
 #'    columns exist at least: 
 #' \enumerate{
 #'   \item \code{Input} Input string, it will be in the first column.
-#'   \item \code{InputIDType} Input ID type 
+#'   \item \code{IDType} Input ID type
 #'   \item \code{GeneID} (Human) Entrez GeneID
 #'   \item \code{GeneSymbol} (Human) official gene symbol
 #'   \item \code{GeneName} (Human) gene name
@@ -41,7 +39,7 @@ NULL
 #' 
 #' # Probesets
 #' myprobes <- c("1000_at", "1004_at", "1002_f_at", "nonsense_at")
-#' annotateProbesets(myprobes, chiptype="HG_U95A")
+#' annotateAnyIDs(myprobes)
 #' 
 #' # UniProt
 #' annotateAnyIDs(ids=c("P38398", "Q8NDF8"))
@@ -49,6 +47,7 @@ NULL
 #' # EnsEMBL 
 #' ensemblIDs <- c("ENSG00000197535", "ENST00000399231.7", "ENSP00000418960.2")
 #' annotateAnyIDs(ensemblIDs)
+#' annotateAnyIDs("ENST00000399231")
 #' 
 #' # RefSeq
 #' annotateAnyIDs(c("NM_000235", "NM_000498"))
@@ -57,38 +56,38 @@ NULL
 #' 
 #' @export annotateAnyIDs
 annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
-  inputIds <- ids
-  ids <- removeEnsemblVersion(inputIds)
-  comm <- paste("SELECT m.ANY_ID, m.ID_TYPE, c.RO_GENE_ID,c.GENE_SYMBOL, c.DESCRIPTION, c.TAX_ID ", 
-                " FROM GTI_GENES c JOIN GTI_IDMAP m ON c.RO_GENE_ID=m.RO_GENE_ID ",sep="")
-  ann <- querydbTmpTbl(comm, "m.ANY_ID", ids, dbName(),
-                       binUser(), 
-                       binPwd())
-  cnames <- c("Input", "InputIDType", "GeneID", "GeneSymbol", "GeneName", "TaxID")
-  conames <- c("Input", "InputIDType", "OrigGeneID", "OrigGeneSymbol",
-               "OrigGeneName", "OrigTaxID")
-  cn <- "Input"
-  if (!orthologue) {
-    colnames(ann) <- cnames
-    res <- ann
+  validIDs <- removeEnsemblVersion(ids)
+  validIDs <- validIDs[!is.na(validIDs)]
+  
+  giCon <- connectMongoDB(instance="bioinfo_read",
+                          collection="featureanno")
+  
+  fieldsJson <- returnFieldsJson(c("feature_id", "tax_id", "gene_id", "id_type"))
+  query <- paste0('{"feature_id":{"$in":[', 
+                  paste(paste0("\"", as.character(validIDs), "\""), 
+                        collapse=","),']}}')
+  genes <- giCon$find(query, fields=fieldsJson)
+  if(nrow(genes)==0) {
+    featAnno <- data.frame(FeatureID=id, 
+                           GeneID=NA,
+                           TaxID=NA,
+                           IDType=NA)
   } else {
-    colnames(ann) <- conames
-    ort <- annotateHumanOrthologsNoOrigTax(ann$OrigGeneID, 
-                                           multiOrth = multiOrth)
-    if (multiOrth) {
-      res <- merge(ann, ort, by = "OrigGeneID", all.x = TRUE)
-    }  else {
-      ort.re <- matchColumn(ann$OrigGeneID, ort, "OrigGeneID", 
-                            multi = FALSE)
-      res <- cbind(ann, ort.re[, -1L])
-    }
-    res <- putColsFirst(res, c("Input", "InputIDType", "GeneID", "GeneSymbol", "TaxID", 
-                               "OrigTaxID", "OrigGeneID", "OrigGeneSymbol", "OrigGeneName"))
+    featAnno <- genes %>%
+      dplyr::rename("FeatureID"="feature_id",
+                    'GeneID'='gene_id',
+                    "TaxID"="tax_id",
+                    "IDType"="id_type") %>%
+      dplyr::select(FeatureID, GeneID, TaxID, IDType)
   }
-  res <- matchColumn(ids, res, cn, multi = orthologue && multiOrth)
-  if(!identical(inputIds, ids)) {
-    res[, cn] <- inputIds[match(res[, cn], ids)]
+  
+  if(orthologue) {
+    res <- appendHumanOrthologsWithNCBI(featAnno, multiOrth = multiOrth)
+  } else {
+    geneanno <- annotateGeneIDsWithoutHumanOrtholog(featAnno$GeneID) %>%
+      dplyr::select(-TaxID)
+    res <- left_join(featAnno, geneanno, by="GeneID")
   }
-  rownames(res) <- id2rownames(res[, cn])
+  res <- sortAnnotationByQuery(res, ids, "FeatureID", multi=FALSE)
   return(res)
 }

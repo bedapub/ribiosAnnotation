@@ -21,7 +21,7 @@ A \code{data.frame} containing annotation information. Following
    columns exist at least: 
 \enumerate{
   \item \code{Input} Input string, it will be in the first column.
-  \item \code{InputIDType} Input ID type 
+  \item \code{InputFeatureType} Input ID type 
   \item \code{GeneID} (Human) Entrez GeneID
   \item \code{GeneSymbol} (Human) official gene symbol
   \item \code{GeneName} (Human) gene name
@@ -43,7 +43,7 @@ annotateAnyIDs(ids=c("DDR1", "RFC2", "HSPA6", "HSAP6"))
 
 # Probesets
 myprobes <- c("1000_at", "1004_at", "1002_f_at", "nonsense_at")
-annotateProbesets(myprobes, chiptype="HG_U95A")
+annotateAnyIDs(myprobes)
 
 # UniProt
 annotateAnyIDs(ids=c("P38398", "Q8NDF8"))
@@ -51,6 +51,7 @@ annotateAnyIDs(ids=c("P38398", "Q8NDF8"))
 # EnsEMBL 
 ensemblIDs <- c("ENSG00000197535", "ENST00000399231.7", "ENSP00000418960.2")
 annotateAnyIDs(ensemblIDs)
+annotateAnyIDs("ENST00000399231")
 
 # RefSeq
 annotateAnyIDs(c("NM_000235", "NM_000498"))
