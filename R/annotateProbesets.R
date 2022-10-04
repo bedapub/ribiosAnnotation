@@ -1,4 +1,4 @@
-#' @include utils.R annotateAnyIDs.R querydb.R orderAnnotationByQuery.R
+#' @include utils.R annotateAnyIDs.R querydb.R sortAnnotationByQuery.R
 NULL
 
 id2rownames <- function(ids) {

@@ -1,4 +1,5 @@
-#' @include utils.R annotateAnyIDs.R querydb.R orderAnnotationByQuery.R
+#' @include utils.R annotateAnyIDs.R querydb.R sortAnnotationByQuery.R
+#' @include appendHumanOrthologsWithNCBI.R
 NULL
 
 #' Annotate Entrez GeneIDs
@@ -133,34 +134,10 @@ annotateGeneIDsWithoutHumanOrtholog <- function(ids) {
 #' 
 #' @export
 annotateGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE) {
-  
   HumanGeneID <- HumanGeneSymbol <- HumanDescription <- Type <- NULL
   GeneSymbol <- GeneID <- Description <- NULL
   
-  hasCharOrIsNa <- any(is.character(ids) | is.na(ids))
-  if(hasCharOrIsNa) {
-    ids <- as.character(ids)
-  }
   geneIdAnno <- annotateGeneIDsWithoutHumanOrtholog(ids)
-  if(!any(is.na(geneIdAnno$TaxID)) && all(geneIdAnno$TaxID==9606)) {
-    res <- geneIdAnno %>%
-      dplyr::mutate(HumanGeneID=GeneID,
-                    HumanGeneSymbol=GeneSymbol,
-                    HumanDescription=Description,
-                    HumanType=Type)
-  } else {
-    orthologs <- annotateHumanOrthologsWithNCBI(geneIdAnno$GeneID,
-                                                multiOrth=multiOrth) %>%
-      dplyr::select(GeneID, HumanGeneID)
-    orthologAnno <- annotateGeneIDsWithoutHumanOrtholog(orthologs$HumanGeneID) %>%
-      dplyr::select(GeneID, HumanGeneSymbol=GeneSymbol, HumanDescription=Description,
-                    HumanType=Type)
-    if(hasCharOrIsNa) {
-      orthologAnno$GeneID <- as.character(orthologAnno$GeneID)
-    }
-    res <- left_join(geneIdAnno, orthologs, by="GeneID") %>%
-      left_join(orthologAnno, by="GeneID") %>% unique
-  }
-  res <- sortAnnotationByQuery(res, ids, "GeneID", multi = multiOrth)
+  res <- appendHumanOrthologsWithNCBI(geneIdAnno)
   return(res)
 }

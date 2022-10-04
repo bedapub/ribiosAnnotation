@@ -1,4 +1,4 @@
-#' @include orderAnnotationByQuery.R
+#' @include sortAnnotationByQuery.R
 NULL
 
 
