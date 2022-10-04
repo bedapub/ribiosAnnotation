@@ -14,10 +14,18 @@ stores taxonomy ID, which are integers, too (again, NA values and characters
 are tolerated).}
 
 \item{multiOrth}{Logical, whether one row is allowed to map to multiple 
-orthologues}
+orthologues
+
+The function appends human orthologs to an existing annotation data.frame. It
+is usually called by another function. Please make sure what you are doing 
+if you call it directly.}
 }
 \description{
 Append human orthologs to an existing annotation dataframe
+}
+\note{
+The function does not sort the rows by GeneID. It is the responsibility
+ of the calling function to do so.
 }
 \examples{
 \dontrun{

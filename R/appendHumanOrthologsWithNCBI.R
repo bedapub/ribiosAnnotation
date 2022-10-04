@@ -11,6 +11,13 @@ NULL
 #' @param multiOrth Logical, whether one row is allowed to map to multiple 
 #' orthologues
 #' 
+#' The function appends human orthologs to an existing annotation data.frame. It
+#' is usually called by another function. Please make sure what you are doing 
+#' if you call it directly.
+#' 
+#' @note The function does not sort the rows by GeneID. It is the responsibility
+#'  of the calling function to do so.
+#' 
 #' @examples 
 #' \dontrun{
 #' anno <- data.frame(GeneID=c(780, 1506, 114483548, 102129055, NA),
@@ -30,7 +37,10 @@ appendHumanOrthologsWithNCBI <- function(anno,
                          "'GeneID' and 'TaxID' columns."))
   
   anno$chrGeneID <- as.character(anno$GeneID)
-  if(!any(is.na(anno$TaxID)) && all(anno$TaxID==9606)) {
+  taxIsAllHumanOrNA <- with(anno,
+                            setequal(as.character(TaxID[!is.na(TaxID)]),
+                                     "9606"))
+  if(taxIsAllHumanOrNA) {
     res <- anno %>%
       dplyr::mutate(HumanGeneID=GeneID,
                     HumanGeneSymbol=GeneSymbol,
@@ -53,6 +63,5 @@ appendHumanOrthologsWithNCBI <- function(anno,
       dplyr::select(-chrGeneID)
   }
   
-  res <- sortAnnotationByQuery(res, anno$GeneID, "GeneID", multi = multiOrth)
   return(res)
 }
