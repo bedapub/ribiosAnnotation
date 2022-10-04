@@ -32,6 +32,9 @@ NULL
 #' @export
 appendHumanOrthologsWithNCBI <- function(anno,
                                          multiOrth=FALSE) {
+  Description <- GeneID <- GeneSymbol <- Type <- HumanGeneID <- NULL
+  chrGeneID <- NULL
+
   ribiosUtils::haltifnot(all(c("GeneID", "TaxID") %in% colnames(anno)),
                          msg=paste0("The annotation dataframe must contain ",
                          "'GeneID' and 'TaxID' columns."))
