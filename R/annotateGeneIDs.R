@@ -138,6 +138,8 @@ annotateGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE) {
   GeneSymbol <- GeneID <- Description <- NULL
   
   geneIdAnno <- annotateGeneIDsWithoutHumanOrtholog(ids)
-  res <- appendHumanOrthologsWithNCBI(geneIdAnno)
+  appGeneIDanno <- appendHumanOrthologsWithNCBI(geneIdAnno)
+  res <- sortAnnotationByQuery(appGeneIDanno, ids, "GeneID", multi = multiOrth)
+  
   return(res)
 }
