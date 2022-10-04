@@ -47,6 +47,8 @@ NULL
 #' # EnsEMBL 
 #' ensemblIDs <- c("ENSG00000197535", "ENST00000399231.7", "ENSP00000418960.2")
 #' annotateAnyIDs(ensemblIDs)
+#' 
+#' # TODO: ENST and ENSP do not work yet
 #' annotateAnyIDs("ENST00000399231")
 #' 
 #' # RefSeq
@@ -59,6 +61,8 @@ annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
   validIDs <- removeEnsemblVersion(ids)
   validIDs <- validIDs[!is.na(validIDs)]
   
+  Input <- GeneID <- TaxID <- IDType <- NULL
+  
   giCon <- connectMongoDB(instance="bioinfo_read",
                           collection="featureanno")
   
@@ -68,17 +72,17 @@ annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
                         collapse=","),']}}')
   genes <- giCon$find(query, fields=fieldsJson)
   if(nrow(genes)==0) {
-    featAnno <- data.frame(FeatureID=id, 
+    featAnno <- data.frame(Input=ids, 
                            GeneID=NA,
                            TaxID=NA,
                            IDType=NA)
   } else {
     featAnno <- genes %>%
-      dplyr::rename("FeatureID"="feature_id",
+      dplyr::rename("Input"="feature_id",
                     'GeneID'='gene_id',
                     "TaxID"="tax_id",
                     "IDType"="id_type") %>%
-      dplyr::select(FeatureID, GeneID, TaxID, IDType)
+      dplyr::select(Input, GeneID, TaxID, IDType)
   }
   
   if(orthologue) {
@@ -88,6 +92,6 @@ annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
       dplyr::select(-TaxID)
     res <- left_join(featAnno, geneanno, by="GeneID")
   }
-  res <- sortAnnotationByQuery(res, ids, "FeatureID", multi=FALSE)
+  res <- sortAnnotationByQuery(res, ids, "Input", multi=FALSE)
   return(res)
 }
