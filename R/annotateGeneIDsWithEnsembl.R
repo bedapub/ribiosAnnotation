@@ -31,15 +31,15 @@
 #' If either \code{transcript} or \code{protein} type is used, more than one 
 #' items will be returned for each input ID.
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
-#' @seealso See \code{\link{annotateEnsembl}} to annotate Ensembl IDs.
+#'
+#' @seealso See \code{\link{annotateEnsemblGeneIDs}} to annotate Ensembl GeneIDs.
 #' 
 #' See \code{\link{annotateGeneIDs}} to get annotation for Entrez GeneIDs.
 #' 
 #' See \code{\link{annotateProbesets}} to get annotation for probesets.
 #' @examples
 #' 
-#' options(error=utils::recover)
-#' 
+#' \dontrun{
 #' ## normal use
 #' annotateGeneIDsWithEnsembl(c(1234, 1432, NULL))
 #' annotateGeneIDsWithEnsembl(c(1234, 1432, NULL), type="transcript")
@@ -49,7 +49,7 @@
 #' ## it is possible to mix ids of different species
 #' annotateGeneIDsWithEnsembl(ids=c("1234", "22227"), orthologue=TRUE)
 #' 
-#' options(error=NULL)
+#' }
 #' 
 #' @export annotateGeneIDsWithEnsembl
 annotateGeneIDsWithEnsembl <- function (ids, 

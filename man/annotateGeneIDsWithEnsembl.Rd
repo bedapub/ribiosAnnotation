@@ -52,8 +52,7 @@ Annotate EntrezGeneID with Ensemble identifiers
 }
 \examples{
 
-options(error=utils::recover)
-
+\dontrun{
 ## normal use
 annotateGeneIDsWithEnsembl(c(1234, 1432, NULL))
 annotateGeneIDsWithEnsembl(c(1234, 1432, NULL), type="transcript")
@@ -63,11 +62,11 @@ annotateGeneIDsWithEnsembl(ids="22227", orthologue=TRUE)
 ## it is possible to mix ids of different species
 annotateGeneIDsWithEnsembl(ids=c("1234", "22227"), orthologue=TRUE)
 
-options(error=NULL)
+}
 
 }
 \seealso{
-See \code{\link{annotateEnsembl}} to annotate Ensembl IDs.
+See \code{\link{annotateEnsemblGeneIDs}} to annotate Ensembl GeneIDs.
 
 See \code{\link{annotateGeneIDs}} to get annotation for Entrez GeneIDs.
 
