@@ -10,6 +10,9 @@ annotateEnsemblGeneIDsWithHumanOrtholog(ids, multiOrth = FALSE)
 \item{ids}{A vector of character strings, Ensembl GeneIDs in form of 
 \code{ENS(species)(object type)(identifier).(version)}. The version is
 optional.}
+
+\item{multiOrth}{Logical, whether mutliple orthologues should be returned if
+exist. Deafult: \code{FALSE}}
 }
 \value{
 A \code{data.frame} containing following columns:

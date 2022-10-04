@@ -239,6 +239,8 @@ annotateEnsemblGeneIDsWithoutHumanOrtholog <- function(ids) {
 #' @param ids A vector of character strings, Ensembl GeneIDs in form of 
 #' \code{ENS(species)(object type)(identifier).(version)}. The version is
 #' optional.
+#' @param multiOrth Logical, whether mutliple orthologues should be returned if
+#' exist. Deafult: \code{FALSE}
 #' @return A \code{data.frame} containing following columns:
 #' \itemize{
 #'   \item{EnsemblID}: The input EnsemblID
