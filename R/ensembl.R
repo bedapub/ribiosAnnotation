@@ -1,6 +1,50 @@
 #' @include removeEnsemblVersion.R
 NULL
 
+#' Annotate Enesembl GeneIDs
+#' 
+#' @param ids A vector of EnsemblGeneIDs in form of 
+#' \code{ENS(species)(object type)(identifier).(version)}. The version is
+#' optional.
+#' @param orthologue Logical, whether human orthologues should be returned. 
+#' Default: \code{FALSE}
+#' @param multiOrth Logical, whether mutliple orthologues should be returned if
+#' exist. Deafult: \code{FALSE}
+#' @return A \code{data.frame} object containing the annotations:
+#' * GeneID EntrezGeneID
+#' * GeneSymbol Official gene symbol
+#' * Description Gene description
+#' * TaxID Taxonomy ID
+#' * Type Gene type
+#' 
+#' If \code{orthologue} is \code{TRUE}, following columns are appended:
+#' * HumanGeneID
+#' * HumanGeneSymbol
+#' * HumanDescription
+#' * HumanType
+#' @seealso \code{\link{annotateEnsemblGeneIDsWithoutHumanOrtholog}} and
+#' \code{\link{annotateEnsemblGeneIDsWithHumanOrtholog}}
+#' @examples 
+#' \dontrun{
+#'   annotateEnsemblGeneIDs(ids=c("ENSG00000236453", "ENSG00000170782",
+#'                                "ENSG00000187867"))
+#'   annotateEnsemblGeneIDs(ids=c("ENSG00000236453", "ENSG00000170782",
+#'                                "ENSG00000187867", NA), orthologue=TRUE)
+#'   annotateEnsemblGeneIDs(ids=c("ENSG00000174827", "ENSMUSG00000038298",
+#'                                "ENSG00000198483", "ENSMUSG00000038354",
+#'                                "ENSRNOG00000054947", "ENSG00000278099"),
+#'                         orthologue=TRUE)
+#' }
+#' @export
+annotateEnsemblGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
+  if(!orthologue) {
+    res <- annotateEnsemblGeneIDsWithoutHumanOrtholog(ids)
+  } else {
+    res <- annotateEnsemblGeneIDsWithHumanOrtholog(ids, multiOrth=TRUE)
+  }
+  return(res)
+}
+
 #' Annotate EnsEMBL GeneID with data from EnsEMBL
 #' @param ids Character strings, Ensembl GeneIDs in form of 
 #' \code{ENS(species)(object type)(identifier).(version)}. The version is
@@ -173,7 +217,7 @@ annotateEnsemblGeneIDsWithNCBI <- function(ids) {
 #' \dontrun{
 #' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
 #'                     "ensemble_geneids.txt"), package="ribiosAnnotation"))
-#' enAnno <- annotateEnsemblGeneIDs(ensIDs)
+#' enAnno <- annotateEnsemblGeneIDsWithoutHumanOrtholog(ensIDs)
 #' }
 #' @export
 annotateEnsemblGeneIDsWithoutHumanOrtholog <- function(ids) {
@@ -188,129 +232,39 @@ annotateEnsemblGeneIDsWithoutHumanOrtholog <- function(ids) {
   for (column in replaceCols) {
     res[isToReplace, column] <- ensAnno[isToReplace, column]
   }
-  res$Source <- ifelse(isToReplace, "EnsEMBL", "NCBI")
   return(res)
 }
 
-annotateEnsemblGeneIDsWithHumanOrtholog <- function(ids) {
+#' Annotate Ensembl GeneIDs while appending human orthologs
+#' @param ids A vector of character strings, Ensembl GeneIDs in form of 
+#' \code{ENS(species)(object type)(identifier).(version)}. The version is
+#' optional.
+#' @return A \code{data.frame} containing following columns:
+#' \itemize{
+#'   \item{EnsemblID}: The input EnsemblID
+#'   \item{GeneID}: NCBI GeneID
+#'   \item{GeneSymbol}: Official gene symbol
+#'   \item{Description}: Gene description
+#'   \item{TaxID}: Taxonomy ID
+#'   \item{Type}: Gene type
+#'   \item{HumanGeneID}: NCBI GeneID of the human orthologue
+#'   \item{HumanGeneSymbol}: Official gene symbol of the human orthologue
+#'   \item{HumanDescription}: Gene description of the human orthologue
+#'   \item{HumanType}: Gene type of the human orthologue
+#' }
+#' @examples
+#' \dontrun{
+#' ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",
+#'                     "ensemble_geneids.txt"), package="ribiosAnnotation"))
+#' enAnnoHumanOrt <- annotateEnsemblGeneIDsWithHumanOrtholog(ensIDs)
+#' }
+#' @export
+annotateEnsemblGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE) {
   HumanGeneID <- HumanGeneSymbol <- HumanDescription <- Type <- NULL
   GeneSymbol <- GeneID <- Description <- NULL
   
   ensAnno <- annotateEnsemblGeneIDsWithoutHumanOrtholog(ids)
-  if(!any(is.na(geneIdAnno$TaxID)) && all(geneIdAnno$TaxID==9606)) {
-    res <- geneIdAnno %>%
-      dplyr::mutate(HumanGeneID=GeneID,
-                    HumanGeneSymbol=GeneSymbol,
-                    HumanDescription=Description,
-                    HumanType=Type)
-  } else {
-    orthologs <- annotateHumanOrthologsWithNCBI(geneIdAnno$GeneID,
-                                                multiOrth=multiOrth) %>%
-      dplyr::select(GeneID, HumanGeneID)
-    orthologAnno <- annotateGeneIDsWithoutHumanOrtholog(orthologs$HumanGeneID) %>%
-      dplyr::select(GeneID, HumanGeneSymbol=GeneSymbol, HumanDescription=Description,
-                    HumanType=Type)
-    if(hasCharOrIsNa) {
-      orthologAnno$GeneID <- as.character(orthologAnno$GeneID)
-    }
-    res <- left_join(geneIdAnno, orthologs, by="GeneID") %>%
-      left_join(orthologAnno, by="GeneID") %>% unique
-  }
-  res <- sortAnnotationByQuery(res, ids, "GeneID", multi = multiOrth)
-  return(res)
-}
-
-#' Annotate EntrezGeneID with Ensemble identifiers
-#' 
-#' 
-#' @param ids Character or integer vector, Entrez Gene IDs. It can contain
-#'  \code{NA} or \code{NULL}.
-#' @param orthologue Logical, whether human orthologues should be returnd
-#' @param multiOrth Logical, whether multiple mapped orthologues should be
-#' returned or not. Only useful when \code{orthologue} is \code{TRUE}, By
-#' default \code{FALSE}. Be cautious with the \code{TRUE} option: in this case
-#' the returning \code{data.frame} may have different row numbers as the input
-#' vector.
-#' @param type Character string, one of the following options: \code{gene}, 
-#' \code{transcript}, and \code{protein}.
-#' @return A \code{data.frame} object containing the annotations.
-#' 
-#' If \code{orthologue} is set to \code{FALSE}, the data frame contains
-#' following columns: \code{GeneID, ENSEMBL_ID, GeneSymbol, GeneName and TaxID}
-#' 
-#' If \code{orthologue} is \code{TRUE}, the data frame contains
-#' \code{GeneID, ENSEMBL_ID, GeneSymbol,TaxID, OrigTaxID, OrigGeneID,
-#' OrigGeneSymbol, OrigGeneName}. Note that \code{GeneID, GeneSymbol, TaxID}
-#' contains the information of mapped orthologues, while \code{OrigXXX}
-#' contains the information of queried genes.
-#' 
-#' If \code{multiOrth} is \code{TRUE} (only valid when \code{orthologue} is
-#' \code{TRUE}), multiples orthologues mapped to the same gene are all
-#' returned. This means that the result data frame may contain more rows than
-#' the length of input vector. If set to \code{FALSE}, the resulting data frame
-#' contains exact number of rows as the input vector length.
-#'
-#' If either \code{transcript} or \code{protein} type is used, more than one 
-#' items will be returned for each input ID.
-#' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
-#' @seealso See \code{\link{annotateEnsembl}} to annotate Ensembl IDs.
-#' 
-#' See \code{\link{annotateGeneIDs}} to get annotation for Entrez GeneIDs.
-#' 
-#' See \code{\link{annotateProbesets}} to get annotation for probesets.
-#' @examples
-#' 
-#' options(error=utils::recover)
-#' 
-#' ## normal use
-#' annotateGeneIDsWithEnsembl(c(1234, 1432, NULL))
-#' annotateGeneIDsWithEnsembl(c(1234, 1432, NULL), type="transcript")
-#' annotateGeneIDsWithEnsembl(c(1234, 1432, NULL), type="protein")
-#' 
-#' annotateGeneIDsWithEnsembl(ids="22227", orthologue=TRUE)
-#' ## it is possible to mix ids of different species
-#' annotateGeneIDsWithEnsembl(ids=c("1234", "22227"), orthologue=TRUE)
-#' 
-#' options(error=NULL)
-#' 
-#' @export annotateGeneIDsWithEnsembl
-annotateGeneIDsWithEnsembl <- function (ids, 
-                                        orthologue = FALSE, 
-                                        multiOrth = FALSE,
-                                        type=c("gene", "transcript", "protein")) {
-  .Deprecated()
-  type <- match.arg(type)
-  typeID <- c("gene"="26", "transcript"="30", "protein"="31")[type]
-  comm <- paste("SELECT c.RO_GENE_ID, e.ENSEMBL_ID, c.GENE_SYMBOL, c.DESCRIPTION, c.TAX_ID", 
-                " FROM GTI_GENES c INNER JOIN ENSEMBL_GENE e ON c.RO_GENE_ID=e.GENE_ID ", 
-                paste0("WHERE e.TYPE_ID=", typeID), " ",
-                sep = "")
-  ann <- querydbTmpTbl(comm, "c.RO_GENE_ID", ids, dbName(),
-                       binUser(), 
-                       binPwd())
-  keyCol <- ifelse(orthologue, "OrigGeneID", "GeneID")
-  cnames <- c(keyCol, "EnsemblID", "GeneSymbol", "GeneName", "TaxID")
-  conames <- c(keyCol, "EnsemblID", "OrigGeneSymbol", "OrigGeneName", 
-               "OrigTaxID")
-  if (!orthologue) {
-    colnames(ann) <- cnames
-    res <- ann
-  } else {
-    colnames(ann) <- conames
-    ort <- annotateHumanOrthologsNoOrigTax(ann$OrigGeneID, 
-                                           multiOrth = multiOrth)
-    if (multiOrth) {
-      res <- merge(ann, ort, by = "OrigGeneID", all.x = TRUE)
-    }  else {
-      ort.re <- matchColumn(ann$OrigGeneID, ort, "OrigGeneID", 
-                            multi = FALSE)
-      res <- cbind(ann, ort.re[, -1L])
-    }
-    res <- putColsFirst(res, c("OrigGeneID", "GeneID", "GeneSymbol", "TaxID", 
-                               "OrigTaxID", "OrigGeneSymbol", "OrigGeneName"))
-  }
-  isTranscriptOrProtein <- type!="gene"
-  res <- matchColumn(ids, res, keyCol, multi = (orthologue && multiOrth) || isTranscriptOrProtein)
-  rownames(res) <- id2rownames(res[,keyCol])
+  appEnsAnno <- appendHumanOrthologsWithNCBI(ensAnno, multiOrth = multiOrth)
+  res <- sortAnnotationByQuery(appEnsAnno, ids, id_column="EnsemblID")
   return(res)
 }
