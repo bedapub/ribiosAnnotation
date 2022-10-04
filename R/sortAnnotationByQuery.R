@@ -25,6 +25,7 @@
 #' @export
 sortAnnotationByQuery <- function(anno, ids, id_column="GeneID", multi=FALSE) {
   stopifnot(id_column %in% colnames(anno))
+  anno <- unique(anno)
   resInd <- ribiosUtils::matchColumnIndex(ids, anno, id_column, multi=multi)
   if(is.list(resInd)) {
     resIndLen <- sapply(resInd, length)
