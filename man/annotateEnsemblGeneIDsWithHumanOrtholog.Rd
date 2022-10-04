@@ -29,6 +29,10 @@ A \code{data.frame} containing following columns:
 \description{
 Annotate Ensembl GeneIDs while appending human orthologs
 }
+\note{
+Currently the human orthologs are looked up in NCBI. It remains to
+be changed to EnsEMBL
+}
 \examples{
 \dontrun{
 ensIDs <- readLines(system.file(file.path("extdata/ribios_annotate_testdata",

@@ -23,13 +23,13 @@ License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.2.1
 Collate: 
+    'sortAnnotationByQuery.R'
     'removeEnsemblVersion.R'
-    'querydb.R'
     'utils.R'
     'annotateAnyIDs.R'
-    'sortAnnotationByQuery.R'
     'annotateHumanOrthologsWithNCBI.R'
     'appendHumanOrthologsWithNCBI.R'
+    'querydb.R'
     'annotateGeneIDs.R'
     'annotateGeneIDsWithEnsembl.R'
     'annotateProbesets.R'
