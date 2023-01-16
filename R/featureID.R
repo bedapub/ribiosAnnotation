@@ -1,3 +1,6 @@
+#' @include annotateUniprotAccession.R
+NULL
+
 #' Whether input character strings are valid feature IDs
 #' @param featureIDs A vector of character strings
 #' @return Logical vector of the same lenght as the input
@@ -218,13 +221,13 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #' @examples 
 #' options(error=utils::recover)
 #' \dontrun{
-#' guessAndAnnotate(c("AKT1", "AKT2", "MAPK14"))
-#' guessAndAnnotate(c(1,2,14,149))
-#' guessAndAnnotate(c("NM_000259", "NM_000331"))
-#' guessAndAnnotate(c("ENST00000613858.4", "ENST00000553916.5",
-#'     "ENST00000399229.6"))
-#' guessAndAnnotate(c("O60583", "P05997", "Q7Z624"))
-#' guessAndAnnotate(c("CM000677.2", "AB003434.2"))
+#'   guessAndAnnotate(c("AKT1", "AKT2", "MAPK14"))
+#'   guessAndAnnotate(c(1,2,14,149))
+#'   guessAndAnnotate(c("NM_000259", "NM_000331"))
+#'   guessAndAnnotate(c("ENST00000613858.4", "ENST00000553916.5",
+#'        "ENST00000399229.6"))
+#'   guessAndAnnotate(c("O60583", "P05997", "Q7Z624"))
+#'   guessAndAnnotate(c("CM000677.2", "AB003434.2"))
 #' }
 #' options(error=NULL)
 #' @export
@@ -238,23 +241,20 @@ guessAndAnnotate <- function(featureIDs, majority=0.5,
   } else if (ft=="Ensembl") {
     res <- annotateEnsemblGeneIDs(featureIDs, orthologue=orthologue, 
                            multiOrth=multiOrth)
-  } else {
-    res <- annotateAnyIDs(featureIDs, orthologue=orthologue,
-                          multiOrth=multiOrth)
-  } 
   ## the following options will be restored gradually
-  # else if (ft=="GeneSymbol") {
+  # } else if (ft=="GeneSymbol") {
   #   res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, 
   #                              multiOrth=multiOrth, organism=organism)
   # } else if (ft=="RefSeq") {
   #   res <- annotateRefSeqs(featureIDs, orthologue=orthologue, 
   #                          multiOrth=multiOrth)
-  # } 
-  # } else if (ft=="UniProt") {
-  #   res <- annotateAnyIDs(featureIDs, orthologue=orthologue, 
-  #                         multiOrth=multiOrth)
-  # } else {
-  #   res <- data.frame(FeatureName=featureIDs, row.names=id2rownames(featureIDs))
-  # }
+  } else if (ft=="UniProt") {
+    res <- annotateUniprotAccession(featureIDs, orthologue=orthologue,
+                           multiOrth=multiOrth)
+  } else {
+    ## res <- annotateAnyIDs(featureIDs, orthologue=orthologue,
+    ##                      multiOrth=multiOrth)
+    res <- data.frame(FeatureName=featureIDs, row.names=id2rownames(featureIDs))
+  }
   return(res)
 }
