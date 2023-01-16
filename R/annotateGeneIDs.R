@@ -1,4 +1,4 @@
-#' @include utils.R annotateAnyIDs.R querydb.R sortAnnotationByQuery.R
+#' @include utils.R annotateAnyIDs.R sortAnnotationByQuery.R
 #' @include appendHumanOrthologsWithNCBI.R
 NULL
 
@@ -58,9 +58,6 @@ annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' @note \code{annotatemRNAs} is an alias of \code{annotateRefSeqs}
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
 #'
-#' @seealso See \code{\link{gtiChipAnnotation}} to get annotation for all
-#' probesets in a chip.
-#' 
 #' @details The collection {ncbi_gene_info} is used.
 #' 
 #' @examples

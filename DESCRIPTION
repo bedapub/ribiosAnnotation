@@ -14,8 +14,6 @@ Imports:
     magrittr,
     mongolite
 Suggests:
-    ROracle,
-    RJDBC,
     roxygen2,
     testthat
 LazyData: true
@@ -29,21 +27,15 @@ Collate:
     'annotateAnyIDs.R'
     'annotateHumanOrthologsWithNCBI.R'
     'appendHumanOrthologsWithNCBI.R'
-    'querydb.R'
     'annotateGeneIDs.R'
-    'annotateGeneIDsWithEnsembl.R'
+    'annotateGeneSymbols.R'
     'annotateProbesets.R'
     'annotateProteinGroups.R'
     'annotateTaxID.R'
-    'chrLen.R'
     'ensembl.R'
     'featureID.R'
+    'formatIn.R'
     'gti2bioc.R'
-    'gtiChiptypes.R'
     'humanOrthologsByTaxID.R'
-    'mRNArefseqByTaxID.R'
-    'mappedProbesets.R'
-    'ortholog.R'
-    'snp.R'
 Remotes:
     github::bedapub/ribiosUtils

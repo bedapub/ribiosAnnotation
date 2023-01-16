@@ -42,10 +42,6 @@ The collection {ncbi_gene_info} is used.
 }
 
 }
-\seealso{
-See \code{\link{gtiChipAnnotation}} to get annotation for all
-probesets in a chip.
-}
 \author{
 Jitao David Zhang <jitao_david.zhang@roche.com>
 }

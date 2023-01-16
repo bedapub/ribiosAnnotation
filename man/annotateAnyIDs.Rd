@@ -63,7 +63,6 @@ options(error=NULL)
 }
 \seealso{
 \code{\link{annotateGeneIDs}}, \code{\link{annotateGeneSymbols}}
-and \code{\link{annotateProbesets}}
 }
 \author{
 Jitao David Zhang <jitao_david.zhang@roche.com>

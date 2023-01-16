@@ -36,12 +36,6 @@ head(hsMtAnno)
 }
 
 }
-\references{
-\url{http://bioinfo.bas.roche.com:8080/bicgi/gti_ui.cgi}
-}
-\seealso{
-\code{\link{gtiChipAnnotation}} for annotating chips.
-}
 \author{
 Jitao David Zhang <jitao_david.zhang@roche.com>
 }

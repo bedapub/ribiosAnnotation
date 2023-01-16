@@ -16,8 +16,6 @@ NULL
 #' Rownames of the \code{data.frame} are set to \code{NULL}.
 #' 
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
-#' @seealso \code{\link{gtiChipAnnotation}} for annotating chips.
-#' @references \url{http://bioinfo.bas.roche.com:8080/bicgi/gti_ui.cgi}
 #' @examples
 #' 
 #' \dontrun{
