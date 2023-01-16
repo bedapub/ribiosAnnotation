@@ -2,6 +2,10 @@
 NULL
 
 #' Annotate UniProt accessions or names
+#' @param accessions Character strings, UniProt accessions or names
+#' @param orthologue Logical, whether orthologues are returned
+#' @param multiOrth Logical, only valid if \code{orthologue} is \code{TRUE},
+#' whether multiple orthologues are returned instead of only one.
 #' 
 #' @examples 
 #' \dontrun{
@@ -13,6 +17,7 @@ annotateUniprotAccession <- function(accessions,
   validIDs <- accessions[!is.na(accessions)]
   
   Accession <- EntryName <- GeneID <- TaxID <- Ensembl <- NULL
+  EnsemblGeneID <- NULL
   
   giCon <- connectMongoDB(instance="bioinfo_read",
                           collection="uniprot")
@@ -31,8 +36,8 @@ annotateUniprotAccession <- function(accessions,
                            EnsemblGeneID=NA)
   } else {
     featAnno <- uniprots %>%
-      dplyr::rename("Accession"=`UniProtKB-AC`,
-                    "EntryName"=`UniProtKB-ID`,
+      dplyr::rename("Accession"="UniProtKB-AC",
+                    "EntryName"="UniProtKB-ID",
                     'GeneID'='geneID',
                     "TaxID"="NCBI-taxon",
                     "EnsemblGeneID"="Ensembl") %>%

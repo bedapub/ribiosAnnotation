@@ -16,6 +16,7 @@ NULL
 #' \dontrun{
 #' humanUniprot <- uniprotByTaxID(9606)
 #' }
+#' @importFrom tidyr unnest
 #' @export
 uniprotByTaxID <- function(taxid, orthologue=FALSE, multiOrth=FALSE) {
   if(missing(taxid)) {
@@ -29,6 +30,7 @@ uniprotByTaxID <- function(taxid, orthologue=FALSE, multiOrth=FALSE) {
   }
   
   GeneID <- GeneSymbol <- Description <- NULL
+  accessions <- Accession <- EntryName <- TaxID <- EnsemblGeneID <- NULL
   
   giCon <- connectMongoDB(instance="bioinfo_read",
                           collection="uniprot")
@@ -48,8 +50,8 @@ uniprotByTaxID <- function(taxid, orthologue=FALSE, multiOrth=FALSE) {
                            EnsemblGeneID=NA)
   } else {
     featAnno <- uniprots %>%
-      dplyr::rename("Accession"=`UniProtKB-AC`,
-                    "EntryName"=`UniProtKB-ID`,
+      dplyr::rename("Accession"="UniProtKB-AC",
+                    "EntryName"="UniProtKB-ID",
                     'GeneID'='geneID',
                     "TaxID"="NCBI-taxon",
                     "EnsemblGeneID"="Ensembl") %>%

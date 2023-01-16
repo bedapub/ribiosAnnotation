@@ -10,6 +10,7 @@ Imports:
     ribiosUtils,
     DBI,
     dplyr,
+    tidyr,
     rjson,
     magrittr,
     mongolite

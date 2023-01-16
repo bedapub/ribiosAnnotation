@@ -35,20 +35,20 @@ Whether input strings look like Entrez GeneIDs
 }
 \section{Functions}{
 \itemize{
-\item \code{likeRefSeq}: tests whether input strings look like NCBI RefSeq IDs
+\item \code{likeRefSeq()}: tests whether input strings look like NCBI RefSeq IDs
 
-\item \code{likeEnsembl}: tests whether input strings look like Ensembl IDs
+\item \code{likeEnsembl()}: tests whether input strings look like Ensembl IDs
 
-\item \code{likeEnsemblGeneID}: tests whether input strings look like EnsemblGeneIDs
+\item \code{likeEnsemblGeneID()}: tests whether input strings look like EnsemblGeneIDs
 
-\item \code{likeUniProt}: tests whether input strings look like UniProt IDs
+\item \code{likeUniProt()}: tests whether input strings look like UniProt IDs
 
-\item \code{likeGeneSymbol}: tests whether input strings look like gene symbols
+\item \code{likeGeneSymbol()}: tests whether input strings look like gene symbols
 
-\item \code{likeHumanGeneSymbol}: tests whether input strings look like human 
+\item \code{likeHumanGeneSymbol()}: tests whether input strings look like human 
 gene symbols
-}}
 
+}}
 \examples{
 feats <- c("1234", "LOX", "345", "-", "", "NKX-1", "CXorf21", "Snail",
    "A2BC19", "P12345", "A0A023GPI8",
