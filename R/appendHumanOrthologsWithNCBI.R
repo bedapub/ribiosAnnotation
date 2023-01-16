@@ -12,14 +12,13 @@ NULL
 #' orthologues
 #' 
 #' The function appends human orthologs to an existing annotation data.frame. It
-#' is usually called by another function. Please make sure what you are doing 
+#' is usually called by another function. Please make sure of what you are doing 
 #' if you call it directly.
 #' 
 #' @note The function does not sort the rows by GeneID. It is the responsibility
 #'  of the calling function to do so.
 #' 
 #' @examples 
-#' \dontrun{
 #' anno <- data.frame(GeneID=c(780, 1506, 114483548, 102129055, NA),
 #'                    TaxID=c(9606, 9606, 10116, 9541, NA))
 #' appendHumanOrthologsWithNCBI(anno)
@@ -27,7 +26,6 @@ NULL
 #' tol_anno <- data.frame(GeneID=c(780, 1506, 114483548, 102129055, NA, "NotV"),
 #'                    TaxID=c(9606, 9606, 10116, 9541, NA, NA))
 #' appendHumanOrthologsWithNCBI(tol_anno)
-#' }
 #' @importFrom ribiosUtils haltifnot
 #' @export
 appendHumanOrthologsWithNCBI <- function(anno,
@@ -55,13 +53,12 @@ appendHumanOrthologsWithNCBI <- function(anno,
       dplyr::mutate(chrGeneID=as.character(GeneID)) %>%
       dplyr::select(chrGeneID, HumanGeneID)
     orthologAnno <- annotateGeneIDsWithoutHumanOrtholog(orthologs$HumanGeneID) %>%
-      dplyr::mutate(chrGeneID=as.character(GeneID)) %>%
-      dplyr::select(chrGeneID, 
+      dplyr::select(HumanGeneID=GeneID,
                     HumanGeneSymbol=GeneSymbol,
                     HumanDescription=Description,
                     HumanType=Type)
-    res <- left_join(anno, orthologs, by="chrGeneID") %>%
-      left_join(orthologAnno, by="chrGeneID") %>% 
+    res <- left_join(anno, orthologs, by="chrGeneID", na_matches="never") %>%
+      left_join(orthologAnno, by="HumanGeneID", na_matches="never") %>%
       unique %>%
       dplyr::select(-chrGeneID)
   }
