@@ -39,5 +39,6 @@ Collate:
     'formatIn.R'
     'gti2bioc.R'
     'humanOrthologsByTaxID.R'
+    'uniprotByTaxID.R'
 Remotes:
     github::bedapub/ribiosUtils
