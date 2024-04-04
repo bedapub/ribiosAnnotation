@@ -1,26 +1,38 @@
 #' @rdname loadSecrets
 #' @export
+ribiosAnnotationSecretEnvVar <- "RIBIOS_ANNOTATION_SECRETS_JSON"
+#' @export
 ribiosAnnotationSecretFile <- file.path("~",
-			       ".credentials", "ribiosAnnotation-secrets.json")
+                                        ".credentials",
+                                        "ribiosAnnotation-secrets.json")
 
-#' Load secrets from a file and set them in options
-#'
+#' Locate secret file
+#' 
 #' ribiosAnnotation needs to access databases to fetch annotations, the process
 #' of which requires credentials for these databases. The package looks for a
-#' file \sQuote{\code{~/.credentials/ribiosAnnotation-secrets.json}} which
+#' file in JSON format, either specified in environment variable 
+#' \code{RIBIOS_ANNOTATION_SECRETS_JSON}, or in the file
+#' \sQuote{\code{~/.credentials/ribiosAnnotation-secrets.json}}, which
 #' contains the credentials. If this file is not found, no queries can be made.
+#' 
+#' The function locates the file and returns the normalized path of the file.
+#' 
+#' @param path Path to the secret file. If not set, in case the environmental 
+#' variable \code{RIBIOS_ANNOTATION_SECRETS_JSON} is set, its value is used as
+#' the file path; if not, \sQuote{\code{~/.credentials/ribiosAnnotation-secrets.json}} is
+#' used. In any case, if the file does not exist, a message will be printed.
 #'
-#' A template of the credential file is provided in
-#' \sQuote{\code{secrets/secrets-template.json}} file of the package.
-#'
-#' @param path Path to the secret file
-#'
-#' @return The current options of \code{ribiosAnnotation}
-#' The function writes the \code{credentials} field of the options
-#' After running this function, database names and passwords can be accessed
-#' @importFrom rjson fromJSON
+#' @return String, the normalized path of the file
 #' @export
-loadSecrets <- function(path=ribiosAnnotationSecretFile) {
+locateSecretsFile <- function(path) {
+  if(missing(path)) {
+    envVarPath <- Sys.getenv(ribiosAnnotationSecretEnvVar)
+    if (envVarPath != "") {
+      path <- envVarPath
+    } else {
+      path <- ribiosAnnotationSecretFile
+    }
+  }
   if (!file.exists(path)) {
     ## the message below must not be sent with warning, otherwise
     ## packages that depdend on ribiosAnnotation will not load properly.
@@ -28,6 +40,22 @@ loadSecrets <- function(path=ribiosAnnotationSecretFile) {
     path <- system.file("secrets/secrets-template.json", 
                         package="ribiosAnnotation")
   }
+  return(normalizePath(path))
+}
+
+#' Load secrets from the secret file file and set them in options
+#'
+#' @param path Path to the secret file. See \code{\link{locateSecretsFile}} to
+#' see how the program looks for the secret files if the parameter is not set.
+#'
+#' @return The current options of \code{ribiosAnnotation}
+#' The function writes the \code{credentials} field of the options
+#' After running this function, database names and passwords can be accessed.
+#' \seealso \code{\link{locateSecretsFile}}
+#' @importFrom rjson fromJSON
+#' @export
+loadSecrets <- function(path) {
+  path <- locateSecretsFile(path)
   secrets <- rjson::fromJSON(file=path)
   opts <- options("ribiosAnnotation")[[1]]
   opts$credentials <- secrets$credentials
@@ -64,8 +92,8 @@ loadSecrets <- function(path=ribiosAnnotationSecretFile) {
 #'     loadMongodbSecrets(instance="decoy")
 #' }
 #' @export
-loadMongodbSecrets <- function(file=ribiosAnnotationSecretFile,
-                              instance="bioinfo_read") {
+loadMongodbSecrets <- function(file=locateSecretsFile(),
+                               instance="bioinfo_read") {
   secrets <-  rjson::fromJSON(file=file)
   dbSecrets <- secrets$mongodb[[instance]]
   if(is.null(dbSecrets)) {

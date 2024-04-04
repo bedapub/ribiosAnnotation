@@ -4,10 +4,7 @@
 \alias{loadMongodbSecrets}
 \title{Get secrets for MongoDB connections}
 \usage{
-loadMongodbSecrets(
-  file = ribiosAnnotationSecretFile,
-  instance = "bioinfo_read"
-)
+loadMongodbSecrets(file = locateSecretsFile(), instance = "bioinfo_read")
 }
 \arguments{
 \item{file}{The secret JSON file.}
