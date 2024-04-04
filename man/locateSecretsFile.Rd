@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{locateSecretsFile}
 \alias{locateSecretsFile}
-\title{Locate secret file}
+\title{Locate ribiosAnnotation secrets file in JSON}
 \usage{
 locateSecretsFile(path)
 }

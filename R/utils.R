@@ -6,7 +6,7 @@ ribiosAnnotationSecretFile <- file.path("~",
                                         ".credentials",
                                         "ribiosAnnotation-secrets.json")
 
-#' Locate secret file
+#' Locate ribiosAnnotation secrets file in JSON
 #' 
 #' ribiosAnnotation needs to access databases to fetch annotations, the process
 #' of which requires credentials for these databases. The package looks for a
