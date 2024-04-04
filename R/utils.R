@@ -1,4 +1,4 @@
-#' @rdname loadSecrets
+#' @rdname locateSecretsFile
 #' @export
 ribiosAnnotationSecretEnvVar <- "RIBIOS_ANNOTATION_SECRETS_JSON"
 #' @export
@@ -41,33 +41,6 @@ locateSecretsFile <- function(path) {
                         package="ribiosAnnotation")
   }
   return(normalizePath(path))
-}
-
-#' Load secrets from the secret file file and set them in options
-#'
-#' @param path Path to the secret file. See \code{\link{locateSecretsFile}} to
-#' see how the program looks for the secret files if the parameter is not set.
-#'
-#' @return The current options of \code{ribiosAnnotation}
-#' The function writes the \code{credentials} field of the options
-#' After running this function, database names and passwords can be accessed.
-#' \seealso \code{\link{locateSecretsFile}}
-#' @importFrom rjson fromJSON
-#' @export
-loadSecrets <- function(path) {
-  path <- locateSecretsFile(path)
-  secrets <- rjson::fromJSON(file=path)
-  opts <- options("ribiosAnnotation")[[1]]
-  opts$credentials <- secrets$credentials
-  opts$connection <- secrets$connection
-  options("ribiosAnnotation"=opts)
-  return(invisible(opts))
-}
-
-
-## onload / onAttach
-.onAttach <- function(libname, pkgname) {
-  loadSecrets()
 }
 
 ##----------------------------------------##

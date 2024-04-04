@@ -13,7 +13,7 @@ test_that("annotateEnsembl works without version number", {
   ids <- c("ENSG00000197535", "ENSG00000105221", NA,
                "ENSG00000112062", "ENST00000229795", "ENSP00000229795")
   skip('updating annotation backend from Oracle to MongoDB')
-  res <- annotateEnsembl(ids)
+  res <- annotateEnsemblGeneIDs(ids)
   expect_identical(res$EnsemblID, ids)
   expect_identical(res$GeneID, c("4644", "208", NA, "1432", "1432", "1432"))
 })
