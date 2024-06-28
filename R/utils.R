@@ -126,6 +126,20 @@ returnFieldsJson <- function(fields, include_id=FALSE) {
   return(res)
 }
 
+#' check single integer Tax ID
+#' @param taxId Integer tax identifier, or character that can be converted to
+#' an integer
+#' @return An integer tax ID if successful, otherwise the function stops and
+#' prints error
+checkSingleIntegerTaxId <- function(taxId) {
+  haltifnot(length(taxId)==1,
+            msg="It is not possible to query with GeneSymbol in more than one species")
+  taxId <- suppressWarnings(as.integer(taxId))
+  haltifnot(!is.na(taxId) && is.integer(taxId),
+            msg="taxId should be an integer")
+  return(taxId)
+}
+
 
 id2rownames <- function(ids) {
   if(identical(anyDuplicated(ids), 0L) & !any(is.na(ids))) {

@@ -4,24 +4,46 @@
 \alias{annotateGeneSymbols}
 \title{Annotate GeneSymbols}
 \usage{
-annotateGeneSymbols(
-  ids,
-  orthologue = FALSE,
-  multiOrth = FALSE,
-  organism = c("human", "mouse", "rat", "any")
-)
+annotateGeneSymbols(ids, taxId = 9606, orthologue = FALSE, multiOrth = FALSE)
 }
 \arguments{
 \item{ids}{Character strings, gene symbols}
+
+\item{taxId}{Integer, NCBI taxonomy ID. Default value: 9606 (human). See \code{commonSpecies} for tax id of common species.}
 
 \item{orthologue}{Logical, whether orthologues are to be returned}
 
 \item{multiOrth}{Logical, only valid when orthologue is set to TRUE, whether
 multiple orthologues are returned}
-
-\item{organism}{Character string, organism
-Now the function is not functional}
+}
+\value{
+A data.frame containing following columns
+\describe{
+  \item{GeneID}{Entrez Gene ID}
+  \item{GeneSymbol}{Official gene symbols}
+  \item{Description}{Description}
+  \item{TaxID}{NCBI Taxonomy ID}
+  \item{Type}{Gene type}
+}
+If \code{orthologue} is \code{TRUE}, then additional columns are appended:
+\describe{
+  \item{HumanGeneID}{Human orthologue Entrez GeneID}
+  \item{HumanGeneSymbol}{Human orthologue official gene symbol}
+  \item{HumanDescription}{Human orthologue gene description}
+  \item{HumanType}{Human orthologue gene type}
+}
 }
 \description{
 Annotate GeneSymbols
+}
+\examples{
+\dontrun{
+    annotateGeneSymbols(c("AKT1", "ERBB2", "NoSuchAGene", "TGFBR1"), 9606)
+    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=FALSE)
+    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=TRUE)
+    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=TRUE, multiOrth=TRUE)
+}
+}
+\seealso{
+The function is a convenient wrapper of two functions: \code{annotateGeneSymbolsWithoutHumanOrtholog} and \code{annotateGeneSymbolsWithHumanOrtholog}.
 }

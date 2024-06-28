@@ -1,0 +1,11 @@
+commonSpecies<- data.frame(TaxID=c(9606, 9598, 9541, 10090, 
+                                   10116, 9986, 36483, 9615, 9823, 9031, 
+                                   7955),
+                           ScientificName=c("Homo sapiens", "Pan troglodytes", 
+                                            "Macaca fascicularis", "Mus musculus", 
+                                            "Rattus norvegicus", "Oryctolagus cuniculus", 
+                                            "Cricetinae gen. sp.", "Canis lupus familiaris", 
+                                            "Sus scrofa", "Gallus gallus", "Naio rerio"),
+                           CommonName=c("human", "chimpanzee", "crab-eating macaque",
+                                        "mouse", "rat", "rabbit", "hamster",
+                                        "dog", "pig", "chicken", "zebrafish"))

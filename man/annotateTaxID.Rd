@@ -4,15 +4,21 @@
 \alias{annotateTaxID}
 \title{Annotations of all genes associated with the given TaxID}
 \usage{
-annotateTaxID(taxid)
+annotateTaxID(taxId, orthologue = FALSE, multiOrth = FALSE)
 }
 \arguments{
-\item{taxid}{Integer, the TaxID of the species in interest. For
+\item{taxId}{Integer, the TaxID of the species in interest. For
 instance \sQuote{9606} for Homo sapiens.}
+
+\item{orthologue}{Logical, whether human orthologues should be returned}
+
+\item{multiOrth}{Logical, in case \code{orthologue} is set to \code{TRUE}, whether
+to return multiple orthologues for one gene. Default: FALSE}
 }
 \value{
 A \code{data.frame} object with very similar structure as the
-\code{EG_GENE_INFO} table in the database.
+\code{EG_GENE_INFO} table in the database. In case \code{orthologue} is \code{TRUE}, additional
+columns containing human orthologue information are returned.
 
 Rownames of the \code{data.frame} are set to \code{NULL}.
 }
@@ -33,6 +39,14 @@ head(hsAnno)
 hsMtAnno <- annotateTaxID("10092")
 dim(hsMtAnno)
 head(hsMtAnno)
+
+mtOrthAnno <- annotateTaxID(10090, orthologue=TRUE)
+dim(mtOrthAnno)
+head(mtOrthAnno)
+
+pigMultiOrthAnno <- annotateTaxID(9823, orthologue=TRUE, multiOrth=TRUE)
+dim(pigMultiOrthAnno)
+head(pigMultiOrthAnno)
 }
 
 }

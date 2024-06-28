@@ -1,8 +1,8 @@
 Package: ribiosAnnotation
 Type: Package
 Title: Annotation of genes, RNAs and proteins in the BIOS system
-Version: 3.7.1
-Date: 2024-04-04
+Version: 3.7.2
+Date: 2024-06-28
 Author: Jitao David Zhang <jitao_david.zhang@roche.com>
 Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
 Description: Retrieves annotation information of genomic features, genes, RNAs and proteins from the Oracle database of the Roche Bioinformatics environment.
@@ -39,6 +39,7 @@ Collate:
     'formatIn.R'
     'gti2bioc.R'
     'humanOrthologsByTaxID.R'
+    'taxID.R'
     'uniprotByTaxID.R'
 Remotes:
     github::bedapub/ribiosUtils

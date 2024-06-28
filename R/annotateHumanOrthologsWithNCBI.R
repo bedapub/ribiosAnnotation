@@ -48,8 +48,15 @@ annotateNonHumanGenesHumanOrthologsWithNCBI <- function(geneids,
   ortQuery <- paste0('{"other_geneId":{"$in":[', 
                      paste(as.character(validIDs), collapse=","),
                      ']}, "taxId":9606}')
-  ortDf <- giCon$find(ortQuery,
-                      fields=orthologFields) %>%
+  ortDfRaw <- giCon$find(ortQuery,
+                      fields=orthologFields)
+  
+  if(nrow(ortDfRaw)==0) {
+    ortDfRaw <- data.frame(other_geneId=validIDs,
+                           other_taxId=NA,
+                           geneId=NA)
+  }
+  ortDf <- ortDfRaw %>%
     dplyr::rename('GeneID'='other_geneId',
                   'TaxID'='other_taxId',
                   'HumanGeneID'='geneId') %>%
