@@ -31,7 +31,6 @@ annotateGeneSymbolsWithoutHumanOrtholog <- function(ids,
   speciesFieldsJson <- returnFieldsJson(c("Symbol", "description", "geneId",
                                           "taxId", "type_of_gene"))
   query <- paste0('{"Symbol":{"$in":[', paste(qids, collapse=","),']}, "taxId":', as.character(taxId), '}')
-  print(query)
   genes <- giCon$find(query, fields=speciesFieldsJson) 
   if(nrow(genes)==0) {
     res <- data.frame(GeneSymbol=ids,
