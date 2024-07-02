@@ -1,10 +1,9 @@
 #' Common species taxonomy IDs
-#' @format ## `commonSpecies`
-#' The data.frame contains three columns: 
+#' @format A \code{data.frame} containing three columns: 
 #' \describe{
 #'   \item{TaxID}{NCBI taxonomy ID}
 #'   \item{ScientificName}{Scientific name}
-#'   \item{CommonName}{Common name
+#'   \item{CommonName}{Common name}
 #' }
 "commonSpecies"
 

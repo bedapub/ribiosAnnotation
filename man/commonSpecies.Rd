@@ -5,7 +5,12 @@
 \alias{commonSpecies}
 \title{Common species taxonomy IDs}
 \format{
-
+A \code{data.frame} containing three columns: 
+\describe{
+  \item{TaxID}{NCBI taxonomy ID}
+  \item{ScientificName}{Scientific name}
+  \item{CommonName}{Common name}
+}
 }
 \usage{
 commonSpecies
