@@ -4,13 +4,23 @@
 \alias{annotateProteinGroups}
 \title{Annotate protein groups for proteomics studies}
 \usage{
-annotateProteinGroups(ids, delimiter = ";")
+annotateProteinGroups(
+  ids,
+  delimiter = ";",
+  orthologue = FALSE,
+  multiOrth = FALSE
+)
 }
 \arguments{
 \item{ids}{Character, Protein groups with identifiers 
 (e.g. UniProt/SwissProt IDs) by the delimiter}
 
-\item{delimiter}{Character, delimiter, default semicolon
+\item{delimiter}{Character, delimiter, default semicolon}
+
+\item{orthologue}{Logical, whether human orthologues should be queried.}
+
+\item{multiOrth}{Logical, in case of multiple orthologues, whether all of 
+them should be returned
 The function queries proteins in protein groups, and annotate
 all proteins that cannot be annotated. For protein groups in which
 no protein can be annotated, all proteins will be returned as they are,
@@ -24,6 +34,8 @@ A \code{data.frame} with following columns:
 * GeneSymbol
 * GeneName
 * TaxID
+In case \code{orthologue} is \code{TRUE}, human orthologue information is 
+returned as well.
 }
 \description{
 Annotate protein groups for proteomics studies
