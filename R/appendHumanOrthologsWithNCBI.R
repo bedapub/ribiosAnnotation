@@ -42,26 +42,31 @@ appendHumanOrthologsWithNCBI <- function(anno,
                             setequal(as.character(TaxID[!is.na(TaxID)]),
                                      "9606"))
   if(taxIsAllHumanOrNA) {
-    res <- anno %>%
-      dplyr::mutate(HumanGeneID=GeneID,
+    humanAnno <- annotateGeneIDsWithoutHumanOrtholog(unique(anno$GeneID)) %>%
+      dplyr::select(HumanGeneID=GeneID,
                     HumanGeneSymbol=GeneSymbol,
                     HumanDescription=Description,
                     HumanType=Type)
+    res <- left_join(anno, humanAnno,
+                     by=c("GeneID"="HumanGeneID"), na_matches="never") %>%
+      mutate(HumanGeneID=GeneID)
   } else {
-    orthologs <- annotateHumanOrthologsWithNCBI(anno$GeneID,
+    orthologs <- annotateHumanOrthologsWithNCBI(unique(anno$GeneID),
                                                 multiOrth=multiOrth) %>%
       dplyr::mutate(chrGeneID=as.character(GeneID)) %>%
       dplyr::select(chrGeneID, HumanGeneID)
-    orthologAnno <- annotateGeneIDsWithoutHumanOrtholog(orthologs$HumanGeneID) %>%
+    orthologAnno <- annotateGeneIDsWithoutHumanOrtholog(unique(orthologs$HumanGeneID)) %>%
       dplyr::select(HumanGeneID=GeneID,
                     HumanGeneSymbol=GeneSymbol,
                     HumanDescription=Description,
                     HumanType=Type)
     res <- left_join(anno, orthologs, by="chrGeneID", na_matches="never") %>%
-      left_join(orthologAnno, by="HumanGeneID", na_matches="never") %>%
-      unique %>%
-      dplyr::select(-chrGeneID)
+      left_join(orthologAnno, by="HumanGeneID", na_matches="never")
   }
   
+  res <- unique(res) %>% dplyr::select(-chrGeneID)
   return(res)
 }
+
+## assignInNamespace("appendHumanOrthologsWithNCBI", appendHumanOrthologsWithNCBI, "ribiosAnnotation")
+## rm(appendHumanOrthologsWithNCBI)
