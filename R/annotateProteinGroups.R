@@ -37,10 +37,12 @@ getGenesPerIndex <- function(x) {
 #'                            "A0A0B4J2F0;A0A0U1RRL7"))
 #' }
 #' options(error=NULL)
-#' @importFrom dplyr group_by arrange group_modify
+#' @importFrom dplyr group_by arrange group_modify ungroup
 #' @export
 annotateProteinGroups <- function(ids, delimiter=";",
                                   orthologue=FALSE, multiOrth=FALSE) {
+  
+  GeneID <- NULL
   GeneSymbol <- InputIDType <- index <- NULL
   idsplit <- strsplit(ids, delimiter)
   idcount <- sapply(idsplit, length)
