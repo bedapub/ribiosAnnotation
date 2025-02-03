@@ -238,13 +238,12 @@ guessAndAnnotate <- function(featureIDs, majority=0.5,
   if(ft=="GeneID") {
     res <- annotateGeneIDs(featureIDs, orthologue=orthologue, 
                            multiOrth=multiOrth)
-  } else if (ft=="Ensembl") {
+  } else if (ft=="EnsemblGeneID") {
     res <- annotateEnsemblGeneIDs(featureIDs, orthologue=orthologue, 
                            multiOrth=multiOrth)
-  ## the following options will be restored gradually
-  # } else if (ft=="GeneSymbol") {
-  #   res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, 
-  #                              multiOrth=multiOrth, organism=organism)
+  } else if (ft=="GeneSymbol") {
+    res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, 
+                               multiOrth=multiOrth, organism=organism)
   # } else if (ft=="RefSeq") {
   #   res <- annotateRefSeqs(featureIDs, orthologue=orthologue, 
   #                          multiOrth=multiOrth)
@@ -252,8 +251,8 @@ guessAndAnnotate <- function(featureIDs, majority=0.5,
     res <- annotateUniprotAccession(featureIDs, orthologue=orthologue,
                            multiOrth=multiOrth)
   } else {
-    ## res <- annotateAnyIDs(featureIDs, orthologue=orthologue,
-    ##                      multiOrth=multiOrth)
+    res <- annotateAnyIDs(featureIDs, orthologue=orthologue,
+                          multiOrth=multiOrth)
     res <- data.frame(FeatureName=featureIDs, row.names=id2rownames(featureIDs))
   }
   return(res)
