@@ -15,15 +15,16 @@ NULL
 #' }
 #' @examples
 #' \dontrun{
-#'     annotateGeneSymbolsWithoutHumanOrtholog(c("AKT1", "ERBB2", "NoSuchAGene", "TGFBR1"), 9606)
-#'     annotateGeneSymbolsWithoutHumanOrtholog(c("Akt1", "Erbb2", "NoSuchAGene", "Tgfbr1"), 10090)
+#'     annotateGeneSymbolsWithoutHumanOrtholog(c("AKT1", "ERBB2", 
+#'                                             "NoSuchAGene", "TGFBR1"), 9606)
+#'     annotateGeneSymbolsWithoutHumanOrtholog(c("Akt1", "Erbb2", 
+#'                                             "NoSuchAGene", "Tgfbr1"), 10090)
 #' }
 #' @export
 annotateGeneSymbolsWithoutHumanOrtholog <- function(ids,
                                                     taxId=9606) {
   GeneID <- GeneSymbol <- Description <- TaxID <- Type <- NULL
   
-  taxId <- checkTaxId(taxId)
   giCon <- connectMongoDB(instance="bioinfo_read",
                           collection="ncbi_gene_info")
   
@@ -71,7 +72,9 @@ annotateGeneSymbolsWithoutHumanOrtholog <- function(ids,
 #' }
 #' @examples
 #' \dontrun{
-#'     annotateGeneSymbolsWithHumanOrtholog(c("Akt1", "Erbb2", "NoSuchAGene", "Tgfbr1"), 10090, multiOrth=FALSE)
+#'     annotateGeneSymbolsWithHumanOrtholog(c("Akt1", "Erbb2",
+#'                                          "NoSuchAGene", "Tgfbr1"), 
+#'                                          taxId=10090, multiOrth=FALSE)
 #' }
 #' @export
 annotateGeneSymbolsWithHumanOrtholog <- function(ids, taxId, multiOrth=FALSE) {
@@ -112,13 +115,15 @@ annotateGeneSymbolsWithHumanOrtholog <- function(ids, taxId, multiOrth=FALSE) {
 #' @examples
 #' \dontrun{
 #'     annotateGeneSymbols(c("AKT1", "ERBB2", "NoSuchAGene", "TGFBR1"), 9606)
-#'     annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=FALSE)
-#'     annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=TRUE)
-#'     annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=TRUE, multiOrth=TRUE)
+#'     annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), 
+#'                         taxId=10116, orthologue=FALSE)
+#'     annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), 
+#'                         taxId=10116, orthologue=TRUE)
+#'     annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), 
+#'                         taxId=10116, orthologue=TRUE, multiOrth=TRUE)
 #' }
 #' @export
 annotateGeneSymbols <- function(ids, taxId=9606, orthologue=FALSE, multiOrth=FALSE) {
-  taxId <- checkTaxId(taxId)
   if(!orthologue) {
     res <- annotateGeneSymbolsWithoutHumanOrtholog(ids, taxId=taxId)
   } else {
