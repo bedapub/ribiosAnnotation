@@ -26,7 +26,9 @@ Annotate gene symbols without human ortholog
 }
 \examples{
 \dontrun{
-    annotateGeneSymbolsWithoutHumanOrtholog(c("AKT1", "ERBB2", "NoSuchAGene", "TGFBR1"), 9606)
-    annotateGeneSymbolsWithoutHumanOrtholog(c("Akt1", "Erbb2", "NoSuchAGene", "Tgfbr1"), 10090)
+    annotateGeneSymbolsWithoutHumanOrtholog(c("AKT1", "ERBB2", 
+                                            "NoSuchAGene", "TGFBR1"), 9606)
+    annotateGeneSymbolsWithoutHumanOrtholog(c("Akt1", "Erbb2", 
+                                            "NoSuchAGene", "Tgfbr1"), 10090)
 }
 }

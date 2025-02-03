@@ -33,6 +33,8 @@ Annotate GeneSymbol with human ortholog
 }
 \examples{
 \dontrun{
-    annotateGeneSymbolsWithHumanOrtholog(c("Akt1", "Erbb2", "NoSuchAGene", "Tgfbr1"), 10090, multiOrth=FALSE)
+    annotateGeneSymbolsWithHumanOrtholog(c("Akt1", "Erbb2",
+                                         "NoSuchAGene", "Tgfbr1"), 
+                                         taxId=10090, multiOrth=FALSE)
 }
 }

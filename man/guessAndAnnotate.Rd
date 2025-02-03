@@ -9,7 +9,7 @@ guessAndAnnotate(
   majority = 0.5,
   orthologue = FALSE,
   multiOrth = FALSE,
-  organism = c("human", "mouse", "rat", "any")
+  taxId = 9606
 )
 }
 \arguments{
@@ -27,9 +27,11 @@ input features are not of human}
 \item{multiOrth}{Logical, in case multiple human orthologues are available, 
 should they all be returned?}
 
-\item{organism}{Character string, in case the input identifiers are gene 
-symbols, the user can specify the organism to be used. 
-The option is passed to \code{\link{annotateGeneSymbols}}.}
+\item{taxId}{Integer, in case the input identifiers are gene 
+symbols, the user can specify the organism to be used with the NCBI taxonomy ID. 
+The option is passed to \code{\link{annotateGeneSymbols}}. 
+Check out \code{commonSpecies} for matches between taxonomy ID and species
+names.}
 }
 \value{
 A \code{data.frame}, containing annotations of following ID types

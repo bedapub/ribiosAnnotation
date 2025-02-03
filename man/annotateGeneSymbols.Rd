@@ -39,9 +39,12 @@ Annotate GeneSymbols
 \examples{
 \dontrun{
     annotateGeneSymbols(c("AKT1", "ERBB2", "NoSuchAGene", "TGFBR1"), 9606)
-    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=FALSE)
-    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=TRUE)
-    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), taxId=10116, orthologue=TRUE, multiOrth=TRUE)
+    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), 
+                        taxId=10116, orthologue=FALSE)
+    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), 
+                        taxId=10116, orthologue=TRUE)
+    annotateGeneSymbols(c("Akt1", "Erbb2", "NoSuchAGene", "Tlr7"), 
+                        taxId=10116, orthologue=TRUE, multiOrth=TRUE)
 }
 }
 \seealso{
