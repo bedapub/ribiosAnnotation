@@ -1,6 +1,9 @@
 #' @rdname locateSecretsFile
 #' @export
 ribiosAnnotationSecretEnvVar <- "RIBIOS_ANNOTATION_SECRETS_JSON"
+
+#' @rdname ribiosAnnotationSecretFile
+#' @title ribiosAnnotation secret file
 #' @export
 ribiosAnnotationSecretFile <- file.path("~",
                                         ".credentials",
