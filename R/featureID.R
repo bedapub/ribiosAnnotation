@@ -195,9 +195,11 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #'   feature IDs in the input matching the pattern of a certain feature type 
 #'   exceeds this value, the function returns a character string representing
 #'   the feature ID type.
-#' @param organism Character string, in case the input identifiers are gene 
-#'   symbols, the user can specify the organism to be used. 
-#'   The option is passed to \code{\link{annotateGeneSymbols}}.
+#' @param taxId Integer, in case the input identifiers are gene 
+#'   symbols, the user can specify the organism to be used with the NCBI taxonomy ID. 
+#'   The option is passed to \code{\link{annotateGeneSymbols}}. 
+#'   Check out \code{commonSpecies} for matches between taxonomy ID and species
+#'   names.
 #' @param orthologue Logical, whether orthologue should be returned if the 
 #' input features are not of human
 #' @param multiOrth Logical, in case multiple human orthologues are available, 
@@ -233,7 +235,7 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #' @export
 guessAndAnnotate <- function(featureIDs, majority=0.5,
                              orthologue=FALSE, multiOrth=FALSE,
-                             organism=c("human", "mouse", "rat", "any")) {
+                             taxId=9606) {
   ft <- guessFeatureType(featureIDs, majority)
   if(ft=="GeneID") {
     res <- annotateGeneIDs(featureIDs, orthologue=orthologue, 
@@ -243,7 +245,7 @@ guessAndAnnotate <- function(featureIDs, majority=0.5,
                            multiOrth=multiOrth)
   } else if (ft=="GeneSymbol") {
     res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, 
-                               multiOrth=multiOrth, organism=organism)
+                               multiOrth=multiOrth, taxId=taxId)
   # } else if (ft=="RefSeq") {
   #   res <- annotateRefSeqs(featureIDs, orthologue=orthologue, 
   #                          multiOrth=multiOrth)
