@@ -4,12 +4,18 @@
 \alias{connectMongoDB}
 \title{Connect to a MongoDB instance}
 \usage{
-connectMongoDB(instance = "bioinfo_read", collection = "ncbi_gene_info")
+connectMongoDB(
+  instance = "bioinfo_read",
+  collection = "ncbi_gene_info",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{instance}{Character string, the MongoDB instance to connect to}
 
 \item{collection}{Character string, the collection to be used}
+
+\item{verbose}{Logical}
 }
 \value{
 A pointer to a collection on the server, as returned by

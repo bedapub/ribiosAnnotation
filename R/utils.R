@@ -86,6 +86,7 @@ loadMongodbSecrets <- function(file=locateSecretsFile(),
 #' Connect to a MongoDB instance
 #' @param instance Character string, the MongoDB instance to connect to
 #' @param collection Character string, the collection to be used
+#' @param verbose Logical
 #' @return A pointer to a collection on the server, as returned by
 #'  \code{\link[mongolite]{mongo}}.
 #' @examples 
@@ -94,18 +95,17 @@ loadMongodbSecrets <- function(file=locateSecretsFile(),
 #' @seealso \code{\link{loadMongodbSecrets}}
 #' @export
 connectMongoDB <- function(instance="bioinfo_read",
-                           collection="ncbi_gene_info") {
+                           collection="ncbi_gene_info",
+			   verbose=FALSE) {
   bioinfoReadSecrets <- loadMongodbSecrets(instance=instance)
-  bioinfoReadURL <- sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", 
+  bioinfoReadURL <- sprintf("mongodb+srv://%s:%s@%s/%s?retryWrites=true&w=majority",
                             bioinfoReadSecrets$username,
                             bioinfoReadSecrets$password,
-                            bioinfoReadSecrets$hostname, 
-                            bioinfoReadSecrets$port,
-                            bioinfoReadSecrets$dbname,
+                            bioinfoReadSecrets$hostname,
                             bioinfoReadSecrets$dbname)
   giCon <- mongolite::mongo(collection=collection,
                             db=bioinfoReadSecrets$dbname,
-                            url=bioinfoReadURL)
+                            url=bioinfoReadURL, verbose=verbose)
   return(giCon)
 }
 
