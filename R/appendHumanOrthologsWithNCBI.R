@@ -18,14 +18,17 @@ NULL
 #' @note The function does not sort the rows by GeneID. It is the responsibility
 #'  of the calling function to do so.
 #' 
-#' @examples 
+#' @return A \code{data.frame} with annotation and human orthologs appended.
+#' @examples
+#' \dontrun{
 #' anno <- data.frame(GeneID=c(780, 1506, 114483548, 102129055, NA),
 #'                    TaxID=c(9606, 9606, 10116, 9541, NA))
 #' appendHumanOrthologsWithNCBI(anno)
-#' 
+#'
 #' tol_anno <- data.frame(GeneID=c(780, 1506, 114483548, 102129055, NA, "NotV"),
 #'                    TaxID=c(9606, 9606, 10116, 9541, NA, NA))
 #' appendHumanOrthologsWithNCBI(tol_anno)
+#' }
 #' @importFrom ribiosUtils haltifnot
 #' @export
 appendHumanOrthologsWithNCBI <- function(anno,
@@ -67,6 +70,3 @@ appendHumanOrthologsWithNCBI <- function(anno,
   res <- unique(res) %>% dplyr::select(-chrGeneID)
   return(res)
 }
-
-## assignInNamespace("appendHumanOrthologsWithNCBI", appendHumanOrthologsWithNCBI, "ribiosAnnotation")
-## rm(appendHumanOrthologsWithNCBI)

@@ -1,3 +1,15 @@
+#' Translation table between GTI and Bioconductor chip type names
+#'
+#' A data frame mapping GTI array names to Bioconductor array names.
+#'
+#' @format A data frame with columns:
+#' \describe{
+#'   \item{GTI}{GTI chip type name}
+#'   \item{Bioconductor}{Bioconductor chip type name}
+#' }
+#' @source Compiled manually in December 2011.
+"gtibioc"
+
 #' @importFrom utils globalVariables
 utils::globalVariables("gtibioc")
 
@@ -33,7 +45,7 @@ bioc2gti <- function (chipname) {
 #' a vector of the GTI names. Both vectors have the chip types in the other
 #' system as names. See examples.
 #' 
-#' @aliases gtibioc gti2bioc bioc2gti
+#' @aliases gti2bioc bioc2gti
 #' @param chipname Character vector, chip names (types). If missing, chip types
 #' supported by both GTI and Bioconductor will be printed, see details.
 #' @return Chracter vector of the same length as the input

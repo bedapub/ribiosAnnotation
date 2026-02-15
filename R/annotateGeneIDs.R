@@ -58,7 +58,7 @@ annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' @note \code{annotatemRNAs} is an alias of \code{annotateRefSeqs}
 #' @author Jitao David Zhang <jitao_david.zhang@@roche.com>
 #'
-#' @details The collection {ncbi_gene_info} is used.
+#' @details The collection \code{ncbi_gene_info} is used.
 #' 
 #' @examples
 #' 

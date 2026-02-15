@@ -32,9 +32,7 @@ A \code{data.frame} containing annotation information. Following
 This annotates any identifies that can be recognized by GTI.
 }
 \examples{
-
-options(error=utils::recover)
-
+\dontrun{
 # GeneID
 annotateAnyIDs(ids=c(780, 5982, 3310, NA))
 
@@ -48,17 +46,13 @@ annotateAnyIDs(myprobes)
 # UniProt
 annotateAnyIDs(ids=c("P38398", "Q8NDF8"))
 
-# EnsEMBL 
+# EnsEMBL
 ensemblIDs <- c("ENSG00000197535", "ENST00000399231.7", "ENSP00000418960.2")
 annotateAnyIDs(ensemblIDs)
 
-# TODO: ENST and ENSP do not work yet
-annotateAnyIDs("ENST00000399231")
-
 # RefSeq
 annotateAnyIDs(c("NM_000235", "NM_000498"))
-
-options(error=NULL)
+}
 
 }
 \seealso{

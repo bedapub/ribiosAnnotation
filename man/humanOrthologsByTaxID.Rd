@@ -13,7 +13,7 @@ for cyno (crab-eating macaque).}
 }
 \value{
 A \code{data.frame} contains following columns:
- \itemize{
+ \describe{
     \item{\code{GeneID}}{NCBI Gene ID of the query species}
     \item{\code{GeneSymbol}}{NCBI Gene symbol of the query species}
     \item{\code{Description}}{Gene description of the query species}

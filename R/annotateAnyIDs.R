@@ -27,34 +27,28 @@ NULL
 #' @seealso \code{\link{annotateGeneIDs}}, \code{\link{annotateGeneSymbols}}
 #' @importFrom ribiosUtils putColsFirst matchColumn
 #' @examples
-#' 
-#' options(error=utils::recover)
-#' 
+#' \dontrun{
 #' # GeneID
 #' annotateAnyIDs(ids=c(780, 5982, 3310, NA))
-#' 
+#'
 #' # GeneSymbol
 #' annotateAnyIDs(ids=c("DDR1", "RFC2", "HSPA6", "HSAP6"))
-#' 
+#'
 #' # Probesets
 #' myprobes <- c("1000_at", "1004_at", "1002_f_at", "nonsense_at")
 #' annotateAnyIDs(myprobes)
-#' 
+#'
 #' # UniProt
 #' annotateAnyIDs(ids=c("P38398", "Q8NDF8"))
-#' 
-#' # EnsEMBL 
+#'
+#' # EnsEMBL
 #' ensemblIDs <- c("ENSG00000197535", "ENST00000399231.7", "ENSP00000418960.2")
 #' annotateAnyIDs(ensemblIDs)
-#' 
-#' # TODO: ENST and ENSP do not work yet
-#' annotateAnyIDs("ENST00000399231")
-#' 
+#'
 #' # RefSeq
 #' annotateAnyIDs(c("NM_000235", "NM_000498"))
-#' 
-#' options(error=NULL)
-#' 
+#' }
+#'
 #' @export annotateAnyIDs
 annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
   validIDs <- removeEnsemblVersion(ids)
