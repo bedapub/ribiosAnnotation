@@ -9,7 +9,8 @@ NULL
 #' selected top one if multiple exist. Only valid when \code{orthologue} is set 
 #' as \code{TRUE}.
 #' 
-#' @seealso 
+#' @return A \code{data.frame} with UniProt accessions and gene annotations.
+#' @seealso
 #' * \code{\link{annotateUniprotAccession}}, which annotates Uniprot accessions
 #' * \code{\link{annotateTaxID}}, which annotates genes given TaxID.
 #' @examples 

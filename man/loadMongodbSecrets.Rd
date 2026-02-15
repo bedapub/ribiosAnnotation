@@ -14,7 +14,7 @@ of the JSON file}
 }
 \value{
 A list of the following items:
-\itemize{
+\describe{
   \item{\code{hostname}}{Hostname of the MongoDB}
   \item{\code{port}}{Port of the MongoDB}
   \item{\code{dbname}}{Database of the MongoDB}

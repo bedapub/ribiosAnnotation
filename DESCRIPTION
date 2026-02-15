@@ -1,11 +1,19 @@
 Package: ribiosAnnotation
 Type: Package
-Title: Annotation of genes, RNAs and proteins in the BIOS system
+Title: Annotation of Genes, RNAs, and Proteins in 'ribios'
 Version: 3.8.0
-Date: 2025-07-28
-Author: Jitao David Zhang <jitao_david.zhang@roche.com>
-Maintainer: Jitao David Zhang <jitao_david.zhang@roche.com>
-Description: Retrieves annotation information of genomic features, genes, RNAs and proteins from the Oracle database of the Roche Bioinformatics environment.
+Date: 2026-02-15
+Authors@R: person("Jitao David", "Zhang",
+    email = "jitao_david.zhang@roche.com",
+    role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0002-3085-0909"))
+Description: Retrieves annotation information of genomic features including
+    genes, RNAs, and proteins from databases. It supports querying by gene
+    identifiers, gene symbols, UniProt accessions, Ensembl identifiers, and
+    RefSeq identifiers, as well as mapping orthologs across species using
+    NCBI data.
+Depends:
+    R (>= 4.1.0)
 Imports:
     ribiosUtils,
     dplyr,
@@ -14,13 +22,13 @@ Imports:
     magrittr,
     mongolite
 Suggests:
-    roxygen2,
     testthat
 LazyData: true
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.3.2
-Collate: 
+RoxygenNote: 7.3.3
+Additional_repositories: https://bedapub.r-universe.dev
+Collate:
     'sortAnnotationByQuery.R'
     'removeEnsemblVersion.R'
     'utils.R'
@@ -38,6 +46,7 @@ Collate:
     'formatIn.R'
     'gti2bioc.R'
     'humanOrthologsByTaxID.R'
+    'ribiosAnnotation-package.R'
     'taxID.R'
     'uniprotByTaxID.R'
 Remotes:

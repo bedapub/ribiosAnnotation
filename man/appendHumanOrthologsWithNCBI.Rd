@@ -20,6 +20,9 @@ The function appends human orthologs to an existing annotation data.frame. It
 is usually called by another function. Please make sure of what you are doing 
 if you call it directly.}
 }
+\value{
+A \code{data.frame} with annotation and human orthologs appended.
+}
 \description{
 Append human orthologs to an existing annotation dataframe
 }
@@ -28,6 +31,7 @@ The function does not sort the rows by GeneID. It is the responsibility
  of the calling function to do so.
 }
 \examples{
+\dontrun{
 anno <- data.frame(GeneID=c(780, 1506, 114483548, 102129055, NA),
                    TaxID=c(9606, 9606, 10116, 9541, NA))
 appendHumanOrthologsWithNCBI(anno)
@@ -35,4 +39,5 @@ appendHumanOrthologsWithNCBI(anno)
 tol_anno <- data.frame(GeneID=c(780, 1506, 114483548, 102129055, NA, "NotV"),
                    TaxID=c(9606, 9606, 10116, 9541, NA, NA))
 appendHumanOrthologsWithNCBI(tol_anno)
+}
 }

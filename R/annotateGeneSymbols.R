@@ -130,5 +130,4 @@ annotateGeneSymbols <- function(ids, taxId=9606, orthologue=FALSE, multiOrth=FAL
     res <- annotateGeneSymbolsWithHumanOrtholog(ids, taxId=taxId, multiOrth=TRUE)
   }
   return(res)
-	return(NULL)
 }

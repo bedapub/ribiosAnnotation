@@ -22,7 +22,7 @@ A \code{data.frame} object containing the annotations:
 Annotate Entrez GeneIDs without querying human orthologs
 }
 \details{
-The collection {ncbi_gene_info} is used.
+The collection \code{ncbi_gene_info} is used.
 }
 \note{
 \code{annotatemRNAs} is an alias of \code{annotateRefSeqs}
