@@ -1,4 +1,4 @@
-#' @include removeEnsemblVersion.R
+#' @include removeEnsemblVersion.R backend.R
 NULL
 
 #' Annotate Enesembl GeneIDs
@@ -10,6 +10,8 @@ NULL
 #' Default: \code{FALSE}
 #' @param multiOrth Logical, whether mutliple orthologues should be returned if
 #' exist. Deafult: \code{FALSE}
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame} object containing the annotations:
 #' * GeneID EntrezGeneID
 #' * GeneSymbol Official gene symbol
@@ -36,11 +38,15 @@ NULL
 #'                         orthologue=TRUE)
 #' }
 #' @export
-annotateEnsemblGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
+annotateEnsemblGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE,
+                                   backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   if(!orthologue) {
-    res <- annotateEnsemblGeneIDsWithoutHumanOrtholog(ids)
+    res <- annotateEnsemblGeneIDsWithoutHumanOrtholog(ids, backend = backend)
   } else {
-    res <- annotateEnsemblGeneIDsWithHumanOrtholog(ids, multiOrth=TRUE)
+    res <- annotateEnsemblGeneIDsWithHumanOrtholog(ids,
+                                                   multiOrth = multiOrth,
+                                                   backend = backend)
   }
   return(res)
 }
@@ -49,6 +55,8 @@ annotateEnsemblGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' @param ids Character strings, Ensembl GeneIDs in form of 
 #' \code{ENS(species)(object type)(identifier).(version)}. The version is
 #' optional.
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame} containing following columns:
 #' \itemize{
 #'   \item{EnsemblID}: The input EnsemblID
@@ -80,9 +88,16 @@ annotateEnsemblGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' ensAnno <- annotateEnsemblGeneIDsWithEnsembl(ensIDs)
 #' }
 #' @export
-annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
+annotateEnsemblGeneIDsWithEnsembl <- function(ids, backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   ids <- as.character(ids)
   uvids <- removeEnsemblVersion(ids)
+
+  if (backend == "bioconductor") {
+    res <- biocAnnotateEnsemblGeneIDs(ids)
+    rownames(res) <- id2rownames(ids)
+    return(res)
+  }
   
   input <- data.frame(EnsemblID=ids,
                       UVID=uvids)
@@ -127,6 +142,8 @@ annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
 #' @param ids Character strings, Ensembl GeneIDs in form of 
 #' \code{ENS(species)(object type)(identifier).(version)}. The version is
 #' optional.
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame} containing following columns:
 #' \itemize{
 #'   \item{EnsemblID}: The input EnsemblID
@@ -156,9 +173,20 @@ annotateEnsemblGeneIDsWithEnsembl <- function(ids) {
 #' ncbiAnno <- annotateEnsemblGeneIDsWithNCBI(ensIDs)
 #' }
 #' @export
-annotateEnsemblGeneIDsWithNCBI <- function(ids) {
+annotateEnsemblGeneIDsWithNCBI <- function(ids, backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   ids <- as.character(ids)
   uvids <- removeEnsemblVersion(ids)
+
+  if (backend == "bioconductor") {
+    res <- biocAnnotateEnsemblGeneIDs(ids)
+    if (!"Type" %in% colnames(res)) {
+      res$Type <- NA
+    }
+    rownames(res) <- id2rownames(ids)
+    return(res)
+  }
+
   input <- data.frame(EnsemblID=ids,
                       UVID=uvids)
   
@@ -186,7 +214,7 @@ annotateEnsemblGeneIDsWithNCBI <- function(ids) {
                     'GeneID'='geneId') %>%
       dplyr::left_join(input, by="UVID") %>%
       dplyr::select(EnsemblID, GeneID)
-    resAnno <- annotateGeneIDs(ids=resE2N$GeneID)
+    resAnno <- annotateGeneIDs(ids=resE2N$GeneID, backend = backend)
     res <- dplyr::left_join(resE2N, resAnno, by="GeneID")
     resInd <- ribiosUtils::matchColumnIndex(ids, res, "EnsemblID")
     res <- res[resInd, , drop=FALSE]
@@ -200,6 +228,8 @@ annotateEnsemblGeneIDsWithNCBI <- function(ids) {
 #' @param ids A vector of character strings, Ensembl GeneIDs in form of 
 #' \code{ENS(species)(object type)(identifier).(version)}. The version is
 #' optional.
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame} containing following columns:
 #' \itemize{
 #'   \item{EnsemblID}: The input EnsemblID
@@ -220,9 +250,11 @@ annotateEnsemblGeneIDsWithNCBI <- function(ids) {
 #' enAnno <- annotateEnsemblGeneIDsWithoutHumanOrtholog(ensIDs)
 #' }
 #' @export
-annotateEnsemblGeneIDsWithoutHumanOrtholog <- function(ids) {
-  ensAnno <- annotateEnsemblGeneIDsWithEnsembl(ids)
-  ncbiAnno <- annotateEnsemblGeneIDsWithNCBI(ids)
+annotateEnsemblGeneIDsWithoutHumanOrtholog <- function(ids,
+                                                       backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
+  ensAnno <- annotateEnsemblGeneIDsWithEnsembl(ids, backend = backend)
+  ncbiAnno <- annotateEnsemblGeneIDsWithNCBI(ids, backend = backend)
 
   res <- ncbiAnno
   isEnsSuccess <- !is.na(ensAnno$TaxID)
@@ -241,6 +273,8 @@ annotateEnsemblGeneIDsWithoutHumanOrtholog <- function(ids) {
 #' optional.
 #' @param multiOrth Logical, whether mutliple orthologues should be returned if
 #' exist. Deafult: \code{FALSE}
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame} containing following columns:
 #' \itemize{
 #'   \item{EnsemblID}: The input EnsemblID
@@ -263,12 +297,17 @@ annotateEnsemblGeneIDsWithoutHumanOrtholog <- function(ids) {
 #' enAnnoHumanOrt <- annotateEnsemblGeneIDsWithHumanOrtholog(ensIDs)
 #' }
 #' @export
-annotateEnsemblGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE) {
+annotateEnsemblGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE,
+                                                    backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   HumanGeneID <- HumanGeneSymbol <- HumanDescription <- Type <- NULL
   GeneSymbol <- GeneID <- Description <- NULL
   
-  ensAnno <- annotateEnsemblGeneIDsWithoutHumanOrtholog(ids)
-  appEnsAnno <- appendHumanOrthologsWithNCBI(ensAnno, multiOrth = multiOrth)
+  ensAnno <- annotateEnsemblGeneIDsWithoutHumanOrtholog(ids,
+                                                        backend = backend)
+  appEnsAnno <- appendHumanOrthologsWithNCBI(ensAnno,
+                                             multiOrth = multiOrth,
+                                             backend = backend)
   res <- sortAnnotationByQuery(appEnsAnno, ids, id_column="EnsemblID")
   return(res)
 }

@@ -3,7 +3,7 @@
 
 ## What is *ribiosAnnotation*?
 
-*ribiosUtils* is a R package that performs feature annotation, for instance genes, mRNAs, and proteins, using Roche Bioinformatics infrastructure. It is distributed under the GPL-3 license.
+*ribiosUtils* is a R package that performs feature annotation, for instance genes, mRNAs, and proteins, using either the Roche Bioinformatics infrastructure or the Bioconductor environment. It is distributed under the GPL-3 license.
 
 ## Installation
 
@@ -14,7 +14,48 @@ library(devtools)
 devtools::install_github("bedapub/ribiosAnnotation")
 ```
 
-The user has to specify a secrets file in JSON format (the template is accessible here [inst/secrets/secrets-template.json](inst/secrets/secrets-template.json), with invalid credentials). The secrets file can be specified with the `RIBIOS_ANNOTATION_SECRETS_JSON` environmental variable. If not, ribiosAnnotation looks for the file at `~/.credentials/ribiosAnnotation-secrets.json`.
+## Annotation Backends
+
+ribiosAnnotation supports two annotation backends:
+
+- `mongodb` (default): online mode using the existing MongoDB instance using the Roche Bioinformatics infrastructure.
+- `bioconductor`: offline mode using Bioconductor OrgDb packages and the babelgene package for ortholog mapping.
+
+You can choose the backend per call:
+
+```r
+annotateGeneIDs(c(1, 2, 3), backend = "mongodb")
+annotateGeneIDs(c(1, 2, 3), backend = "bioconductor")
+```
+
+Or set a global backend for the current R session:
+
+```r
+ribiosAnnotation::setAnnotationBackend("bioconductor")
+ribiosAnnotation::getAnnotationBackend()
+
+# Calls without explicit backend now use the global setting
+annotateGeneSymbols(c("AKT1", "MAPK14"))
+```
+
+Or set a global default for the session with an environment variable:
+
+```r
+Sys.setenv(RIBIOS_ANNOTATION_BACKEND = "bioconductor")
+annotateGeneSymbols(c("AKT1", "MAPK14"))
+```
+
+For `backend = "bioconductor"`, install:
+
+- `AnnotationDbi`
+- `org.Hs.eg.db` (human)
+- `org.Mm.eg.db` (mouse)
+- `org.Rn.eg.db` (rat)
+- `org.Cf.eg.db` (dog)
+- `org.Ss.eg.db` (pig)
+- `org.Pt.eg.db` (chimpanzee)
+- `org.Mmu.eg.db` (rhesus macaque)
+- `babelgene` (for non-human to human orthologue mapping)
 
 ## Contact
 

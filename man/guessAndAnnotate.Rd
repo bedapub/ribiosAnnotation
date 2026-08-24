@@ -9,7 +9,8 @@ guessAndAnnotate(
   majority = 0.5,
   orthologue = FALSE,
   multiOrth = FALSE,
-  taxId = 9606
+  taxId = 9606,
+  backend = "mongodb"
 )
 }
 \arguments{
@@ -32,6 +33,9 @@ symbols, the user can specify the organism to be used with the NCBI taxonomy ID.
 The option is passed to \code{\link{annotateGeneSymbols}}. 
 Check out \code{commonSpecies} for matches between taxonomy ID and species
 names.}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A \code{data.frame}, containing annotations of following ID types

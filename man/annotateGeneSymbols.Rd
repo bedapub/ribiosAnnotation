@@ -4,7 +4,13 @@
 \alias{annotateGeneSymbols}
 \title{Annotate GeneSymbols}
 \usage{
-annotateGeneSymbols(ids, taxId = 9606, orthologue = FALSE, multiOrth = FALSE)
+annotateGeneSymbols(
+  ids,
+  taxId = 9606,
+  orthologue = FALSE,
+  multiOrth = FALSE,
+  backend = "mongodb"
+)
 }
 \arguments{
 \item{ids}{Character strings, gene symbols}
@@ -15,6 +21,9 @@ annotateGeneSymbols(ids, taxId = 9606, orthologue = FALSE, multiOrth = FALSE)
 
 \item{multiOrth}{Logical, only valid when orthologue is set to TRUE, whether
 multiple orthologues are returned}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A data.frame containing following columns

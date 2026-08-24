@@ -1,4 +1,4 @@
-#' @include sortAnnotationByQuery.R
+#' @include sortAnnotationByQuery.R backend.R
 NULL
 
 
@@ -7,6 +7,8 @@ NULL
 #' @param multiOrth Logical, whether one gene is allowed to map to multiple
 #' human orthologs? Default value is \code{FALSE}, i.e. only the first 
 #' human ortholog (random choice) is returned.
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' 
 #' @return A \code{data.frame} containing following columns:
 #' * GeneID: Input GeneID
@@ -31,7 +33,13 @@ NULL
 #' }
 #' @export
 annotateNonHumanGenesHumanOrthologsWithNCBI <- function(geneids,
-                                                        multiOrth=FALSE) {
+                                                        multiOrth=FALSE,
+                                                        backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
+
+  if (backend == "bioconductor") {
+    return(biocAnnotateHumanOrthologs(geneids, multiOrth = multiOrth))
+  }
   
   validIDs <- suppressWarnings(unique(as.integer(as.character(geneids))))
   validIDs <- validIDs[!is.na(validIDs)]
@@ -76,6 +84,8 @@ annotateNonHumanGenesHumanOrthologsWithNCBI <- function(geneids,
 #' @param multiOrth Logical, whether one gene is allowed to map to multiple
 #' human orthologs? Default value is \code{FALSE}, i.e. only the first 
 #' human ortholog (random choice) is returned.
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' 
 #' @return A \code{data.frame} containing following columns:
 #' * GeneID: Input GeneID
@@ -99,7 +109,13 @@ annotateNonHumanGenesHumanOrthologsWithNCBI <- function(geneids,
 #'                                  102129055))
 #' }
 #' @export
-annotateHumanOrthologsWithNCBI <- function(geneids, multiOrth=FALSE) {
+annotateHumanOrthologsWithNCBI <- function(geneids, multiOrth=FALSE,
+                                           backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
+
+  if (backend == "bioconductor") {
+    return(biocAnnotateHumanOrthologs(geneids, multiOrth = multiOrth))
+  }
   
   validIDs <- suppressWarnings(unique(as.integer(as.character(geneids))))
   validIDs <- validIDs[!is.na(validIDs)]
@@ -129,7 +145,8 @@ annotateHumanOrthologsWithNCBI <- function(geneids, multiOrth=FALSE) {
   
   if(length(nonhumanValidGeneIDs)>0) {
     ortDf <- annotateNonHumanGenesHumanOrthologsWithNCBI(nonhumanValidGeneIDs,
-                                                         multiOrth = multiOrth)
+                                                         multiOrth = multiOrth,
+                                                         backend = backend)
     combDf <- rbind(humanDf, ortDf)
   } else {
     combDf <- humanDf

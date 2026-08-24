@@ -4,7 +4,12 @@
 \alias{annotateUniprotAccession}
 \title{Annotate UniProt accessions or names}
 \usage{
-annotateUniprotAccession(accessions, orthologue = FALSE, multiOrth = FALSE)
+annotateUniprotAccession(
+	accessions,
+	orthologue = FALSE,
+	multiOrth = FALSE,
+	backend = "mongodb"
+)
 }
 \arguments{
 \item{accessions}{Character strings, UniProt accessions or names}
@@ -13,6 +18,9 @@ annotateUniprotAccession(accessions, orthologue = FALSE, multiOrth = FALSE)
 
 \item{multiOrth}{Logical, only valid if \code{orthologue} is \code{TRUE},
 whether multiple orthologues are returned instead of only one.}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \description{
 Annotate UniProt accessions or names

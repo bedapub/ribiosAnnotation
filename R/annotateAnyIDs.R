@@ -1,4 +1,4 @@
-#' @include utils.R removeEnsemblVersion.R sortAnnotationByQuery.R
+#' @include utils.R removeEnsemblVersion.R sortAnnotationByQuery.R backend.R
 NULL
 
 #' Annotate any identifiers
@@ -13,6 +13,8 @@ NULL
 #' 
 #' @param orthologue Logical, is orthologous mapping needed?
 #' @param multiOrth Logical, is more than one orthologs allowed
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame} containing annotation information. Following
 #'    columns exist at least: 
 #' \enumerate{
@@ -56,38 +58,47 @@ NULL
 #' options(error=NULL)
 #' 
 #' @export annotateAnyIDs
-annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE) {
+annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE,
+                           backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   validIDs <- removeEnsemblVersion(ids)
   validIDs <- validIDs[!is.na(validIDs)]
   
   Input <- GeneID <- TaxID <- IDType <- NULL
   
-  giCon <- connectMongoDB(instance="bioinfo_read",
-                          collection="featureanno")
-  
-  fieldsJson <- returnFieldsJson(c("feature_id", "tax_id", "gene_id", "id_type"))
-  query <- paste0('{"feature_id":{"$in":[', 
-                  paste(paste0("\"", as.character(validIDs), "\""), 
-                        collapse=","),']}}')
-  genes <- giCon$find(query, fields=fieldsJson)
-  if(nrow(genes)==0) {
-    featAnno <- data.frame(Input=ids, 
-                           GeneID=NA,
-                           TaxID=NA,
-                           IDType=NA)
+  if (backend == "mongodb") {
+    giCon <- connectMongoDB(instance="bioinfo_read",
+                            collection="featureanno")
+
+    fieldsJson <- returnFieldsJson(c("feature_id", "tax_id", "gene_id", "id_type"))
+    query <- paste0('{"feature_id":{"$in":[',
+                    paste(paste0("\"", as.character(validIDs), "\""),
+                          collapse=","),']}}')
+    genes <- giCon$find(query, fields=fieldsJson)
+    if(nrow(genes)==0) {
+      featAnno <- data.frame(Input=ids,
+                             GeneID=NA,
+                             TaxID=NA,
+                             IDType=NA)
+    } else {
+      featAnno <- genes %>%
+        dplyr::rename("Input"="feature_id",
+                      'GeneID'='gene_id',
+                      "TaxID"="tax_id",
+                      "IDType"="id_type") %>%
+        dplyr::select(Input, GeneID, TaxID, IDType)
+    }
   } else {
-    featAnno <- genes %>%
-      dplyr::rename("Input"="feature_id",
-                    'GeneID'='gene_id',
-                    "TaxID"="tax_id",
-                    "IDType"="id_type") %>%
-      dplyr::select(Input, GeneID, TaxID, IDType)
+    featAnno <- biocAnnotateAnyIDsFeatureMap(ids)
   }
   
   if(orthologue) {
-    res <- appendHumanOrthologsWithNCBI(featAnno, multiOrth = multiOrth)
+    res <- appendHumanOrthologsWithNCBI(featAnno,
+                                        multiOrth = multiOrth,
+                                        backend = backend)
   } else {
-    geneanno <- annotateGeneIDsWithoutHumanOrtholog(featAnno$GeneID) %>%
+    geneanno <- annotateGeneIDsWithoutHumanOrtholog(featAnno$GeneID,
+                                                    backend = backend) %>%
       dplyr::select(-TaxID)
     res <- left_join(featAnno, geneanno, by="GeneID")
   }

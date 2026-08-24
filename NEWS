@@ -1,3 +1,12 @@
+Version 3.8-1 (2026-08-24)
+  + Add annotation backend selection with `backend` parameter across main annotation functions.
+  + Add global session backend controls with `setAnnotationBackend` and `getAnnotationBackend`.
+  + Keep MongoDB as default backend.
+  + Add Bioconductor backend support for offline annotation using OrgDb packages.
+  + Add `babelgene`-based non-human to human orthologue mapping in Bioconductor mode.
+  + Add backend tests covering dog and pig symbol orthologue mapping.
+  + Add backend compatibility tests and update README with backend usage.
+
 Version 3.2-0 (2016-12-21)
   + Add mRNArefseqByTaxID to get all refseq IDs given a Taxonomy ID
 

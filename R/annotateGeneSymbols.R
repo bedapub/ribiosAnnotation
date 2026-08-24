@@ -1,10 +1,12 @@
-#' @include utils.R
+#' @include utils.R backend.R
 NULL
 
 
 #' Annotate gene symbols without human ortholog
 #' @param ids Character vector, gene symbols to be queried
 #' @param taxId Integer, NCBI taxonomy ID of the species. Default value: 9606 (human). See \code{commonSpecies} for tax id of common species.
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A data.frame of following columns
 #' \describe{
 #'   \item{GeneID}{Entrez Gene ID}
@@ -22,17 +24,36 @@ NULL
 #' }
 #' @export
 annotateGeneSymbolsWithoutHumanOrtholog <- function(ids,
-                                                    taxId=9606) {
+                                                    taxId=9606,
+                                                    backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   GeneID <- GeneSymbol <- Description <- TaxID <- Type <- NULL
-  
-  giCon <- connectMongoDB(instance="bioinfo_read",
-                          collection="ncbi_gene_info")
-  
-  qids <- paste0('"', ids, '"')
-  speciesFieldsJson <- returnFieldsJson(c("Symbol", "description", "geneId",
-                                          "taxId", "type_of_gene"))
-  query <- paste0('{"Symbol":{"$in":[', paste(qids, collapse=","),']}, "taxId":', as.character(taxId), '}')
-  genes <- giCon$find(query, fields=speciesFieldsJson) 
+
+  if (backend == "mongodb") {
+    giCon <- connectMongoDB(instance="bioinfo_read",
+                            collection="ncbi_gene_info")
+
+    qids <- paste0('"', ids, '"')
+    speciesFieldsJson <- returnFieldsJson(c("Symbol", "description", "geneId",
+                                            "taxId", "type_of_gene"))
+    query <- paste0('{"Symbol":{"$in":[', paste(qids, collapse=","),']}, "taxId":', as.character(taxId), '}')
+    genes <- giCon$find(query, fields=speciesFieldsJson)
+  } else {
+    if (is.na(biocOrgDbPackageByTaxId(taxId))) {
+      warning("Bioconductor GeneSymbol annotation is unavailable for taxId ",
+              taxId,
+              ". Returning NA fields except TaxID and input symbols.")
+      genes <- data.frame()
+    } else {
+      genes <- biocAnnotateGeneSymbols(ids, taxId = taxId) %>%
+        dplyr::rename(Symbol = GeneSymbol,
+                      description = Description,
+                      geneId = GeneID,
+                      taxId = TaxID,
+                      type_of_gene = Type)
+    }
+  }
+
   if(nrow(genes)==0) {
     res <- data.frame(GeneSymbol=ids,
                       GeneID=NA,
@@ -58,6 +79,8 @@ annotateGeneSymbolsWithoutHumanOrtholog <- function(ids,
 #' @param taxId Integer, NCBI taxonomy ID. Default value: 9606 (human). See \code{commonSpecies} for tax id of common species.
 #' @param multiOrth Logical, only valid when orthologue is set to TRUE,  whether
 #' multiple orthologues are returned
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A data.frame containing following columns:
 #' \describe{
 #'   \item{GeneID}{Entrez Gene ID}
@@ -77,12 +100,17 @@ annotateGeneSymbolsWithoutHumanOrtholog <- function(ids,
 #'                                          taxId=10090, multiOrth=FALSE)
 #' }
 #' @export
-annotateGeneSymbolsWithHumanOrtholog <- function(ids, taxId, multiOrth=FALSE) {
+annotateGeneSymbolsWithHumanOrtholog <- function(ids, taxId, multiOrth=FALSE,
+                                                 backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   HumanGeneID <- HumanGeneSymbol <- HumanDescription <- Type <- NULL
   GeneSymbol <- GeneID <- Description <- NULL
   
-  geneIdAnno <- annotateGeneSymbolsWithoutHumanOrtholog(ids, taxId=taxId)
-  appGeneIDanno <- appendHumanOrthologsWithNCBI(geneIdAnno, multiOrth=multiOrth)
+  geneIdAnno <- annotateGeneSymbolsWithoutHumanOrtholog(ids, taxId=taxId,
+                                                        backend = backend)
+  appGeneIDanno <- appendHumanOrthologsWithNCBI(geneIdAnno,
+                                                multiOrth=multiOrth,
+                                                backend = backend)
   res <- sortAnnotationByQuery(appGeneIDanno, ids, "GeneSymbol", multi = multiOrth)
   
   return(res)
@@ -95,6 +123,8 @@ annotateGeneSymbolsWithHumanOrtholog <- function(ids, taxId, multiOrth=FALSE) {
 #' @param orthologue Logical, whether orthologues are to be returned
 #' @param multiOrth Logical, only valid when orthologue is set to TRUE, whether
 #' multiple orthologues are returned
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' 
 #' @seealso The function is a convenient wrapper of two functions: \code{annotateGeneSymbolsWithoutHumanOrtholog} and \code{annotateGeneSymbolsWithHumanOrtholog}.
 #' @return A data.frame containing following columns
@@ -123,12 +153,18 @@ annotateGeneSymbolsWithHumanOrtholog <- function(ids, taxId, multiOrth=FALSE) {
 #'                         taxId=10116, orthologue=TRUE, multiOrth=TRUE)
 #' }
 #' @export
-annotateGeneSymbols <- function(ids, taxId=9606, orthologue=FALSE, multiOrth=FALSE) {
+annotateGeneSymbols <- function(ids, taxId=9606, orthologue=FALSE,
+                                multiOrth=FALSE, backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   if(!orthologue) {
-    res <- annotateGeneSymbolsWithoutHumanOrtholog(ids, taxId=taxId)
+    res <- annotateGeneSymbolsWithoutHumanOrtholog(ids,
+                                                   taxId=taxId,
+                                                   backend = backend)
   } else {
-    res <- annotateGeneSymbolsWithHumanOrtholog(ids, taxId=taxId, multiOrth=TRUE)
+    res <- annotateGeneSymbolsWithHumanOrtholog(ids,
+                                                taxId=taxId,
+                                                multiOrth=multiOrth,
+                                                backend = backend)
   }
   return(res)
-	return(NULL)
 }

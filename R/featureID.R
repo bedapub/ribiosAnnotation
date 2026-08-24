@@ -204,6 +204,8 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #' input features are not of human
 #' @param multiOrth Logical, in case multiple human orthologues are available, 
 #' should they all be returned?
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame}, containing annotations of following ID types
 #'   \itemize{
 #'     \item \code{GeneID}
@@ -235,26 +237,34 @@ guessFeatureType <- function(featureIDs, majority=0.5) {
 #' @export
 guessAndAnnotate <- function(featureIDs, majority=0.5,
                              orthologue=FALSE, multiOrth=FALSE,
-                             taxId=9606) {
+                             taxId=9606,
+                             backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   ft <- guessFeatureType(featureIDs, majority)
   if(ft=="GeneID") {
     res <- annotateGeneIDs(featureIDs, orthologue=orthologue, 
-                           multiOrth=multiOrth)
+                           multiOrth=multiOrth,
+                           backend = backend)
   } else if (ft=="EnsemblGeneID") {
     res <- annotateEnsemblGeneIDs(featureIDs, orthologue=orthologue, 
-                           multiOrth=multiOrth)
+                           multiOrth=multiOrth,
+                           backend = backend)
   } else if (ft=="GeneSymbol") {
     res <- annotateGeneSymbols(featureIDs, orthologue=orthologue, 
-                               multiOrth=multiOrth, taxId=taxId)
+                               multiOrth=multiOrth,
+                               taxId=taxId,
+                               backend = backend)
   # } else if (ft=="RefSeq") {
   #   res <- annotateRefSeqs(featureIDs, orthologue=orthologue, 
   #                          multiOrth=multiOrth)
   } else if (ft=="UniProt") {
     res <- annotateUniprotAccession(featureIDs, orthologue=orthologue,
-                           multiOrth=multiOrth)
+                           multiOrth=multiOrth,
+                           backend = backend)
   } else {
     res <- annotateAnyIDs(featureIDs, orthologue=orthologue,
-                          multiOrth=multiOrth)
+                          multiOrth=multiOrth,
+                          backend = backend)
     res <- data.frame(FeatureName=featureIDs, row.names=id2rownames(featureIDs))
   }
   return(res)

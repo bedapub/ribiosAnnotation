@@ -4,7 +4,7 @@
 \alias{annotateAnyIDs}
 \title{Annotate any identifiers}
 \usage{
-annotateAnyIDs(ids, orthologue = FALSE, multiOrth = FALSE)
+annotateAnyIDs(ids, orthologue = FALSE, multiOrth = FALSE, backend = "mongodb")
 }
 \arguments{
 \item{ids}{A vector of identifiers. They must be of the same type. Supported 
@@ -15,6 +15,9 @@ version suffixes).}
 \item{orthologue}{Logical, is orthologous mapping needed?}
 
 \item{multiOrth}{Logical, is more than one orthologs allowed}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A \code{data.frame} containing annotation information. Following

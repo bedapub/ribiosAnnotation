@@ -4,7 +4,7 @@
 \alias{annotateGeneIDs}
 \title{Annotate Entrez GeneIDs}
 \usage{
-annotateGeneIDs(ids, orthologue = FALSE, multiOrth = FALSE)
+annotateGeneIDs(ids, orthologue = FALSE, multiOrth = FALSE, backend = "mongodb")
 }
 \arguments{
 \item{ids}{A vector of integers or characters, encoding NCBI Entrez GeneIDs.
@@ -15,6 +15,9 @@ Default: \code{FALSE}}
 
 \item{multiOrth}{Logical, whether mutliple orthologues should be returned if
 exist. Deafult: \code{FALSE}}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A \code{data.frame} object containing the annotations:

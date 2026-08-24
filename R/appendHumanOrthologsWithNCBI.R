@@ -1,4 +1,4 @@
-#' @include annotateHumanOrthologsWithNCBI.R
+#' @include annotateHumanOrthologsWithNCBI.R backend.R
 NULL
 
 #' Append human orthologs to an existing annotation dataframe
@@ -10,6 +10,8 @@ NULL
 #'  are tolerated).
 #' @param multiOrth Logical, whether one row is allowed to map to multiple 
 #' orthologues
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' 
 #' The function appends human orthologs to an existing annotation data.frame. It
 #' is usually called by another function. Please make sure of what you are doing 
@@ -29,7 +31,14 @@ NULL
 #' @importFrom ribiosUtils haltifnot
 #' @export
 appendHumanOrthologsWithNCBI <- function(anno,
-                                         multiOrth=FALSE) {
+                                         multiOrth=FALSE,
+                                         backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
+
+  if (backend == "bioconductor") {
+    return(biocAppendHumanOrthologs(anno, multiOrth = multiOrth))
+  }
+
   Description <- GeneID <- GeneSymbol <- Type <- HumanGeneID <- NULL
   chrGeneID <- NULL
 
@@ -42,7 +51,8 @@ appendHumanOrthologsWithNCBI <- function(anno,
                             setequal(as.character(TaxID[!is.na(TaxID)]),
                                      "9606"))
   if(taxIsAllHumanOrNA) {
-    humanAnno <- annotateGeneIDsWithoutHumanOrtholog(unique(anno$GeneID)) %>%
+    humanAnno <- annotateGeneIDsWithoutHumanOrtholog(unique(anno$GeneID),
+                                                     backend = backend) %>%
       dplyr::select(HumanGeneID=GeneID,
                     HumanGeneSymbol=GeneSymbol,
                     HumanDescription=Description,
@@ -52,10 +62,12 @@ appendHumanOrthologsWithNCBI <- function(anno,
       mutate(HumanGeneID=GeneID)
   } else {
     orthologs <- annotateHumanOrthologsWithNCBI(unique(anno$GeneID),
-                                                multiOrth=multiOrth) %>%
+                                                multiOrth=multiOrth,
+                                                backend = backend) %>%
       dplyr::mutate(chrGeneID=as.character(GeneID)) %>%
       dplyr::select(chrGeneID, HumanGeneID)
-    orthologAnno <- annotateGeneIDsWithoutHumanOrtholog(unique(orthologs$HumanGeneID)) %>%
+    orthologAnno <- annotateGeneIDsWithoutHumanOrtholog(unique(orthologs$HumanGeneID),
+                                                        backend = backend) %>%
       dplyr::select(HumanGeneID=GeneID,
                     HumanGeneSymbol=GeneSymbol,
                     HumanDescription=Description,

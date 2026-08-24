@@ -10,12 +10,21 @@ Imports:
     ribiosUtils,
     dplyr,
     tidyr,
+    AnnotationDbi,
     rjson,
     magrittr,
     mongolite
 Suggests:
     roxygen2,
-    testthat
+    testthat,
+    babelgene,
+    org.Hs.eg.db,
+    org.Mm.eg.db,
+    org.Rn.eg.db,
+    org.Cf.eg.db,
+    org.Ss.eg.db,
+    org.Pt.eg.db,
+    org.Mmu.eg.db
 LazyData: true
 License: GPL-3
 Encoding: UTF-8
@@ -24,6 +33,7 @@ Collate:
     'sortAnnotationByQuery.R'
     'removeEnsemblVersion.R'
     'utils.R'
+    'backend.R'
     'annotateAnyIDs.R'
     'annotateHumanOrthologsWithNCBI.R'
     'appendHumanOrthologsWithNCBI.R'

@@ -1,4 +1,4 @@
-#' @include utils.R annotateAnyIDs.R sortAnnotationByQuery.R
+#' @include utils.R annotateAnyIDs.R sortAnnotationByQuery.R backend.R
 #' @include appendHumanOrthologsWithNCBI.R
 NULL
 
@@ -10,6 +10,8 @@ NULL
 #' Default: \code{FALSE}
 #' @param multiOrth Logical, whether mutliple orthologues should be returned if
 #' exist. Deafult: \code{FALSE}
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame} object containing the annotations:
 #' * GeneID EntrezGeneID
 #' * GeneSymbol Official gene symbol
@@ -34,11 +36,14 @@ NULL
 #'                         orthologue=TRUE)
 #' }
 #' @export
-annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
+annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE,
+                            backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   if(!orthologue) {
-    res <- annotateGeneIDsWithoutHumanOrtholog(ids)
+    res <- annotateGeneIDsWithoutHumanOrtholog(ids, backend = backend)
   } else {
-    res <- annotateGeneIDsWithHumanOrtholog(ids, multiOrth=TRUE)
+    res <- annotateGeneIDsWithHumanOrtholog(ids, multiOrth = multiOrth,
+                                            backend = backend)
   }
   return(res)
 }
@@ -48,6 +53,8 @@ annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' @param ids A vector of integers or characters, encoding NCBI Entrez GeneIDs.
 #' It can contain \code{NA} or \code{NULL}.
 #' 
+#' @param backend Character string, data backend to use. One of
+#' \code{"mongodb"} (default) or \code{"bioconductor"}.
 #' @return A \code{data.frame} object containing the annotations:
 #' * GeneID EntrezGeneID
 #' * GeneSymbol Official gene symbol
@@ -75,19 +82,30 @@ annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE) {
 #' }
 #' 
 #' @export
-annotateGeneIDsWithoutHumanOrtholog <- function(ids) {
+annotateGeneIDsWithoutHumanOrtholog <- function(ids, backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   GeneID <- GeneSymbol <- Description <- TaxID <- Type <- NULL
   
   intID <- suppressWarnings(as.integer(ids))
   validID <- intID[!is.na(intID)]
-  
-  giCon <- connectMongoDB(instance="bioinfo_read",
-                          collection="ncbi_gene_info")
-  
-  speciesFieldsJson <- returnFieldsJson(c("Symbol", "description", "geneId",
-                                          "taxId", "type_of_gene"))
-  query <- paste0('{"geneId":{"$in":[', paste(as.character(validID), collapse=","),']}}')
-  genes <- giCon$find(query, fields=speciesFieldsJson) 
+
+  if (backend == "mongodb") {
+    giCon <- connectMongoDB(instance="bioinfo_read",
+                            collection="ncbi_gene_info")
+
+    speciesFieldsJson <- returnFieldsJson(c("Symbol", "description", "geneId",
+                                            "taxId", "type_of_gene"))
+    query <- paste0('{"geneId":{"$in":[', paste(as.character(validID), collapse=","),']}}')
+    genes <- giCon$find(query, fields=speciesFieldsJson)
+  } else {
+    genes <- biocAnnotateGeneIDs(validID) %>%
+      dplyr::rename(Symbol = GeneSymbol,
+                    description = Description,
+                    geneId = GeneID,
+                    taxId = TaxID,
+                    type_of_gene = Type)
+  }
+
   if(nrow(genes)==0) {
     res <- data.frame(GeneID=ids,
                       GeneSymbol=NA,
@@ -137,12 +155,16 @@ annotateGeneIDsWithoutHumanOrtholog <- function(ids) {
 #' }
 #' 
 #' @export
-annotateGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE) {
+annotateGeneIDsWithHumanOrtholog <- function(ids, multiOrth=FALSE,
+                                             backend = NULL) {
+  backend <- normalizeAnnotationBackend(backend)
   HumanGeneID <- HumanGeneSymbol <- HumanDescription <- Type <- NULL
   GeneSymbol <- GeneID <- Description <- NULL
   
-  geneIdAnno <- annotateGeneIDsWithoutHumanOrtholog(ids)
-  appGeneIDanno <- appendHumanOrthologsWithNCBI(geneIdAnno)
+  geneIdAnno <- annotateGeneIDsWithoutHumanOrtholog(ids, backend = backend)
+  appGeneIDanno <- appendHumanOrthologsWithNCBI(geneIdAnno,
+                                                multiOrth = multiOrth,
+                                                backend = backend)
   res <- sortAnnotationByQuery(appGeneIDanno, ids, "GeneID", multi = multiOrth)
   
   return(res)
