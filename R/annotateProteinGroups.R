@@ -31,12 +31,10 @@ getGenesPerIndex <- function(x) {
 #' In case \code{orthologue} is \code{TRUE}, human orthologue information is 
 #' returned as well.
 #' @examples
-#' options(error=utils::recover)
 #' \dontrun{
 #' annotateProteinGroups(c("A0A024RBG1;Q9NZJ9", "A0A0B4J2D5;P0DPI2",
 #'                            "A0A0B4J2F0;A0A0U1RRL7"))
 #' }
-#' options(error=NULL)
 #' @importFrom dplyr group_by arrange group_modify ungroup
 #' @export
 annotateProteinGroups <- function(ids, delimiter=";",
@@ -62,6 +60,3 @@ annotateProteinGroups <- function(ids, delimiter=";",
     unique
   return(res)
 }
-
-## assignInNamespace("getGenesPerIndex", getGenesPerIndex, "ribiosAnnotation")
-## assignInNamespace("annotateProteinGroups", annotateProteinGroups, "ribiosAnnotation")

@@ -2,7 +2,6 @@
 % Please edit documentation in R/gti2bioc.R
 \name{gti2bioc}
 \alias{gti2bioc}
-\alias{gtibioc}
 \alias{bioc2gti}
 \title{Translate chiptypes between GTI Bioconductor naming conventions}
 \usage{

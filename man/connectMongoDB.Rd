@@ -25,8 +25,10 @@ A pointer to a collection on the server, as returned by
 Connect to a MongoDB instance
 }
 \examples{
+\dontrun{
 giCon <- connectMongoDB(instance="bioinfo_read",
                         collection="ncbi_gene_info")
+}
 }
 \seealso{
 \code{\link{loadMongodbSecrets}}

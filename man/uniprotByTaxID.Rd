@@ -16,6 +16,9 @@ the annotation}
 selected top one if multiple exist. Only valid when \code{orthologue} is set 
 as \code{TRUE}.}
 }
+\value{
+A \code{data.frame} with UniProt accessions and gene annotations.
+}
 \description{
 Get Uniprot annotation with NCBI Taxonomy ID
 }

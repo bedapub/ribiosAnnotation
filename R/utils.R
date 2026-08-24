@@ -55,7 +55,7 @@ locateSecretsFile <- function(path) {
 #' @param instance String, which must be found under the \code{mongodb} section
 #'  of the JSON file
 #' @return A list of the following items:
-#' \itemize{
+#' \describe{
 #'   \item{\code{hostname}}{Hostname of the MongoDB}
 #'   \item{\code{port}}{Port of the MongoDB}
 #'   \item{\code{dbname}}{Database of the MongoDB}
@@ -89,9 +89,11 @@ loadMongodbSecrets <- function(file=locateSecretsFile(),
 #' @param verbose Logical
 #' @return A pointer to a collection on the server, as returned by
 #'  \code{\link[mongolite]{mongo}}.
-#' @examples 
+#' @examples
+#' \dontrun{
 #' giCon <- connectMongoDB(instance="bioinfo_read",
 #'                         collection="ncbi_gene_info")
+#' }
 #' @seealso \code{\link{loadMongodbSecrets}}
 #' @export
 connectMongoDB <- function(instance="bioinfo_read",

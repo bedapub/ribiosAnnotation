@@ -6,7 +6,7 @@ NULL
 #'    for instance \code{10116} for rat, \code{10090} for mouse, and \code{9541}
 #'    for cyno (crab-eating macaque).
 #' @return A \code{data.frame} contains following columns:
-#'  \itemize{
+#'  \describe{
 #'     \item{\code{GeneID}}{NCBI Gene ID of the query species}
 #'     \item{\code{GeneSymbol}}{NCBI Gene symbol of the query species}
 #'     \item{\code{Description}}{Gene description of the query species}
