@@ -11,6 +11,9 @@ annotateGeneIDsWithHumanOrtholog(ids, multiOrth = FALSE, backend = NULL)
 
 \item{multiOrth}{Logical, whether mutliple orthologues should be returned if
 exist. Deafult: \code{FALSE}}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A \code{data.frame} object containing the annotations:

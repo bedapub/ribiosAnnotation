@@ -49,14 +49,22 @@ biocOrgDbPackageByTaxId <- function(taxId) {
                 "9606" = "org.Hs.eg.db",
                 "10090" = "org.Mm.eg.db",
                 "10116" = "org.Rn.eg.db",
+                "9615" = "org.Cf.eg.db",
+                "9823" = "org.Ss.eg.db",
+                "9598" = "org.Pt.eg.db",
+                "9541" = "org.Mmu.eg.db",
                 NA_character_)
   pkg
+}
+
+biocSupportedOrgDbTaxIds <- function() {
+  c(9606L, 10090L, 10116L, 9615L, 9823L, 9598L, 9541L)
 }
 
 biocRequireOrgDbByTaxId <- function(taxId) {
   pkg <- biocOrgDbPackageByTaxId(taxId)
   if (is.na(pkg)) {
-    stop("Bioconductor backend supports taxId 9606 (human), 10090 (mouse), and 10116 (rat).",
+    stop("Bioconductor backend supports taxId 9606 (human), 10090 (mouse), 10116 (rat), 9615 (dog), 9823 (pig), 9598 (chimpanzee), and 9541 (macaque via org.Mmu.eg.db).",
          call. = FALSE)
   }
   if (!requireNamespace("AnnotationDbi", quietly = TRUE)) {
@@ -76,6 +84,10 @@ biocEnsemblTaxId <- function(ensemblIDs) {
   taxId[grepl("^ENSG", x)] <- 9606L
   taxId[grepl("^ENSMUSG", x)] <- 10090L
   taxId[grepl("^ENSRNOG", x)] <- 10116L
+  taxId[grepl("^ENSCAFG", x)] <- 9615L
+  taxId[grepl("^ENSSSCG", x)] <- 9823L
+  taxId[grepl("^ENSPTRG", x)] <- 9598L
+  taxId[grepl("^ENSMMUG", x)] <- 9541L
   taxId
 }
 
@@ -142,7 +154,7 @@ biocAnnotateGeneIDs <- function(geneIds) {
   }
 
   resList <- list()
-  for (taxId in c(9606L, 10090L, 10116L)) {
+  for (taxId in biocSupportedOrgDbTaxIds()) {
     orgdb <- biocRequireOrgDbByTaxId(taxId)
     keys <- as.character(validIDs)
     dbRes <- biocSelectSafe(orgdb,
@@ -200,6 +212,8 @@ biocAnnotateGeneSymbols <- function(symbols, taxId) {
 }
 
 biocAnnotateEnsemblGeneIDs <- function(ids) {
+  EnsemblID <- GeneID <- GeneSymbol <- Description <- TaxID <- NULL
+
   ids <- as.character(ids)
   uvids <- removeEnsemblVersion(ids)
   taxVec <- biocEnsemblTaxId(uvids)
@@ -254,7 +268,7 @@ biocAnnotateUniProt <- function(accessions) {
     return(data.frame())
   }
   resList <- list()
-  for (taxId in c(9606L, 10090L, 10116L)) {
+  for (taxId in biocSupportedOrgDbTaxIds()) {
     orgdb <- biocRequireOrgDbByTaxId(taxId)
     dbRes <- biocSelectSafe(orgdb,
                 keys = acc,
@@ -293,6 +307,7 @@ biocAnnotateHumanOrthologs <- function(geneids, multiOrth = FALSE) {
 
 biocAppendHumanOrthologs <- function(anno, multiOrth = FALSE) {
   Description <- GeneID <- GeneSymbol <- TaxID <- Type <- NULL
+  .rowid <- HumanGeneID.mapped <- HumanGeneSymbol.mapped <- HumanGeneSymbolAnno <- NULL
 
   res <- anno
   res$.rowid <- seq_len(nrow(res))

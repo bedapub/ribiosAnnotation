@@ -13,14 +13,14 @@ for cyno (crab-eating macaque).}
 }
 \value{
 A \code{data.frame} contains following columns:
- \itemize{
-    \item{\code{GeneID}}{NCBI Gene ID of the query species}
-    \item{\code{GeneSymbol}}{NCBI Gene symbol of the query species}
-    \item{\code{Description}}{Gene description of the query species}
-    \item{\code{HumanGeneID}}{NCBI Gene ID of the human homolog}
-    \item{\code{HumanGeneSymbol}}{NCBI Gene symbol of the human homolog}
-    \item{\code{HumanDescription}}{Gene description of the human homolog}
- }
+\describe{
+  \item{\code{GeneID}}{NCBI Gene ID of the query species}
+  \item{\code{GeneSymbol}}{NCBI Gene symbol of the query species}
+  \item{\code{Description}}{Gene description of the query species}
+  \item{\code{HumanGeneID}}{NCBI Gene ID of the human homolog}
+  \item{\code{HumanGeneSymbol}}{NCBI Gene symbol of the human homolog}
+  \item{\code{HumanDescription}}{Gene description of the human homolog}
+}
 }
 \description{
 Retrieve human orthologs of genes of another species with its Taxonomy ID
