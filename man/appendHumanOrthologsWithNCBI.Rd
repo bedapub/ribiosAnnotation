@@ -4,7 +4,7 @@
 \alias{appendHumanOrthologsWithNCBI}
 \title{Append human orthologs to an existing annotation dataframe}
 \usage{
-appendHumanOrthologsWithNCBI(anno, multiOrth = FALSE)
+appendHumanOrthologsWithNCBI(anno, multiOrth = FALSE, backend = NULL)
 }
 \arguments{
 \item{anno}{A \code{data.frame} containing at least two columns \code{GeneID}
@@ -14,7 +14,10 @@ stores taxonomy ID, which are integers, too (again, NA values and characters
 are tolerated).}
 
 \item{multiOrth}{Logical, whether one row is allowed to map to multiple 
-orthologues
+orthologues}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.
 
 The function appends human orthologs to an existing annotation data.frame. It
 is usually called by another function. Please make sure of what you are doing 

@@ -41,29 +41,36 @@ export(removeEnsemblVersion)
 export(returnFieldsJson)
 export(ribiosAnnotationSecretEnvVar)
 export(ribiosAnnotationSecretFile)
-export(sortAnnotationByQuery)
 export(setAnnotationBackend)
+export(sortAnnotationByQuery)
 export(uniprotByTaxID)
 export(validFeatureIDs)
-importFrom(dplyr,any_of)
-importFrom(dplyr,arrange)
-importFrom(dplyr,group_by)
-importFrom(dplyr,group_modify)
-importFrom(dplyr,left_join)
-importFrom(dplyr,mutate)
-importFrom(dplyr,rename)
-importFrom(dplyr,right_join)
-importFrom(dplyr,select)
-importFrom(dplyr,ungroup)
+importFrom(dplyr,
+  any_of,
+  arrange,
+  group_by,
+  group_modify,
+  left_join,
+  mutate,
+  rename,
+  right_join,
+  select,
+  ungroup
+)
 importFrom(magrittr,"%>%")
-importFrom(magrittr,'%>%')
 importFrom(mongolite,mongo)
-importFrom(ribiosUtils,haltifnot)
-importFrom(ribiosUtils,matchColumn)
-importFrom(ribiosUtils,matchColumnIndex)
-importFrom(ribiosUtils,putColsFirst)
-importFrom(rjson,fromJSON)
-importFrom(rjson,toJSON)
+importFrom(ribiosUtils,
+  haltifnot,
+  matchColumn,
+  matchColumnIndex,
+  putColsFirst
+)
+importFrom(rjson,
+  fromJSON,
+  toJSON
+)
 importFrom(tidyr,unnest)
-importFrom(utils,data)
-importFrom(utils,globalVariables)
+importFrom(utils,
+  data,
+  globalVariables
+)

@@ -4,7 +4,7 @@
 \alias{annotateGeneIDs}
 \title{Annotate Entrez GeneIDs}
 \usage{
-annotateGeneIDs(ids, orthologue = FALSE, multiOrth = FALSE, backend = "mongodb")
+annotateGeneIDs(ids, orthologue = FALSE, multiOrth = FALSE, backend = NULL)
 }
 \arguments{
 \item{ids}{A vector of integers or characters, encoding NCBI Entrez GeneIDs.

@@ -43,7 +43,7 @@ test_that("bioconductor backend works in annotateAnyIDs", {
 
   ids <- c("1", "AKT1", "ENSG00000142208", NA)
   res <- annotateAnyIDs(ids, backend = "bioconductor")
-
+  
   expect_identical(res$Input, ids)
   expect_identical(nrow(res), length(ids))
   expect_true(all(c("Input", "GeneID", "TaxID", "IDType") %in% colnames(res)))

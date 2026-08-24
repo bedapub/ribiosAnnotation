@@ -4,12 +4,15 @@
 \alias{annotateGeneSymbolsWithoutHumanOrtholog}
 \title{Annotate gene symbols without human ortholog}
 \usage{
-annotateGeneSymbolsWithoutHumanOrtholog(ids, taxId = 9606)
+annotateGeneSymbolsWithoutHumanOrtholog(ids, taxId = 9606, backend = NULL)
 }
 \arguments{
 \item{ids}{Character vector, gene symbols to be queried}
 
 \item{taxId}{Integer, NCBI taxonomy ID of the species. Default value: 9606 (human). See \code{commonSpecies} for tax id of common species.}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A data.frame of following columns

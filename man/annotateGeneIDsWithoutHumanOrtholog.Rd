@@ -4,11 +4,14 @@
 \alias{annotateGeneIDsWithoutHumanOrtholog}
 \title{Annotate Entrez GeneIDs without querying human orthologs}
 \usage{
-annotateGeneIDsWithoutHumanOrtholog(ids)
+annotateGeneIDsWithoutHumanOrtholog(ids, backend = NULL)
 }
 \arguments{
 \item{ids}{A vector of integers or characters, encoding NCBI Entrez GeneIDs.
 It can contain \code{NA} or \code{NULL}.}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A \code{data.frame} object containing the annotations:

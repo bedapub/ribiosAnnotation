@@ -43,7 +43,7 @@ NULL
 #' @importFrom dplyr any_of rename mutate
 #' @importFrom mongolite mongo
 #' @importFrom rjson toJSON
-#' @importFrom magrittr '%>%'
+#' @importFrom magrittr %>%
 #' @export annotateTaxID
 annotateTaxID <- function(taxId, orthologue=FALSE, multiOrth=FALSE) {
   taxId <- checkSingleIntegerTaxId(taxId)

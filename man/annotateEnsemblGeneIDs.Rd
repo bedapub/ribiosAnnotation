@@ -4,7 +4,12 @@
 \alias{annotateEnsemblGeneIDs}
 \title{Annotate Enesembl GeneIDs}
 \usage{
-annotateEnsemblGeneIDs(ids, orthologue = FALSE, multiOrth = FALSE, backend = "mongodb")
+annotateEnsemblGeneIDs(
+  ids,
+  orthologue = FALSE,
+  multiOrth = FALSE,
+  backend = NULL
+)
 }
 \arguments{
 \item{ids}{A vector of EnsemblGeneIDs in form of 

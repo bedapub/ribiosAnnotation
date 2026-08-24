@@ -4,12 +4,15 @@
 \alias{annotateEnsemblGeneIDsWithNCBI}
 \title{Annotate EnsEMBL GeneID with data from NCBI}
 \usage{
-annotateEnsemblGeneIDsWithNCBI(ids)
+annotateEnsemblGeneIDsWithNCBI(ids, backend = NULL)
 }
 \arguments{
 \item{ids}{Character strings, Ensembl GeneIDs in form of 
 \code{ENS(species)(object type)(identifier).(version)}. The version is
 optional.}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A \code{data.frame} containing following columns:

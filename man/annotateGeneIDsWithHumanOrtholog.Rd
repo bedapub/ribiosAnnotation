@@ -4,7 +4,7 @@
 \alias{annotateGeneIDsWithHumanOrtholog}
 \title{Annotate Entrez GeneIDs with the query of human orthologs}
 \usage{
-annotateGeneIDsWithHumanOrtholog(ids, multiOrth = FALSE)
+annotateGeneIDsWithHumanOrtholog(ids, multiOrth = FALSE, backend = NULL)
 }
 \arguments{
 \item{ids}{Vector of integer or character strings, EntrezIDs to be annotated}

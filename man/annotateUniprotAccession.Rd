@@ -5,10 +5,10 @@
 \title{Annotate UniProt accessions or names}
 \usage{
 annotateUniprotAccession(
-	accessions,
-	orthologue = FALSE,
-	multiOrth = FALSE,
-	backend = "mongodb"
+  accessions,
+  orthologue = FALSE,
+  multiOrth = FALSE,
+  backend = NULL
 )
 }
 \arguments{

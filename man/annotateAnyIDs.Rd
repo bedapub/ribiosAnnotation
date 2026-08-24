@@ -4,7 +4,7 @@
 \alias{annotateAnyIDs}
 \title{Annotate any identifiers}
 \usage{
-annotateAnyIDs(ids, orthologue = FALSE, multiOrth = FALSE, backend = "mongodb")
+annotateAnyIDs(ids, orthologue = FALSE, multiOrth = FALSE, backend = NULL)
 }
 \arguments{
 \item{ids}{A vector of identifiers. They must be of the same type. Supported 

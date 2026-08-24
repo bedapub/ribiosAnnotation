@@ -10,7 +10,7 @@ guessAndAnnotate(
   orthologue = FALSE,
   multiOrth = FALSE,
   taxId = 9606,
-  backend = "mongodb"
+  backend = NULL
 )
 }
 \arguments{

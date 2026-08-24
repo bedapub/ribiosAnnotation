@@ -4,7 +4,7 @@
 \alias{annotateEnsemblGeneIDsWithHumanOrtholog}
 \title{Annotate Ensembl GeneIDs while appending human orthologs}
 \usage{
-annotateEnsemblGeneIDsWithHumanOrtholog(ids, multiOrth = FALSE)
+annotateEnsemblGeneIDsWithHumanOrtholog(ids, multiOrth = FALSE, backend = NULL)
 }
 \arguments{
 \item{ids}{A vector of character strings, Ensembl GeneIDs in form of 
@@ -13,6 +13,9 @@ optional.}
 
 \item{multiOrth}{Logical, whether mutliple orthologues should be returned if
 exist. Deafult: \code{FALSE}}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A \code{data.frame} containing following columns:

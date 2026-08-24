@@ -9,7 +9,7 @@ annotateGeneSymbols(
   taxId = 9606,
   orthologue = FALSE,
   multiOrth = FALSE,
-  backend = "mongodb"
+  backend = NULL
 )
 }
 \arguments{

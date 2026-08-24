@@ -4,7 +4,7 @@
 \alias{annotateHumanOrthologsWithNCBI}
 \title{Annotate human orthologs with data from NCBI}
 \usage{
-annotateHumanOrthologsWithNCBI(geneids, multiOrth = FALSE)
+annotateHumanOrthologsWithNCBI(geneids, multiOrth = FALSE, backend = NULL)
 }
 \arguments{
 \item{geneids}{Integer GeneIDs, can contain human GeneIDs.}
@@ -12,6 +12,9 @@ annotateHumanOrthologsWithNCBI(geneids, multiOrth = FALSE)
 \item{multiOrth}{Logical, whether one gene is allowed to map to multiple
 human orthologs? Default value is \code{FALSE}, i.e. only the first 
 human ortholog (random choice) is returned.}
+
+\item{backend}{Character string, data backend to use. One of
+\code{"mongodb"} (default) or \code{"bioconductor"}.}
 }
 \value{
 A \code{data.frame} containing following columns:
