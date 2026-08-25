@@ -61,7 +61,6 @@ jobs:
           path: check
 
   R-CMD-check-mongodb:
-    if: ${{ secrets.RIBIOS_ANNOTATION_SECRETS_JSON != '' }}
     runs-on: ubuntu-latest
 
     name: ubuntu-latest (release, mongodb+bioconductor)
@@ -74,9 +73,21 @@ jobs:
       RIBIOS_ANNOTATION_SECRETS_JSON: ${{ github.workspace }}/.github/secrets/ribiosAnnotation-secrets.json
 
     steps:
+      - name: Check MongoDB secret availability
+        id: mongodb_gate
+        shell: bash
+        run: |
+          if [[ -n "${{ secrets.RIBIOS_ANNOTATION_SECRETS_JSON }}" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: ${{ steps.mongodb_gate.outputs.enabled == 'true' }}
 
       - name: Prepare MongoDB secrets file
+        if: ${{ steps.mongodb_gate.outputs.enabled == 'true' }}
         shell: bash
         run: |
           mkdir -p "${{ github.workspace }}/.github/secrets"
@@ -85,25 +96,33 @@ jobs:
           EOF
 
       - uses: r-lib/actions/setup-pandoc@v2
+        if: ${{ steps.mongodb_gate.outputs.enabled == 'true' }}
 
       - uses: r-lib/actions/setup-r@v2
+        if: ${{ steps.mongodb_gate.outputs.enabled == 'true' }}
         with:
           r-version: release
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+        if: ${{ steps.mongodb_gate.outputs.enabled == 'true' }}
         with:
           extra-packages: any::rcmdcheck
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+        if: ${{ steps.mongodb_gate.outputs.enabled == 'true' }}
         with:
           args: 'c("--no-manual", "--as-cran")'
           error-on: '"warning"'
           upload-snapshots: true
 
+      - name: MongoDB CI skipped
+        if: ${{ steps.mongodb_gate.outputs.enabled != 'true' }}
+        run: echo "Skipping MongoDB job because RIBIOS_ANNOTATION_SECRETS_JSON is not configured."
+
       - name: Upload check results
-        if: failure()
+        if: ${{ failure() && steps.mongodb_gate.outputs.enabled == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ubuntu-rrelease-mongodb-results
