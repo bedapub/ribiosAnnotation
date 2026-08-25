@@ -52,15 +52,9 @@ test_that("bioconductor backend works in annotateAnyIDs", {
 test_that("both backends expose compatible core columns for GeneID annotation", {
   skip_if_not_installed("AnnotationDbi")
   skip_if_not_installed("org.Hs.eg.db")
+  skip_if_no_mongodb_backend()
 
-  mongo_ok <- TRUE
-  mongo_res <- tryCatch({
-    annotateGeneIDsWithoutHumanOrtholog(c(1, 2), backend = "mongodb")
-  }, error = function(e) {
-    mongo_ok <<- FALSE
-    NULL
-  })
-  skip_if_not(mongo_ok)
+  mongo_res <- annotateGeneIDsWithoutHumanOrtholog(c(1, 2), backend = "mongodb")
 
   bioc_res <- annotateGeneIDsWithoutHumanOrtholog(c(1, 2), backend = "bioconductor")
 

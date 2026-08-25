@@ -57,6 +57,21 @@ For `backend = "bioconductor"`, install:
 - `org.Mmu.eg.db` (rhesus macaque)
 - `babelgene` (for non-human to human orthologue mapping)
 
+## CI Environment Variables
+
+In CI, backend behavior is controlled with these environment variables:
+
+- `RIBIOS_ANNOTATION_BACKEND`: default backend for function calls without an explicit `backend` argument (recommended CI default: `bioconductor`).
+- `RIBIOS_TEST_BACKENDS`: comma-separated list of backends to exercise in tests.
+	- `bioconductor`: run Bioconductor-only checks (works without MongoDB).
+	- `bioconductor,mongodb`: also enable MongoDB-dependent tests.
+- `RIBIOS_ANNOTATION_SECRETS_JSON`: path to the MongoDB secrets JSON file when MongoDB tests are enabled.
+
+Typical setup in GitHub Actions:
+
+- Standard CI (no MongoDB): set `RIBIOS_ANNOTATION_BACKEND=bioconductor` and `RIBIOS_TEST_BACKENDS=bioconductor`.
+- Optional MongoDB CI job: additionally provide a valid secrets file and set `RIBIOS_TEST_BACKENDS=bioconductor,mongodb`.
+
 ## Contact
 
 [Jitao David Zhang](mailto:jitao_david.zhang@roche.com) maintains and develops *ribiosUtils* and other ribios packages in memory of Clemens Broger, a pioneer of bioinformatics and cheminformatics in drug discovery, a man true to himself. Jitao David Zhang thanks Balazs Banfai, Marco Berrera, and Roland Schmucki for their help and input.

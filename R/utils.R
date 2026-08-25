@@ -111,6 +111,87 @@ connectMongoDB <- function(instance="bioinfo_read",
   return(giCon)
 }
 
+#' Check Whether MongoDB Backend Is Requested for Tests
+#'
+#' Reads environment variable 
+#' \code{RIBIOS_TEST_BACKENDS} and checks whether 
+#' \code{"mongodb"} is included.
+#'
+#' @param envVar Character string, environment variable name that stores a
+#' comma-separated list of backends. Default is
+#' \code{"RIBIOS_TEST_BACKENDS"}.
+#' @return Logical scalar.
+#' @examples
+#' mongodbRequestedForTests()
+#' @rdname mongodbConnectionAvailable
+#' @export
+mongodbRequestedForTests <- function(envVar = "RIBIOS_TEST_BACKENDS") {
+  backends <- Sys.getenv(envVar, unset = "bioconductor")
+  backendSet <- unique(trimws(strsplit(backends, ",", fixed = TRUE)[[1]]))
+  "mongodb" %in% tolower(backendSet)
+}
+
+#' Check Whether MongoDB Secrets File Exists
+#'
+#' Determines whether a secrets file can be found either from
+#' \code{RIBIOS_ANNOTATION_SECRETS_JSON} or from
+#' \code{ribiosAnnotationSecretFile}.
+#'
+#' @return Logical scalar.
+#' @examples
+#' mongodbSecretsFileExists()
+#' @rdname mongodbConnectionAvailable
+#' @export
+mongodbSecretsFileExists <- function() {
+  envPath <- Sys.getenv(ribiosAnnotationSecretEnvVar, unset = "")
+  candidate <- if (nzchar(envPath)) envPath else ribiosAnnotationSecretFile
+  file.exists(path.expand(candidate))
+}
+
+#' Check Whether MongoDB Connection Is Available
+#'
+#' This helper is intended for conditional test or runtime behavior.
+#' It returns \code{TRUE} only if MongoDB is requested for tests,
+#' a secrets file exists, and a lightweight query can be executed.
+#'
+#' @param instance Character string, MongoDB instance name used in secrets.
+#' Default is \code{"bioinfo_read"}.
+#' @param collection Character string, collection name used for the probe query.
+#' Default is \code{"ncbi_gene_info"}.
+#' @param probeQuery Character string, query sent to \code{count()} to verify
+#' connectivity.
+#' @param requireRequested Logical. If \code{TRUE} (default), returns
+#' \code{FALSE} unless \code{mongodbRequestedForTests()} is \code{TRUE}.
+#' @return Logical scalar.
+#' @examples
+#' \dontrun{
+#' mongodbConnectionAvailable()
+#' }
+#' @seealso \code{\link{mongodbRequestedForTests}},
+#'   \code{\link{mongodbSecretsFileExists}}, \code{\link{connectMongoDB}}
+#' @rdname mongodbConnectionAvailable
+#' @export
+mongodbConnectionAvailable <- function(instance = "bioinfo_read",
+                                       collection = "ncbi_gene_info",
+                                       probeQuery = "{}",
+                                       requireRequested = TRUE) {
+  if (isTRUE(requireRequested) && !mongodbRequestedForTests()) {
+    return(FALSE)
+  }
+  if (!mongodbSecretsFileExists()) {
+    return(FALSE)
+  }
+  ok <- tryCatch({
+    con <- connectMongoDB(instance = instance, collection = collection)
+    on.exit(try(con$disconnect(), silent = TRUE), add = TRUE)
+    con$count(probeQuery)
+    TRUE
+  }, error = function(e) {
+    FALSE
+  })
+  isTRUE(ok)
+}
+
 #' Construct a JSON string to indicate returned fields from a MongoDB query
 #' @param fields A vector of character strings that should be included
 #' @param include_id Logical, whether \code{_id} should be returned. Default 
