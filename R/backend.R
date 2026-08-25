@@ -18,11 +18,11 @@ normalizeAnnotationBackend <- function(backend = NULL) {
 #' Set Global Annotation Backend
 #'
 #' Set the default annotation backend for the current R session.
-#' This affects all annotation function calls where the \\code{backend}
+#' This affects all annotation function calls where the \code{backend}
 #' argument is not explicitly provided.
 #'
-#' @param backend Character string, one of \\code{"mongodb"} or
-#'   \\code{"bioconductor"}.
+#' @param backend Character string, one of \sQuote{\code{mongodb}} or
+#'   \sQuote{\code{bioconductor}}.
 #' @return Invisibly returns the selected backend.
 #' @export
 setAnnotationBackend <- function(backend = c("mongodb", "bioconductor")) {
@@ -35,9 +35,7 @@ setAnnotationBackend <- function(backend = c("mongodb", "bioconductor")) {
 #'
 #' Returns the currently effective backend after resolving function argument,
 #' option, and environment variable fallbacks.
-#'
-#' @return Character string, one of \\code{"mongodb"} or
-#'   \\code{"bioconductor"}.
+#
 #' @export
 getAnnotationBackend <- function() {
   normalizeAnnotationBackend(NULL)

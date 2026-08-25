@@ -11,7 +11,7 @@ annotateGeneIDsWithoutHumanOrtholog(ids, backend = NULL)
 It can contain \code{NA} or \code{NULL}.}
 
 \item{backend}{Character string, data backend to use. One of
-\code{"mongodb"} (default) or \code{"bioconductor"}.}
+\sQuote{\code{mongodb}} (default) or \sQuote{\code{bioconductor}}.}
 }
 \value{
 A \code{data.frame} object containing the annotations:

@@ -17,7 +17,7 @@ Default: \code{FALSE}}
 exist. Deafult: \code{FALSE}}
 
 \item{backend}{Character string, data backend to use. One of
-\code{"mongodb"} (default) or \code{"bioconductor"}.}
+\sQuote{\code{mongodb}} (default) or \sQuote{\code{bioconductor}}.}
 }
 \value{
 A \code{data.frame} object containing the annotations:

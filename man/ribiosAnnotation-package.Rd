@@ -11,5 +11,10 @@ Retrieves annotation information of genomic features including genes, RNAs, and 
 \author{
 \strong{Maintainer}: Jitao David Zhang \email{jitao_david.zhang@roche.com} (\href{https://orcid.org/0000-0002-3085-0909}{ORCID})
 
+Authors:
+\itemize{
+  \item Jitao David Zhang \email{jitao_david.zhang@roche.com} (\href{https://orcid.org/0000-0002-3085-0909}{ORCID})
+}
+
 }
 \keyword{internal}

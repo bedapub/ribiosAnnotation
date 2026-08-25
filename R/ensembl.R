@@ -213,9 +213,10 @@ annotateEnsemblGeneIDsWithNCBI <- function(ids, backend = NULL) {
       dplyr::rename('UVID'='Ensembl_geneId',
                     'GeneID'='geneId') %>%
       dplyr::left_join(input, by="UVID") %>%
-      dplyr::select(EnsemblID, GeneID)
+      dplyr::select(EnsemblID, GeneID) %>%
+      unique
     resAnno <- annotateGeneIDs(ids=resE2N$GeneID, backend = backend)
-    res <- dplyr::left_join(resE2N, resAnno, by="GeneID")
+    res <- dplyr::left_join(resE2N, resAnno, by="GeneID", relationship="many-to-many")
     resInd <- ribiosUtils::matchColumnIndex(ids, res, "EnsemblID")
     res <- res[resInd, , drop=FALSE]
     res$EnsemblID <- ids

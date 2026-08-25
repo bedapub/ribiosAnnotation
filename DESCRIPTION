@@ -1,8 +1,8 @@
 Package: ribiosAnnotation
 Type: Package
 Title: Annotation of Genes, RNAs, and Proteins in 'ribios'
-Version: 3.8.0
-Date: 2026-02-15
+Version: 3.9.0
+Date: 2026-08-25
 Authors@R: person("Jitao David", "Zhang",
     email = "jitao_david.zhang@roche.com",
     role = c("aut", "cre"),
@@ -36,7 +36,6 @@ Suggests:
 LazyData: true
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 Additional_repositories: https://bedapub.r-universe.dev
 Collate: 
     'backend.R'

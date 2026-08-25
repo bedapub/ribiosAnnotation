@@ -94,7 +94,7 @@ annotateAnyIDs <- function(ids, orthologue = FALSE, multiOrth = FALSE,
     geneanno <- annotateGeneIDsWithoutHumanOrtholog(featAnno$GeneID,
                                                     backend = backend) %>%
       dplyr::select(-TaxID)
-    res <- left_join(featAnno, geneanno, by="GeneID")
+    res <- left_join(featAnno, geneanno, by="GeneID", relationship="many-to-many")
   }
   res <- sortAnnotationByQuery(res, ids, "Input", multi=FALSE)
   return(res)

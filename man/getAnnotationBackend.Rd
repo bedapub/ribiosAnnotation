@@ -6,10 +6,6 @@
 \usage{
 getAnnotationBackend()
 }
-\value{
-Character string, one of \code{"mongodb"} or
-  \code{"bioconductor"}.
-}
 \description{
 Returns the currently effective backend after resolving function argument,
 option, and environment variable fallbacks.

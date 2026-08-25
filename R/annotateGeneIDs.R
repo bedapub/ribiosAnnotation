@@ -11,7 +11,7 @@ NULL
 #' @param multiOrth Logical, whether mutliple orthologues should be returned if
 #' exist. Deafult: \code{FALSE}
 #' @param backend Character string, data backend to use. One of
-#' \code{"mongodb"} (default) or \code{"bioconductor"}.
+#' \sQuote{\code{mongodb}} (default) or \sQuote{\code{bioconductor}}.
 #' @return A \code{data.frame} object containing the annotations:
 #' * GeneID EntrezGeneID
 #' * GeneSymbol Official gene symbol
@@ -52,9 +52,8 @@ annotateGeneIDs <- function(ids, orthologue=FALSE, multiOrth=FALSE,
 #' 
 #' @param ids A vector of integers or characters, encoding NCBI Entrez GeneIDs.
 #' It can contain \code{NA} or \code{NULL}.
-#' 
 #' @param backend Character string, data backend to use. One of
-#' \code{"mongodb"} (default) or \code{"bioconductor"}.
+#' \sQuote{\code{mongodb}} (default) or \sQuote{\code{bioconductor}}.
 #' @return A \code{data.frame} object containing the annotations:
 #' * GeneID EntrezGeneID
 #' * GeneSymbol Official gene symbol
@@ -129,6 +128,8 @@ annotateGeneIDsWithoutHumanOrtholog <- function(ids, backend = NULL) {
 #' @param ids Vector of integer or character strings, EntrezIDs to be annotated
 #' @param multiOrth Logical, whether mutliple orthologues should be returned if
 #' exist. Deafult: \code{FALSE}
+#' @param backend Character string, data backend to use. One of
+#' \sQuote{\code{mongodb}} (default) or \sQuote{\code{bioconductor}}.
 #' @return A \code{data.frame} object containing the annotations:
 #' * GeneID EntrezGeneID
 #' * GeneSymbol Official gene symbol
